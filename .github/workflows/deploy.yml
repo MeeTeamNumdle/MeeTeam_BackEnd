@@ -78,7 +78,7 @@ jobs:
 
       # CodeDelploy에 배포를 요청합니다.
       - name: Code Deploy 배포 요청
-        run: aws deploy create-deployment --application-name backend-deploy-group
+        run: aws deploy create-deployment --application-name meeteam-app
           --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name backend-deploy-group
+          --deployment-group-name meeteam-app
           --s3-location bucket=meeteam-backend-bucket,bundleType=zip,key=spring-build.zip
