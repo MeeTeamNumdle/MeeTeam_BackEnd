@@ -18,3 +18,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
+}
