@@ -22,14 +22,4 @@ public abstract class BaseTimeEntity {
     @LastModifiedDate
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime modifiedAt;
-
-    @PrePersist
-    public void prePersist() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        modifiedAt = LocalDateTime.now();
-    }
 }
