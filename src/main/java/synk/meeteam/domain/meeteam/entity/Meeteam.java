@@ -38,6 +38,11 @@ public class Meeteam {
 
     //소개
     //상태
+    @Enumerated(EnumType.STRING)
+    private MeeteamStatus meeteamStatus;
+
+    //구인 글 존재 여부
+    private Boolean isRecruiting;
 
     //기간 시작일
     private LocalDateTime proceedingStart;
