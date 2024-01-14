@@ -21,12 +21,12 @@ public class University {
     private Long universityId;
 
     @NotNull
-    private String schoolName;
+    private String universityName;
 
     @NotNull
     private String departmentName;
 
     @NotNull
-    private String email_regex;
+    private String emailRegex;
 
 }
