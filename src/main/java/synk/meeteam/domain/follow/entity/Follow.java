@@ -33,11 +33,11 @@ public class Follow {
     @Column(name = "follow_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "from_user_id")
     private User fromUser;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "to_user_id")
     private User toUser;
 }
