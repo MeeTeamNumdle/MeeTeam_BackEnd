@@ -34,7 +34,6 @@ public class Meeteam {
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "user_id")
-    @Column(unique = true)
     private User leader;
 
     @NotNull
