@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import synk.meeteam.domain.university.entity.University;
+import synk.meeteam.domain.user.entity.enums.PlatformType;
 import synk.meeteam.domain.user.entity.enums.Role;
-import synk.meeteam.domain.user.entity.enums.SocialType;
 
 
 @Getter
@@ -28,6 +29,7 @@ import synk.meeteam.domain.user.entity.enums.SocialType;
 @Entity
 @Builder
 @AllArgsConstructor
+@Table(name = "USERS")
 public class User {
 
     @Id
@@ -53,7 +55,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "university_id")
-    private University universityId;
+    private University university;
 
     private Double gpa;
 
@@ -70,8 +72,26 @@ public class User {
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    private SocialType socialType; // KAKAO, NAVER, GOOGLE, NONE
+    private PlatformType platformType; // KAKAO, NAVER, GOOGLE, NONE
 
+    private String platformId;
+
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updateAdmissionYear(int admissionYear) {
+        this.admissionYear = admissionYear;
+    }
+
+    public void updateUniversity(University university){
+        this.university = university;
+    }
+
+    public void updateRole(Role role){
+        this.role = role;
+    }
 
     // 유저 권한 설정 메소드
     public void authorizeUser() {
