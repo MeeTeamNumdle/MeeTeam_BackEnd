@@ -34,9 +34,13 @@ public class Meeteam {
     private User leader;
 
     private Long likeCount;
+
     private String name;
 
     //소개
+    @Column(columnDefinition = "TEXT")
+    private String introduction;
+
     //상태
     @Enumerated(EnumType.STRING)
     private MeeteamStatus meeteamStatus;
