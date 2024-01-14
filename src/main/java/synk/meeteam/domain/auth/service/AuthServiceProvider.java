@@ -16,7 +16,7 @@ public class AuthServiceProvider {
 
     @PostConstruct
     void init() {
-        authServiceMap.put(PlatformType.NAR, naverAuthService);
+        authServiceMap.put(PlatformType.NAVER, naverAuthService);
     }
 
     public AuthService getAuthService(PlatformType platformType) {
