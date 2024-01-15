@@ -26,11 +26,11 @@ public class RecruitmentApplicant {
     @Column(name = "recruitment_applicant_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "recruitment_id")
     private Recruitment recruitment;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "applicant_id")
     private User applicant;
 }
