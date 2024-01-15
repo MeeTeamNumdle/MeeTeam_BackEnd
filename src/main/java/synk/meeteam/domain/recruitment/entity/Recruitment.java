@@ -17,13 +17,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import synk.meeteam.domain.base.entity.BaseEntity;
 import synk.meeteam.domain.meeteam.entity.Meeteam;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Recruitment {
+public class Recruitment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recruitment_id")

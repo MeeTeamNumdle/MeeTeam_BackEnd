@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import synk.meeteam.domain.base.entity.BaseEntity;
 import synk.meeteam.domain.field.entity.Field;
 import synk.meeteam.domain.user.entity.User;
 
@@ -26,7 +27,7 @@ import synk.meeteam.domain.user.entity.User;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Meeteam {
+public class Meeteam extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meeteam_id")

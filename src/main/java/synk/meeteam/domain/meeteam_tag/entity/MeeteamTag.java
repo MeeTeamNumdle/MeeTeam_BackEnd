@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import synk.meeteam.domain.base.entity.BaseTimeEntity;
 import synk.meeteam.domain.meeteam.entity.Meeteam;
 import synk.meeteam.domain.tag.entity.Tag;
 
@@ -20,7 +21,7 @@ import synk.meeteam.domain.tag.entity.Tag;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MeeteamTag {
+public class MeeteamTag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meeteam_tag_id")

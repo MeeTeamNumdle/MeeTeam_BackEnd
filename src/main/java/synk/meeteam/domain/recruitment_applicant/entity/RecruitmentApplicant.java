@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import synk.meeteam.domain.base.entity.BaseTimeEntity;
 import synk.meeteam.domain.recruitment.entity.Recruitment;
 import synk.meeteam.domain.user.entity.User;
 
@@ -20,7 +21,7 @@ import synk.meeteam.domain.user.entity.User;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecruitmentApplicant {
+public class RecruitmentApplicant extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recruitment_applicant_id")

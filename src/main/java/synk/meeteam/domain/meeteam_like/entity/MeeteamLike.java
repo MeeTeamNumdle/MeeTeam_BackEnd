@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import synk.meeteam.domain.base.entity.BaseTimeEntity;
 import synk.meeteam.domain.meeteam.entity.Meeteam;
 import synk.meeteam.domain.user.entity.User;
 
@@ -28,7 +29,7 @@ import synk.meeteam.domain.user.entity.User;
                 columnNames = {"user_id", "meeteam_id"}
         )
 })
-public class MeeteamLike {
+public class MeeteamLike extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meeteam_like_id")
