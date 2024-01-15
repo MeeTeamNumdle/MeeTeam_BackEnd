@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +21,15 @@ public class University {
     @Column(name = "university_id")
     private Long id;
 
+    @NotNull
+    @Column(length = 20)
     private String schoolName;
 
+    @NotNull
+    @Column(length = 20)
     private String departmentName;
 
+    @NotNull
+    @Column(length = 20)
     private String email_regex;
 }
