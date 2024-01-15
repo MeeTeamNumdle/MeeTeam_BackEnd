@@ -4,15 +4,19 @@ import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import synk.meeteam.domain.meeteam_link.entity.LinkType;
 import synk.meeteam.domain.user.entity.User;
 
 @Getter
@@ -25,12 +29,15 @@ public class UserLink {
     @Column(name = "user_link_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @NotNull
+    @Column(length = 500)
     private String url;
 
-    //TODO:MeeteamLink 처럼 Enum 으로 변경하는 것에 대해 고려 필요
-    private String type;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private LinkType type;
 }
