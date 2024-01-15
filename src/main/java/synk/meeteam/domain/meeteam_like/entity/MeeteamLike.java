@@ -1,4 +1,4 @@
-package synk.meeteam.domain.like.entity;
+package synk.meeteam.domain.meeteam_like.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -24,14 +24,14 @@ import synk.meeteam.domain.user.entity.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "like_uk",
+                name = "meeteam_like_uk",
                 columnNames = {"user_id", "meeteam_id"}
         )
 })
-public class Like {
+public class MeeteamLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column(name = "meeteam_like_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)
