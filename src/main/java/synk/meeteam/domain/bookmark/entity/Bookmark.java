@@ -34,11 +34,11 @@ public class Bookmark {
     @Column(name = "bookmark_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "meeteam_id")
     private Meeteam meeteam;
 }
