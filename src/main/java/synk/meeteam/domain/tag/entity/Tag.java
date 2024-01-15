@@ -30,7 +30,6 @@ public class Tag {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("MEETEAM")
     @Column(length = 10)
     private TagType type = TagType.MEETEAM;
 }
