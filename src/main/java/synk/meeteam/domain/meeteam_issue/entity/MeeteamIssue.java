@@ -20,7 +20,7 @@ import lombok.Setter;
 public class MeeteamIssue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notification_id")
+    @Column(name = "meeteam_issue_id")
     private Long id;
 
     @NotNull
