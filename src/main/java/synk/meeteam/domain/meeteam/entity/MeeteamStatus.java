@@ -1,5 +1,6 @@
 package synk.meeteam.domain.meeteam.entity;
 
 public enum MeeteamStatus {
-    PRODUCING, COMPLETE
+    PRODUCING, //진행중
+    COMPLETE //진행 완료
 }
