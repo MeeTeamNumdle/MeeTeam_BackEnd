@@ -26,11 +26,11 @@ public class MeeteamTag {
     @Column(name = "meeteam_tag_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "meeteam_id")
     private Meeteam meeteam;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "tag_id")
     private Tag tag;
 }
