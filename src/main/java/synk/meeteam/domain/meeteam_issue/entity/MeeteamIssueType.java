@@ -1,6 +1,7 @@
 package synk.meeteam.domain.meeteam_issue.entity;
 
 public enum MeeteamIssueType {
+    NONE,
     /*
     - 초대/ 승인
     - 댓글/좋아요
