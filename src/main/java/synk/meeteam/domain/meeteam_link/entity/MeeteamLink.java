@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,12 +28,15 @@ public class MeeteamLink {
     @Column(name = "meeteam_link_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "meeteam_id")
     private Meeteam meeteam;
 
+    @NotNull
+    @Column(length = 500)
     private String url;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 10)
     private LinkType type;
 }
