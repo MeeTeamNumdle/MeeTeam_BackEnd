@@ -51,12 +51,24 @@ public class Meeteam {
 
     //상태
     @Enumerated(EnumType.STRING)
+    @Column(length = 10)
     private MeeteamStatus meeteamStatus;
 
     //구인 글 존재 여부
     @NotNull
     @ColumnDefault("0")
     private Boolean isRecruiting = false;
+
+    //수업 여부
+    @NotNull
+    @ColumnDefault("0")
+    private Boolean isCourse = false;
+
+    //범위
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private MeeteamScope scope;
 
     //기간 시작일
     @NotNull
