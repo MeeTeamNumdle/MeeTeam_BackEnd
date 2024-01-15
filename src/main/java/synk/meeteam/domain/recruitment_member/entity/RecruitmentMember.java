@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,13 +27,14 @@ public class RecruitmentMember {
     @Column(name = "recruitment_member_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "recruitment_id")
     private Recruitment recruitment;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @NotNull
     private Long count;
 }
