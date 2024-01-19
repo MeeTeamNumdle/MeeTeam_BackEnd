@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String authorizationAccessToken = RequestUtils.getAuthorizationAccessToken((HttpServletRequest) request);
+        String authorizationAccessToken = RequestUtils.getAuthorizationAccessToken(request);
 
         try {
             if (!jwtService.validateToken(authorizationAccessToken)) {
