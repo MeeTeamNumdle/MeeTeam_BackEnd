@@ -1,36 +1,35 @@
-package synk.meeteam.domain.university.entity;
+package synk.meeteam.domain.tag.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import synk.meeteam.domain.base.entity.BaseEntity;
 
-@Entity
 @Getter
+@Setter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-public class University {
-
+public class Tag extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "university_id")
+    @Column(name = "tag_id")
     private Long id;
 
     @NotNull
-    @Column(length = 20)
-    private String schoolName;
+    @Column(length = 50)
+    private String name;
 
     @NotNull
-    @Column(length = 20)
-    private String departmentName;
-
-    @NotNull
-    @Column(length = 20)
-    private String emailRegex;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private TagType type = TagType.MEETEAM;
 }
