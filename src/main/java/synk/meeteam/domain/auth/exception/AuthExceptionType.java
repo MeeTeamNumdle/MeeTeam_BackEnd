@@ -33,7 +33,6 @@ public enum AuthExceptionType implements ExceptionType {
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "유효한 유저를 찾지 못했습니다."),
     NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "유효한 리프레시 토큰을 찾지 못했습니다."),
     NOT_FOUND_EMAIL_CODE(HttpStatus.NOT_FOUND, "유효한 이메일 코드를 찾지 못했습니다."),
-    NOT_FOUND_EMAIL_REGEX(HttpStatus.NOT_FOUND, "유효한 학교 이메일이 아닙니다."),
     NOT_FOUND_UNIVERSITY_AND_DEPARTMENT(HttpStatus.NOT_FOUND, "유효한 학교명 및 학과명을 찾지 못했습니다.");
 
 
