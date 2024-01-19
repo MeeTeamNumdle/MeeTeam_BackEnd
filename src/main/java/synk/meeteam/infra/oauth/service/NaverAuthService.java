@@ -57,7 +57,7 @@ public class NaverAuthService extends AuthService {
     }
 
     public NaverMemberVO getNaverUserInfo(String accessToken) {
-        WebClient webClient = WebClient.builder().build();
+        WebClient webClient = WebClient.create();
         try {
             return webClient.post()
                     .uri(userInfoUri)
