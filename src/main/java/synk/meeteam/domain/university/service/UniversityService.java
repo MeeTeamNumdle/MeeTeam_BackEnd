@@ -15,11 +15,7 @@ public class UniversityService {
         University foundUniversity = universityRepository.findByUniversityNameOrElseThrowException(universityName);
         String regex = extractEmailRegex(email);
 
-        if(!foundUniversity.getEmailRegex().equals(regex)){
-            return false;
-        }
-
-        return true;
+        return foundUniversity.getEmailRegex().equals(regex);
     }
 
     private String extractEmailRegex(String email){
