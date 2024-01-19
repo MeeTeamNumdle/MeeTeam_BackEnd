@@ -24,7 +24,7 @@ public class University {
 
     @NotNull
     @Column(length = 20)
-    private String schoolName;
+    private String universityName;
 
     @NotNull
     @Column(length = 20)
