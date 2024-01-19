@@ -17,7 +17,7 @@ public class TokenVO {
     @Indexed
     private String platformId;
 
-    private boolean black;
+    private boolean isBlack;
 
     private String refreshToken;
 
@@ -27,13 +27,13 @@ public class TokenVO {
     }
 
     public void updateBlack(boolean black) {
-        this.black = black;
+        this.isBlack = black;
     }
 
     @Builder
-    public TokenVO(String platformId, boolean black, String refreshToken) {
+    public TokenVO(String platformId, boolean isBlack, String refreshToken) {
         this.platformId = platformId;
-        this.black = black;
+        this.isBlack = isBlack;
         this.refreshToken = refreshToken;
     }
 }
