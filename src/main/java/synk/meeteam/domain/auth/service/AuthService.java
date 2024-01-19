@@ -26,12 +26,12 @@ public abstract class AuthService {
 
     protected User saveUser(UserAuthRequestDTO request, String email, String name, String id,
                             String phoneNumber) {
-        User newUser = createSocialMember(email, name, request.platformType(), id, phoneNumber);
+        User newUser = createSocialUser(email, name, request.platformType(), id, phoneNumber);
         return userRepository.saveAndFlush(newUser);
     }
 
-    private static User createSocialMember(String email, String name, PlatformType platformType, String id,
-                                             String phoneNumber) {
+    private static User createSocialUser(String email, String name, PlatformType platformType, String id,
+                                         String phoneNumber) {
         String password = PasswordUtil.generateRandomPassword();
 
         return User.builder()
