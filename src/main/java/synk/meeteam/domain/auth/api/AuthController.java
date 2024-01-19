@@ -19,9 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.auth.api.dto.request.UserAuthRequestDTO;
 import synk.meeteam.domain.auth.api.dto.request.UserSignUpRequestDTO;
-import synk.meeteam.domain.auth.api.dto.request.UserVerifyRequestDTO;
-import synk.meeteam.domain.auth.api.dto.response.MemberAuthResponseDTO;
-import synk.meeteam.domain.auth.api.dto.response.MemberReissueResponseDTO;
+import synk.meeteam.domain.auth.api.dto.response.UserAuthResponseDTO;
+import synk.meeteam.domain.auth.api.dto.response.UserReissueResponseDTO;
 import synk.meeteam.domain.auth.api.dto.response.UserSignUpResponseDTO;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.service.AuthServiceProvider;
@@ -53,7 +52,7 @@ public class AuthController {
     private String redirectUri;
 
     @PostMapping("/social/login")
-    public ResponseEntity<MemberAuthResponseDTO> login(
+    public ResponseEntity<UserAuthResponseDTO> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
             UserAuthRequestDTO request, HttpServletResponse response) {
@@ -62,11 +61,11 @@ public class AuthController {
                 .saveUserOrLogin(authorizationCode, request);
 
         if (vo.role() == Role.GUEST) {
-            return ResponseEntity.ok(MemberAuthResponseDTO
+            return ResponseEntity.ok(UserAuthResponseDTO
                     .of(vo.platformId(), vo.authType(), vo.name(), vo.role(), null, null));
         }
 
-        MemberAuthResponseDTO responseDTO = jwtService.issueToken(vo);
+        UserAuthResponseDTO responseDTO = jwtService.issueToken(vo);
         if (responseDTO.authType().equals(AuthType.SIGN_UP)) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(responseDTO);
@@ -88,22 +87,22 @@ public class AuthController {
         return ResponseEntity.ok(UserSignUpResponseDTO.of(requestDTO.platformId()));
     }
 
-    @GetMapping("/verify")
-    public ResponseEntity<MemberAuthResponseDTO> verify(
+    @GetMapping("/email-verify")
+    public ResponseEntity<UserAuthResponseDTO> verify(
             @RequestParam String emailCode) {
 
         User user = mailService.verify(emailCode);
         UserSignUpVO vo = UserSignUpVO.of(user, user.getPlatformType(), user.getRole(), AuthType.SIGN_UP);
-        MemberAuthResponseDTO responseDTO = jwtService.issueToken(vo);
+        UserAuthResponseDTO responseDTO = jwtService.issueToken(vo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<MemberReissueResponseDTO> reissue(HttpServletRequest request,
-                                                            HttpServletResponse response) {
-        MemberReissueResponseDTO memberReissueResponseDTO = jwtService.reissueToken(request, response);
-        return ResponseEntity.ok().body(memberReissueResponseDTO);
+    public ResponseEntity<UserReissueResponseDTO> reissue(HttpServletRequest request,
+                                                          HttpServletResponse response) {
+        UserReissueResponseDTO userReissueResponseDTO = jwtService.reissueToken(request, response);
+        return ResponseEntity.ok().body(userReissueResponseDTO);
     }
 
 
