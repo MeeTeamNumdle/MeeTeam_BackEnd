@@ -20,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import synk.meeteam.domain.auth.api.dto.response.MemberAuthResponseDTO;
-import synk.meeteam.domain.auth.api.dto.response.MemberReissueResponseDTO;
+import synk.meeteam.domain.auth.api.dto.response.UserAuthResponseDTO;
+import synk.meeteam.domain.auth.api.dto.response.UserReissueResponseDTO;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
@@ -62,19 +62,19 @@ public class JwtService {
     private final RedisTokenRepository redisTokenRepository;
 
     @Transactional
-    public MemberAuthResponseDTO issueToken(UserSignUpVO vo) {
+    public UserAuthResponseDTO issueToken(UserSignUpVO vo) {
         String accessToken = jwtTokenProvider.createAccessToken(vo.platformId(), vo.platformType(), accessTokenExpirationPeriod);
 
         if (vo.role().equals(Role.USER)) {
             String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
-            updateRefreshTokenByMemberId(vo.platformId(), refreshToken);
-            return MemberAuthResponseDTO.of(vo.platformId(), vo.authType(), vo.name(), Role.USER, accessToken, refreshToken);
+            updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
+            return UserAuthResponseDTO.of(vo.platformId(), vo.authType(), vo.name(), Role.USER, accessToken, refreshToken);
         }
 
         throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
     }
 
-    public MemberReissueResponseDTO reissueToken(HttpServletRequest request, HttpServletResponse response) {
+    public UserReissueResponseDTO reissueToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = extractRefreshToken(request);
         String accessToken = extractAccessToken(request);
 
@@ -96,9 +96,9 @@ public class JwtService {
         String newAccessToken = jwtTokenProvider.createAccessToken(platformId, platformType, accessTokenExpirationPeriod);
         String newRefreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
 
-        updateRefreshTokenByMemberId(platformId, newRefreshToken);
+        updateRefreshTokenByPlatformId(platformId, newRefreshToken);
 
-        return MemberReissueResponseDTO.of(platformId, newAccessToken, newRefreshToken);
+        return UserReissueResponseDTO.of(platformId, newAccessToken, newRefreshToken);
     }
 
 
@@ -134,7 +134,7 @@ public class JwtService {
 
 
     @Transactional
-    public void updateRefreshTokenByMemberId(String platformId, String newRefreshToken) {
+    public void updateRefreshTokenByPlatformId(String platformId, String newRefreshToken) {
         redisTokenRepository.findByPlatformId(String.valueOf(platformId))
                 .ifPresent(refreshToken -> {
                     refreshToken.updateBlack(true);
@@ -142,7 +142,7 @@ public class JwtService {
         log.info("newRefreshToken = {}", newRefreshToken);
         redisTokenRepository.save(TokenVO.builder()
                 .platformId(platformId)
-                .black(false)
+                .isBlack(false)
                 .refreshToken(newRefreshToken)
                 .build());
     }
