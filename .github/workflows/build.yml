@@ -62,3 +62,9 @@ jobs:
 
       - name: Gradle로 빌드 실행
         run: ./gradlew bootjar
+
+      - name: Discord 알림 봇
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
