@@ -9,15 +9,16 @@ name: BackEnd - CI/CD
 
 on:
   pull_request:
-    types: [ closed ]
+    branches: [ "main","develop" ]
+  push:
     branches: [ "develop" ]
 
 permissions:
   contents: read
 
 jobs:
-  deploy:
-    if: github.event.pull_request.merged == true
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -61,42 +62,6 @@ jobs:
 
       - name: Gradle로 빌드 실행
         run: ./gradlew bootjar
-
-
-      # 배포에 필요한 여러 설정 파일과 프로젝트 빌드파일을 zip 파일로 모아줍니다.
-      - name: zip file 생성
-        run: |
-          mkdir deploy
-          cp ./docker/docker-compose.blue.yml ./deploy/
-          cp ./docker/docker-compose.green.yml ./deploy/
-          cp ./appspec.yml ./deploy/
-          cp ./docker/Dockerfile ./deploy/
-          cp ./scripts/*.sh ./deploy/
-          cp ./build/libs/*.jar ./deploy/
-          zip -r -qq -j ./spring-build.zip ./deploy
-      
-
-      # AWS에 연결해줍니다.
-      - name: AWS 연결
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      # S3에 프로젝트를 업로드 합니다.
-      - name: S3에 프로젝트 업로드
-        run: |
-          aws s3 cp \
-          --region ap-northeast-2 \
-          ./spring-build.zip s3://meeteam-backend-bucket
-
-      # CodeDelploy에 배포를 요청합니다.
-      - name: Code Deploy 배포 요청
-        run: aws deploy create-deployment --application-name meeteam-app
-          --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name meeteam-app
-          --s3-location bucket=meeteam-backend-bucket,bundleType=zip,key=spring-build.zip
 
       - name: Discord 알림 봇
         uses: sarisia/actions-status-discord@v1
