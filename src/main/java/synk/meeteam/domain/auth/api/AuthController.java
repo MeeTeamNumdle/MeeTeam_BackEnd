@@ -26,6 +26,7 @@ import synk.meeteam.domain.auth.service.AuthServiceProvider;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
 import synk.meeteam.domain.university.service.UniversityService;
 import synk.meeteam.domain.user.entity.User;
+import synk.meeteam.domain.user.entity.UserVO;
 import synk.meeteam.domain.user.entity.enums.Role;
 import synk.meeteam.domain.user.service.UserService;
 import synk.meeteam.infra.mail.MailService;
@@ -52,10 +53,10 @@ public class AuthController {
     public ResponseEntity<AuthUserResponseDto> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
-            AuthUserRequestDto request) {
+            AuthUserRequestDto requestDto) {
 
-        UserSignUpVO vo = authServiceProvider.getAuthService(request.platformType())
-                .saveUserOrLogin(authorizationCode, request);
+        UserSignUpVO vo = authServiceProvider.getAuthService(requestDto.platformType())
+                .saveUserOrLogin(authorizationCode, requestDto);
 
         if (vo.role() == Role.GUEST) {
             return ResponseEntity.ok(AuthUserResponseDto
@@ -73,7 +74,7 @@ public class AuthController {
         Long universityId = universityService.getUniversityId(requestDto.universityName(), requestDto.departmentName(),
                 requestDto.email());
 
-        userService.updateUniversityInfo(requestDto, universityId);
+        authServiceProvider.getAuthService(requestDto.platformType()).updateUniversityInfo(requestDto, universityId);
         mailService.sendMail(requestDto, requestDto.platformId());
 
         return ResponseEntity.ok(SignUpUserResponseDto.of(requestDto.platformId()));
@@ -83,7 +84,10 @@ public class AuthController {
     public ResponseEntity<AuthUserResponseDto> verify(
             @RequestBody @Valid VerifyUserRequestDto requestDto) {
 
-        User user = mailService.verify(requestDto.emailCode(), requestDto.nickName());
+        UserVO userVO = mailService.verify(requestDto.emailCode());
+        User user = authServiceProvider.getAuthService(userVO.getPlatformType())
+                .createSocialUser(userVO, requestDto.nickName());
+
         UserSignUpVO vo = UserSignUpVO.of(user, user.getPlatformType(), user.getRole(), AuthType.SIGN_UP);
         AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
 
