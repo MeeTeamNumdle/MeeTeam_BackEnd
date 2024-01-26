@@ -1,9 +1,9 @@
-package synk.meeteam.domain.auth.api.dto.request;
+package synk.meeteam.domain.auth.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import synk.meeteam.domain.user.entity.enums.PlatformType;
 
-public record UserSignUpRequestDTO(
+public record SignUpUserRequestDto(
     @NotNull String platformId,
     @NotNull PlatformType platformType,
     @NotNull String email,
