@@ -12,7 +12,6 @@ public record UserSignUpVO(Long userId, String email, String name, PlatformType 
                            String platformId, String phoneNumber, AuthType authType) {
     public static UserSignUpVO of(User user, PlatformType platformType, Role role, AuthType authType) {
         return UserSignUpVO.builder()
-                .userId(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .platformType(platformType)
