@@ -11,7 +11,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Optional;
 import lombok.Getter;
@@ -20,8 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import synk.meeteam.domain.auth.api.dto.response.UserAuthResponseDTO;
-import synk.meeteam.domain.auth.api.dto.response.UserReissueResponseDTO;
+import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
@@ -62,19 +62,20 @@ public class JwtService {
     private final RedisTokenRepository redisTokenRepository;
 
     @Transactional
-    public UserAuthResponseDTO issueToken(UserSignUpVO vo) {
+    public AuthUserResponseDto issueToken(UserSignUpVO vo) {
         String accessToken = jwtTokenProvider.createAccessToken(vo.platformId(), vo.platformType(), accessTokenExpirationPeriod);
 
         if (vo.role().equals(Role.USER)) {
             String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
             updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
-            return UserAuthResponseDTO.of(vo.platformId(), vo.authType(), vo.name(), Role.USER, accessToken, refreshToken);
+            return AuthUserResponseDto.of(vo.platformId(), vo.authType(), vo.name(), Role.USER, accessToken, refreshToken);
         }
 
         throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
     }
 
-    public UserReissueResponseDTO reissueToken(HttpServletRequest request, HttpServletResponse response) {
+    @Transactional
+    public ReissueUserResponseDto reissueToken(HttpServletRequest request) {
         String refreshToken = extractRefreshToken(request);
         String accessToken = extractAccessToken(request);
 
@@ -98,7 +99,20 @@ public class JwtService {
 
         updateRefreshTokenByPlatformId(platformId, newRefreshToken);
 
-        return UserReissueResponseDTO.of(platformId, newAccessToken, newRefreshToken);
+        return ReissueUserResponseDto.of(platformId, newAccessToken, newRefreshToken);
+    }
+
+    @Transactional
+    public LogoutUserResponseDto logout(HttpServletRequest request){
+        String accessToken = extractAccessToken(request);  // 이미 필터에서 validate가 되었기 때문에 검증로직은 추가로 X
+        Claims tokenClaims = jwtTokenProvider.getTokenClaims(accessToken);
+
+        TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(
+                String.valueOf(tokenClaims.get(PLATFORM_ID_CLAIM)));
+        foundRefreshToken.updateRefreshToken(null);
+        redisTokenRepository.save(foundRefreshToken);
+
+        return LogoutUserResponseDto.of((String) tokenClaims.get(PLATFORM_ID_CLAIM));
     }
 
 
@@ -133,7 +147,7 @@ public class JwtService {
     }
 
 
-    @Transactional
+
     public void updateRefreshTokenByPlatformId(String platformId, String newRefreshToken) {
         redisTokenRepository.findByPlatformId(String.valueOf(platformId))
                 .ifPresent(refreshToken -> {
