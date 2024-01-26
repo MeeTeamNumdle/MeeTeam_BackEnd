@@ -1,6 +1,5 @@
 package synk.meeteam.domain.auth.api;
 
-import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_MAIL_REGEX;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,20 +14,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import synk.meeteam.domain.auth.api.dto.request.UserAuthRequestDTO;
-import synk.meeteam.domain.auth.api.dto.request.UserSignUpRequestDTO;
-import synk.meeteam.domain.auth.api.dto.response.UserAuthResponseDTO;
-import synk.meeteam.domain.auth.api.dto.response.UserReissueResponseDTO;
-import synk.meeteam.domain.auth.api.dto.response.UserSignUpResponseDTO;
-import synk.meeteam.domain.auth.exception.AuthException;
+import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
+import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
+import synk.meeteam.domain.auth.dto.request.VerifyUserRequestDto;
+import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.SignUpUserResponseDto;
 import synk.meeteam.domain.auth.service.AuthServiceProvider;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
 import synk.meeteam.domain.university.service.UniversityService;
 import synk.meeteam.domain.user.entity.User;
 import synk.meeteam.domain.user.entity.enums.Role;
-import synk.meeteam.domain.user.repository.UserRepository;
 import synk.meeteam.domain.user.service.UserService;
 import synk.meeteam.infra.mail.MailService;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
@@ -43,7 +41,6 @@ public class AuthController {
     private final JwtService jwtService;
     private final MailService mailService;
     private final UniversityService universityService;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     @Value("${spring.security.oauth2.client.naver.client-id}")
@@ -52,57 +49,56 @@ public class AuthController {
     private String redirectUri;
 
     @PostMapping("/social/login")
-    public ResponseEntity<UserAuthResponseDTO> login(
+    public ResponseEntity<AuthUserResponseDto> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
-            UserAuthRequestDTO request, HttpServletResponse response) {
+            AuthUserRequestDto request) {
 
         UserSignUpVO vo = authServiceProvider.getAuthService(request.platformType())
                 .saveUserOrLogin(authorizationCode, request);
 
         if (vo.role() == Role.GUEST) {
-            return ResponseEntity.ok(UserAuthResponseDTO
+            return ResponseEntity.ok(AuthUserResponseDto
                     .of(vo.platformId(), vo.authType(), vo.name(), vo.role(), null, null));
         }
 
-        UserAuthResponseDTO responseDTO = jwtService.issueToken(vo);
-        if (responseDTO.authType().equals(AuthType.SIGN_UP)) {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(responseDTO);
-        }
+        AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/social/sign-up")
-    public ResponseEntity<UserSignUpResponseDTO> signUp(
-            @RequestBody @Valid UserSignUpRequestDTO requestDTO
+    public ResponseEntity<SignUpUserResponseDto> signUp(
+            @RequestBody @Valid SignUpUserRequestDto requestDto
     ) {
-        if (!universityService.isValidRegex(requestDTO.universityName(), requestDTO.email())){
-            throw new AuthException(INVALID_MAIL_REGEX);
-        }
+        Long universityId = universityService.getUniversityId(requestDto.universityName(), requestDto.departmentName(),
+                requestDto.email());
 
-        userService.updateUniversityInfo(requestDTO);
-        mailService.sendMail(requestDTO);
+        userService.updateUniversityInfo(requestDto, universityId);
+        mailService.sendMail(requestDto, requestDto.platformId());
 
-        return ResponseEntity.ok(UserSignUpResponseDTO.of(requestDTO.platformId()));
+        return ResponseEntity.ok(SignUpUserResponseDto.of(requestDto.platformId()));
     }
 
-    @GetMapping("/email-verify")
-    public ResponseEntity<UserAuthResponseDTO> verify(
-            @RequestParam String emailCode) {
+    @PostMapping("/email-verify")
+    public ResponseEntity<AuthUserResponseDto> verify(
+            @RequestBody @Valid VerifyUserRequestDto requestDto) {
 
-        User user = mailService.verify(emailCode);
+        User user = mailService.verify(requestDto.emailCode(), requestDto.nickName());
         UserSignUpVO vo = UserSignUpVO.of(user, user.getPlatformType(), user.getRole(), AuthType.SIGN_UP);
-        UserAuthResponseDTO responseDTO = jwtService.issueToken(vo);
+        AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<UserReissueResponseDTO> reissue(HttpServletRequest request,
-                                                          HttpServletResponse response) {
-        UserReissueResponseDTO userReissueResponseDTO = jwtService.reissueToken(request, response);
-        return ResponseEntity.ok().body(userReissueResponseDTO);
+    public ResponseEntity<ReissueUserResponseDto> reissue(HttpServletRequest request) {
+        ReissueUserResponseDto reissueUserResponseDto = jwtService.reissueToken(request);
+        return ResponseEntity.ok().body(reissueUserResponseDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<LogoutUserResponseDto> logout(HttpServletRequest request) {
+        return ResponseEntity.ok(jwtService.logout(request));
     }
 
 
