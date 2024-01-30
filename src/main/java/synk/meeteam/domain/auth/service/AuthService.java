@@ -11,7 +11,7 @@ import synk.meeteam.domain.university.repository.UniversityRepository;
 import synk.meeteam.domain.user.entity.User;
 import synk.meeteam.domain.user.entity.UserVO;
 import synk.meeteam.domain.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.entity.enums.Role;
+import synk.meeteam.domain.user.entity.enums.Authority;
 import synk.meeteam.domain.user.repository.UserRepository;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
 
@@ -41,7 +41,7 @@ public abstract class AuthService {
                 .phoneNumber(phoneNumber)
                 .platformType(request.platformType())
                 .platformId(id)
-                .role(Role.GUEST)
+                .authority(Authority.GUEST)
                 .build();
     }
 
