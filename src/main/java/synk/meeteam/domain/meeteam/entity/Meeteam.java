@@ -15,16 +15,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.base.entity.BaseEntity;
 import synk.meeteam.domain.field.entity.Field;
 import synk.meeteam.domain.user.entity.User;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Meeteam extends BaseEntity {
@@ -69,7 +68,17 @@ public class Meeteam extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
-    private MeeteamScope scope;
+    private MeeteamScope meeteamScope;
+
+    // 분야
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private MeeteamCategory meeteamCategory;
+
+    // 진행 방식
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private MeeteamProceed meeteamProceed;
 
     //기간 시작일
     @NotNull
@@ -87,4 +96,29 @@ public class Meeteam extends BaseEntity {
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "field_id")
     private Field field;
+
+    @NotNull
+    private String coverImageUrl;
+
+    @Builder
+    public Meeteam(final User leader, final String name, final Long likeCount, final String introduction, final MeeteamStatus meeteamStatus,
+                   final Boolean isRecruiting, final Boolean isCourse, final MeeteamScope meeteamScope, final MeeteamCategory meeteamCategory,
+                   final MeeteamProceed meeteamProceed, final LocalDateTime proceedingStart, final LocalDateTime proceedingEnd,
+                   final Boolean isPublic, final Field field, final String coverImageUrl) {
+        this.leader = leader;
+        this.name = name;
+        this.likeCount = likeCount;
+        this.introduction = introduction;
+        this.meeteamStatus = meeteamStatus;
+        this.isRecruiting = isRecruiting;
+        this.isCourse = isCourse;
+        this.meeteamScope = meeteamScope;
+        this.meeteamCategory = meeteamCategory;
+        this.meeteamProceed = meeteamProceed;
+        this.proceedingStart = proceedingStart;
+        this.proceedingEnd = proceedingEnd;
+        this.isPublic = isPublic;
+        this.field = field;
+        this.coverImageUrl = coverImageUrl;
+    }
 }
