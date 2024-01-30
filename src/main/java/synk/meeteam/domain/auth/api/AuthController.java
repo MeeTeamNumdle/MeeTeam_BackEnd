@@ -31,6 +31,7 @@ import synk.meeteam.domain.user.entity.enums.Role;
 import synk.meeteam.domain.user.service.UserService;
 import synk.meeteam.infra.mail.MailService;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
+import synk.meeteam.security.AuthUser;
 import synk.meeteam.security.jwt.service.JwtService;
 
 @RestController
@@ -67,8 +68,8 @@ public class AuthController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PostMapping("/social/sign-up")
-    public ResponseEntity<SignUpUserResponseDto> signUp(
+    @PostMapping("/social/email-verify")
+    public ResponseEntity<SignUpUserResponseDto> createTempUserAndSendEmail(
             @RequestBody @Valid SignUpUserRequestDto requestDto
     ) {
         Long universityId = universityService.getUniversityId(requestDto.universityName(), requestDto.departmentName(),
@@ -80,8 +81,8 @@ public class AuthController {
         return ResponseEntity.ok(SignUpUserResponseDto.of(requestDto.platformId()));
     }
 
-    @PostMapping("/email-verify")
-    public ResponseEntity<AuthUserResponseDto> verify(
+    @PostMapping("/sign-up")
+    public ResponseEntity<AuthUserResponseDto> signUp(
             @RequestBody @Valid VerifyUserRequestDto requestDto) {
 
         UserVO userVO = mailService.verify(requestDto.emailCode());
@@ -101,8 +102,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutUserResponseDto> logout(HttpServletRequest request) {
-        return ResponseEntity.ok(jwtService.logout(request));
+    public ResponseEntity<LogoutUserResponseDto> logout(@AuthUser final User user) {
+        return ResponseEntity.ok(jwtService.logout(user));
     }
 
 

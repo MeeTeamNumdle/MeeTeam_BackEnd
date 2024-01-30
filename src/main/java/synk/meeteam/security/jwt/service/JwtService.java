@@ -25,6 +25,7 @@ import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
+import synk.meeteam.domain.user.entity.User;
 import synk.meeteam.domain.user.entity.enums.PlatformType;
 import synk.meeteam.domain.user.entity.enums.Role;
 import synk.meeteam.domain.user.repository.UserRepository;
@@ -103,16 +104,12 @@ public class JwtService {
     }
 
     @Transactional
-    public LogoutUserResponseDto logout(HttpServletRequest request){
-        String accessToken = extractAccessToken(request);  // 이미 필터에서 validate가 되었기 때문에 검증로직은 추가로 X
-        Claims tokenClaims = jwtTokenProvider.getTokenClaims(accessToken);
-
-        TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(
-                String.valueOf(tokenClaims.get(PLATFORM_ID_CLAIM)));
+    public LogoutUserResponseDto logout(User user){
+        TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(user.getPlatformId());
         foundRefreshToken.updateRefreshToken(null);
         redisTokenRepository.save(foundRefreshToken);
 
-        return LogoutUserResponseDto.of((String) tokenClaims.get(PLATFORM_ID_CLAIM));
+        return LogoutUserResponseDto.of(user.getPlatformId());
     }
 
 
