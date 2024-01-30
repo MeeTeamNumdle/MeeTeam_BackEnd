@@ -78,7 +78,7 @@ public abstract class AuthService {
                 .phoneNumber(userVO.getPhoneNumber())
                 .admissionYear(userVO.getAdmissionYear())
                 .university(foundUniversity)
-                .role(Role.USER)
+                .authority(Authority.USER)
                 .platformType(userVO.getPlatformType())
                 .platformId(userVO.getPlatformId())
                 .build();

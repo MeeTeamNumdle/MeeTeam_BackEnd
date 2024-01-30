@@ -118,7 +118,7 @@ public class User extends BaseTimeEntity {
     }
 
     @Builder
-    public User(String email, String name, String nickname, String password, String phoneNumber,
+    public User(String email, University university, String name, String nickname, String password, String phoneNumber,
                 Integer admissionYear, Authority authority, PlatformType platformType, String platformId) {
         this.email = email;
         this.university = university;

@@ -11,7 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,10 +43,10 @@ public class Recruitment extends BaseEntity {
     private String content;
 
     @NotNull
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     @Builder
-    public Recruitment(final Meeteam meeteam, final String title, final String content, final LocalDateTime deadline) {
+    public Recruitment(final Meeteam meeteam, final String title, final String content, final LocalDate deadline) {
         this.meeteam = meeteam;
         this.title = title;
         this.content = content;

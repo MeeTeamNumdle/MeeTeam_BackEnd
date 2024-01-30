@@ -25,7 +25,6 @@ public class RecruitmentController implements RecruitmentApi {
     public ResponseEntity<CreateRecruitmentResponseDto> createRecruitment(
             @RequestBody @Valid final CreateRecruitmentRequestDto requestDto, @AuthUser User user
     ) {
-
         return ResponseEntity.status(HttpStatus.CREATED).body(recruitmentFacade.createRecruitment(requestDto, user));
     }
 }
