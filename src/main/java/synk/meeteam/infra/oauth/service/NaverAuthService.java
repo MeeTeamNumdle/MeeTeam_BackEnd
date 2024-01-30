@@ -51,7 +51,7 @@ public class NaverAuthService extends AuthService {
         }
 
         // redis 사용, 무조건 새로 회원가입하는 경우
-        User savedUser = saveUser(request, naverMemberInfo.getResponse().getEmail(),
+        User savedUser = saveTempUser(request, naverMemberInfo.getResponse().getEmail(),
                 naverMemberInfo.getResponse().getName(), naverMemberInfo.getResponse().getId(),
                 naverMemberInfo.getResponse().getMobile());
 
