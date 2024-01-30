@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,4 +42,10 @@ public class RecruitmentMemberSpec {
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "spec_id")
     private Spec spec;
+
+    @Builder
+    public RecruitmentMemberSpec(RecruitmentMember recruitmentMember, Spec spec) {
+        this.recruitmentMember = recruitmentMember;
+        this.spec = spec;
+    }
 }
