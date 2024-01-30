@@ -45,14 +45,14 @@ public class RecruitmentFacade {
                 CreateCourseTagRequestDto.of(requestDto.courseRequestDto().isCourse(),
                         requestDto.courseRequestDto().courseTagName()));
 
-        // 1. 밋팀 생성 - 범위, 분야, 유형, 진행방식, 기간, 공개여부, 수업여부, 태그, 커버이미지
+        // 1. 밋팀 생성 - field
         String tempTitle = userService.getUserName(user) + TEMP_TITLE;
 
         Meeteam createdMeeteam = meeteamService.createMeeteam(
                 CreateMeeteamRequestDto.of(user.getId(), tempTitle, null, true,
                         requestDto.courseRequestDto().isCourse(), requestDto.meeteamScope(), requestDto.meeteamCategory(),
                         requestDto.meeteamProceed(), requestDto.proceedingStart(), requestDto.proceedingEnd(),
-                        requestDto.isPublic(), requestDto.field(), requestDto.coverImageUrl(),
+                        requestDto.isPublic(), null, requestDto.coverImageUrl(),
                         meeteamTags), user);
 
 
