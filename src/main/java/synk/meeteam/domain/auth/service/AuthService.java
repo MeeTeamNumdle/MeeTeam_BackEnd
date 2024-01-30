@@ -30,7 +30,7 @@ public abstract class AuthService {
                 .orElse(null);
     }
 
-    protected User saveUser(AuthUserRequestDto request, String email, String name, String id,
+    protected User saveTempUser(AuthUserRequestDto request, String email, String name, String id,
                             String phoneNumber) {
         UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber);
         redisUserRepository.save(tempSocialUser);
