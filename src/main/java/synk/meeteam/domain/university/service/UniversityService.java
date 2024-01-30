@@ -1,7 +1,10 @@
 package synk.meeteam.domain.university.service;
 
+import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_MAIL_REGEX;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.university.entity.University;
 import synk.meeteam.domain.university.repository.UniversityRepository;
 
@@ -11,14 +14,20 @@ public class UniversityService {
 
     private final UniversityRepository universityRepository;
 
-    public boolean isValidRegex(String universityName, String email){
-        University foundUniversity = universityRepository.findByUniversityNameOrElseThrowException(universityName);
+    public Long getUniversityId(String universityName, String departmentName, String email) {
+        University foundUniversity = universityRepository.findByUniversityNameAndDepartmentNameOrElseThrowException(
+                universityName, departmentName);
+
         String regex = extractEmailRegex(email);
 
-        return foundUniversity.getEmailRegex().equals(regex);
+        if (!foundUniversity.getEmailRegex().equals(regex)) {
+            throw new AuthException(INVALID_MAIL_REGEX);
+        }
+
+        return foundUniversity.getId();
     }
 
-    private String extractEmailRegex(String email){
+    private String extractEmailRegex(String email) {
         String[] split = email.split("@");
         return split[1];
     }
