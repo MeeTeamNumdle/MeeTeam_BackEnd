@@ -10,3 +10,5 @@ services:
       - "8081:8080"
     # 컨테이너의 이름
     container_name: spring-blue
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
