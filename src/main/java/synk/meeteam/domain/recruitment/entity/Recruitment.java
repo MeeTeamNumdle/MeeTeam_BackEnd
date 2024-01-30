@@ -13,10 +13,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.base.entity.BaseEntity;
 import synk.meeteam.domain.meeteam.entity.Meeteam;
 
@@ -43,9 +43,13 @@ public class Recruitment extends BaseEntity {
     private String content;
 
     @NotNull
-    @ColumnDefault("0")
-    private Boolean isOnline = false;
-
-    @NotNull
     private LocalDateTime deadline;
+
+    @Builder
+    public Recruitment(final Meeteam meeteam, final String title, final String content, final LocalDateTime deadline) {
+        this.meeteam = meeteam;
+        this.title = title;
+        this.content = content;
+        this.deadline = deadline;
+    }
 }
