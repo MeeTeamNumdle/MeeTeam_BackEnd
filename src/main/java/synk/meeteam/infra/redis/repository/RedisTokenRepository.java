@@ -11,10 +11,10 @@ import synk.meeteam.security.jwt.service.vo.TokenVO;
 
 @Repository
 public interface RedisTokenRepository extends CrudRepository<TokenVO, String> {
-    Optional<TokenVO> findByPlatformId(String memberId);
+    Optional<TokenVO> findByPlatformId(String platformId);
 
-    default TokenVO findByPlatformIdOrElseThrowException(String memberId) {
-        return findByPlatformId(memberId)
+    default TokenVO findByPlatformIdOrElseThrowException(String platformId) {
+        return findByPlatformId(platformId)
                 .filter(tokenVO -> !tokenVO.isBlack())
                 .orElseThrow(
                         () -> new AuthException(NOT_FOUND_REFRESH_TOKEN));

@@ -1,7 +1,8 @@
 package synk.meeteam.domain.university.repository;
 
-import static synk.meeteam.domain.auth.exception.AuthExceptionType.NOT_FOUND_UNIVERSITY_AND_DEPARTMENT;
 import static synk.meeteam.domain.university.exception.UniversityExceptionType.NOT_FOUND_EMAIL_REGEX;
+import static synk.meeteam.domain.university.exception.UniversityExceptionType.NOT_FOUND_UNIVERSITY_AND_DEPARTMENT;
+import static synk.meeteam.domain.university.exception.UniversityExceptionType.NOT_FOUND_UNIVERSITY_ID;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,5 +24,11 @@ public interface UniversityRepository extends JpaRepository<University, Long> {
                                                                                  String departmentName) {
         return findByUniversityNameAndDepartmentName(universityName, departmentName).orElseThrow(
                 () -> new AuthException(NOT_FOUND_UNIVERSITY_AND_DEPARTMENT));
+    }
+
+    Optional<University> findById(Long universityId);
+
+    default University findByIdOrElseThrowException(Long universityId) {
+        return findById(universityId).orElseThrow(() -> new UniversityException(NOT_FOUND_UNIVERSITY_ID));
     }
 }

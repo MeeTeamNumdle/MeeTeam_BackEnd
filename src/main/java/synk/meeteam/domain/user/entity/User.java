@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -29,6 +30,7 @@ import synk.meeteam.domain.user.entity.enums.Role;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "USERS")
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +55,7 @@ public class User extends BaseTimeEntity {
     @Column(length = 100)
     private String password;
 
-    @Column(length = 11)
+    @Column(length = 15)
     private String phoneNumber;
 
     //한줄 소개
@@ -74,12 +76,6 @@ public class User extends BaseTimeEntity {
 
     //평가 점수
     private String evaluationScore;
-
-    //계정 타입
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(length = 15)
-    private UserType type;
 
     //학사 정보
     @ManyToOne(fetch = LAZY, optional = false)
@@ -123,14 +119,14 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String email, String name, String nickname, String password, String phoneNumber,
-                Integer admissionYear, UserType type, Role role, PlatformType platformType, String platformId) {
+                Integer admissionYear, Role role, PlatformType platformType, String platformId, University university) {
         this.email = email;
+        this.university = university;
         this.name = name;
         this.nickname = nickname;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.admissionYear = admissionYear;
-        this.type = type;
         this.role = role;
         this.platformType = platformType;
         this.platformId = platformId;
