@@ -2,8 +2,6 @@ package synk.meeteam.domain.auth.api;
 
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +31,7 @@ public interface AuthApi {
                     @ApiResponse(responseCode = "400", description = "유효하지 않은 플랫폼 인가코드입니다, 입력값이 올바르지 않습니다, 올바르지 않은 플랫폼 유형입니다")
             }
     )
-    @Operation(summary = "소셜 로그인")
+    @Operation(summary = "소셜 로그인(1)")
     ResponseEntity<AuthUserResponseDto> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
@@ -45,7 +43,7 @@ public interface AuthApi {
                     @ApiResponse(responseCode = "200", description = "임시 유저 생성 및 이메일 전송에 성공하였습니다."),
             }
     )
-    @Operation(summary = "임시 유저 생성 및 이메일 전송")
+    @Operation(summary = "임시 유저 생성 및 이메일 전송(2)")
     ResponseEntity<SignUpUserResponseDto> createTempUserAndSendEmail(
             @RequestBody @Valid SignUpUserRequestDto requestDto
     );
@@ -55,7 +53,7 @@ public interface AuthApi {
                     @ApiResponse(responseCode = "200", description = "이메일 인증 및 회원가입에 성공하였습니다."),
             }
     )
-    @Operation(summary = "이메일 인증 및 회원가입")
+    @Operation(summary = "이메일 인증 및 회원가입(3)")
     ResponseEntity<AuthUserResponseDto> signUp(
             @RequestBody @Valid VerifyUserRequestDto requestDto);
 
