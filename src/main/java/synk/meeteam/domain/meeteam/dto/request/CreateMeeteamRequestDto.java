@@ -1,7 +1,7 @@
 package synk.meeteam.domain.meeteam.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 import synk.meeteam.domain.field.entity.Field;
 import synk.meeteam.domain.meeteam.entity.MeeteamCategory;
@@ -10,27 +10,27 @@ import synk.meeteam.domain.meeteam.entity.MeeteamScope;
 import synk.meeteam.domain.tag.entity.Tag;
 
 public record CreateMeeteamRequestDto(
-        @NotBlank Long leaderId,
-        @NotBlank String name,
+        @NotNull Long leaderId,
+        @NotNull String name,
         String introduction,
-        @NotBlank Boolean isRecruiting,
-        @NotBlank Boolean isCourse,
-        @NotBlank MeeteamScope meeteamScope,
-        @NotBlank MeeteamCategory meeteamCategory,
-        @NotBlank MeeteamProceed meeteamProceed,
-        @NotBlank LocalDateTime proceedingStart,
-        @NotBlank LocalDateTime proceedingEnd,
-        @NotBlank Boolean isPublic,
-        @NotBlank Field field,
-        @NotBlank String coverImgUrl,
-        @NotBlank List<Tag> meeteamTags
+        @NotNull Boolean isRecruiting,
+        @NotNull Boolean isCourse,
+        @NotNull MeeteamScope meeteamScope,
+        @NotNull MeeteamCategory meeteamCategory,
+        @NotNull MeeteamProceed meeteamProceed,
+        @NotNull LocalDate proceedingStart,
+        @NotNull LocalDate proceedingEnd,
+        @NotNull Boolean isPublic,
+        Field field,
+        @NotNull String coverImgUrl,
+        @NotNull List<Tag> meeteamTags
 ) {
     public static CreateMeeteamRequestDto of(final Long leaderId, final String name, final String introduction,
                                              final Boolean isRecruiting,
                                              final Boolean isCourse, final MeeteamScope meeteamScope,
                                              final MeeteamCategory meeteamCategory,
-                                             final MeeteamProceed meeteamProceed, final LocalDateTime proceedingStart,
-                                             final LocalDateTime proceedingEnd, final Boolean isPublic,
+                                             final MeeteamProceed meeteamProceed, final LocalDate proceedingStart,
+                                             final LocalDate proceedingEnd, final Boolean isPublic,
                                              final Field field, final String coverImgUrl,
                                              final List<Tag> meeteamTags) {
 

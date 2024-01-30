@@ -1,14 +1,14 @@
 package synk.meeteam.domain.recruitment.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import synk.meeteam.domain.role.entity.Role;
 import synk.meeteam.domain.spec.entity.Spec;
 
 public record CreateRecruitmentRoleAndSpecDto<T, E>(
-        @NotBlank T role,
-        @NotBlank int count,
-        @NotBlank List<E> specNames
+        @NotNull T role,
+        int count,
+        @NotNull List<E> specNames
 ) {
     public static CreateRecruitmentRoleAndSpecDto ofRole(Role role, int count, List<String> specNames){
         return new CreateRecruitmentRoleAndSpecDto(role, count, specNames);
