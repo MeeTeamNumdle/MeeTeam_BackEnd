@@ -1,6 +1,13 @@
 package synk.meeteam.infra.mail;
 
 import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_MAIL_SERVICE;
+import static synk.meeteam.infra.mail.MailText.CHAR_SET;
+import static synk.meeteam.infra.mail.MailText.MAIL_CONTENT_POSTFIX;
+import static synk.meeteam.infra.mail.MailText.MAIL_CONTENT_PREFIX;
+import static synk.meeteam.infra.mail.MailText.MAIL_TITLE;
+import static synk.meeteam.infra.mail.MailText.SENDER;
+import static synk.meeteam.infra.mail.MailText.SENDER_ADDRESS;
+import static synk.meeteam.infra.mail.MailText.SUB_TYPE;
 
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -35,23 +42,22 @@ public class MailService {
 
         try {
             message.addRecipients(RecipientType.TO, receiverMail);// 보내는 대상
-            message.setSubject("Meeteam 회원가입 이메일 인증");// 제목
+            message.setSubject(MAIL_TITLE);// 제목
 
-            String body = "<div>"
-                    + "<h1> 안녕하세요. Meeteam 입니다</h1>"
-                    + "<br>"
-                    + "<p>아래 링크를 클릭하면 이메일 인증이 완료됩니다.<p>"
-                    + "<a href='http://localhost:8080/auth/verify?emailCode=" + newEmailCode + "'>인증 링크</a>"
-                    + "</div>";
+            String body = createMailContent(newEmailCode);
 
-            message.setText(body, "utf-8", "html");// 내용, charset 타입, subtype
+            message.setText(body, CHAR_SET, SUB_TYPE);// 내용, charset 타입, subtype
             // 보내는 사람의 이메일 주소, 보내는 사람 이름
-            message.setFrom(new InternetAddress("thdalsrb79@naver.com", "Meeteam"));// 보내는 사람
+            message.setFrom(new InternetAddress(SENDER_ADDRESS, SENDER));// 보내는 사람
             mailSender.send(message); // 메일 전송
         } catch (Exception e) {
             log.info("{}", e);
             throw new AuthException(INVALID_MAIL_SERVICE);
         }
+    }
+
+    private static String createMailContent(String emailCode){
+        return MAIL_CONTENT_PREFIX + emailCode + MAIL_CONTENT_POSTFIX;
     }
 
     public UserVO verify(String emailCode) {
