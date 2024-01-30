@@ -38,7 +38,7 @@ import synk.meeteam.security.jwt.service.JwtService;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Slf4j
-public class AuthController {
+public class AuthController implements AuthApi {
     private final AuthServiceProvider authServiceProvider;
     private final JwtService jwtService;
     private final MailService mailService;
@@ -50,6 +50,7 @@ public class AuthController {
     @Value("${spring.security.oauth2.client.naver.redirect-uri}")
     private String redirectUri;
 
+    @Override
     @PostMapping("/social/login")
     public ResponseEntity<AuthUserResponseDto> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
@@ -68,6 +69,7 @@ public class AuthController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @Override
     @PostMapping("/social/email-verify")
     public ResponseEntity<SignUpUserResponseDto> createTempUserAndSendEmail(
             @RequestBody @Valid SignUpUserRequestDto requestDto
@@ -81,6 +83,7 @@ public class AuthController {
         return ResponseEntity.ok(SignUpUserResponseDto.of(requestDto.platformId()));
     }
 
+    @Override
     @PostMapping("/sign-up")
     public ResponseEntity<AuthUserResponseDto> signUp(
             @RequestBody @Valid VerifyUserRequestDto requestDto) {
@@ -95,17 +98,18 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
+    @Override
     @PostMapping("/reissue")
     public ResponseEntity<ReissueUserResponseDto> reissue(HttpServletRequest request) {
         ReissueUserResponseDto reissueUserResponseDto = jwtService.reissueToken(request);
         return ResponseEntity.ok().body(reissueUserResponseDto);
     }
 
+    @Override
     @PostMapping("/logout")
     public ResponseEntity<LogoutUserResponseDto> logout(@AuthUser final User user) {
         return ResponseEntity.ok(jwtService.logout(user));
     }
-
 
     @GetMapping("/authTest")
     public String authTest(HttpServletRequest request, HttpServletResponse response) {
