@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import synk.meeteam.domain.base.entity.BaseTimeEntity;
 import synk.meeteam.domain.university.entity.University;
+import synk.meeteam.domain.user.entity.enums.Authority;
 import synk.meeteam.domain.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.entity.enums.Role;
 
 
 
@@ -83,7 +83,7 @@ public class User extends BaseTimeEntity {
     private University university;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Authority authority;
 
     @Enumerated(EnumType.STRING)
     private PlatformType platformType; // KAKAO, NAVER, GOOGLE, NONE
@@ -103,13 +103,13 @@ public class User extends BaseTimeEntity {
         this.university = university;
     }
 
-    public void updateRole(Role role){
-        this.role = role;
+    public void updateRole(Authority authority){
+        this.authority = authority;
     }
 
     // 유저 권한 설정 메소드
     public void authorizeUser() {
-        this.role = Role.USER;
+        this.authority = Authority.USER;
     }
 
     // 비밀번호 암호화 메소드
@@ -119,7 +119,7 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String email, String name, String nickname, String password, String phoneNumber,
-                Integer admissionYear, Role role, PlatformType platformType, String platformId, University university) {
+                Integer admissionYear, Authority authority, PlatformType platformType, String platformId) {
         this.email = email;
         this.university = university;
         this.name = name;
@@ -127,7 +127,7 @@ public class User extends BaseTimeEntity {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.admissionYear = admissionYear;
-        this.role = role;
+        this.authority = authority;
         this.platformType = platformType;
         this.platformId = platformId;
     }
