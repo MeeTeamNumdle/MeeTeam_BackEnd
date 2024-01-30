@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.meeteam.dto.request.CreateMeeteamRequestDto;
 import synk.meeteam.domain.meeteam.entity.Meeteam;
+import synk.meeteam.domain.meeteam.entity.MeeteamStatus;
 import synk.meeteam.domain.meeteam.repository.MeeteamRepository;
 import synk.meeteam.domain.meeteam_tag.entity.MeeteamTag;
 import synk.meeteam.domain.meeteam_tag.repository.MeeteamTagRepository;
@@ -24,7 +25,9 @@ public class MeeteamService {
         Meeteam newMeeteam = Meeteam.builder()
                 .leader(user)
                 .name(requestDto.name())
+                .likeCount(0L)
                 .introduction(requestDto.introduction())
+                .meeteamStatus(MeeteamStatus.PRODUCING)
                 .isRecruiting(requestDto.isRecruiting())
                 .isCourse(requestDto.isCourse())
                 .meeteamScope(requestDto.meeteamScope())
