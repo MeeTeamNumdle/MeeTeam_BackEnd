@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,4 +35,10 @@ public class MeeteamTag extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @Builder
+    public MeeteamTag(Meeteam meeteam, Tag tag) {
+        this.meeteam = meeteam;
+        this.tag = tag;
+    }
 }
