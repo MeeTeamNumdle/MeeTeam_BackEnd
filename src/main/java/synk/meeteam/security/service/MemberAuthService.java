@@ -19,6 +19,6 @@ public class MemberAuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String platformId) throws UsernameNotFoundException {
         User user = userRepository.findByPlatformIdOrElseThrowException(platformId);
 
-        return new CustomAuthUser(user, user.getRole());
+        return new CustomAuthUser(user, user.getAuthority());
     }
 }
