@@ -10,7 +10,7 @@ import synk.meeteam.domain.user.entity.enums.PlatformType;
 
 @Getter
 @NoArgsConstructor
-@RedisHash(value = "user", timeToLive = 604800016)
+@RedisHash(value = "user", timeToLive = 60480000)
 public class UserVO {
 
     @Id
