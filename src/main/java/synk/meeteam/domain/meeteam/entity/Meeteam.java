@@ -13,7 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -82,18 +82,18 @@ public class Meeteam extends BaseEntity {
 
     //기간 시작일
     @NotNull
-    private LocalDateTime proceedingStart;
+    private LocalDate proceedingStart;
 
     //기간 종료일
     @NotNull
-    private LocalDateTime proceedingEnd;
+    private LocalDate proceedingEnd;
 
     //공개 여부
     @NotNull
     @ColumnDefault("1")
     private Boolean isPublic = true;
 
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "field_id")
     private Field field;
 
@@ -103,7 +103,7 @@ public class Meeteam extends BaseEntity {
     @Builder
     public Meeteam(final User leader, final String name, final Long likeCount, final String introduction, final MeeteamStatus meeteamStatus,
                    final Boolean isRecruiting, final Boolean isCourse, final MeeteamScope meeteamScope, final MeeteamCategory meeteamCategory,
-                   final MeeteamProceed meeteamProceed, final LocalDateTime proceedingStart, final LocalDateTime proceedingEnd,
+                   final MeeteamProceed meeteamProceed, final LocalDate proceedingStart, final LocalDate proceedingEnd,
                    final Boolean isPublic, final Field field, final String coverImageUrl) {
         this.leader = leader;
         this.name = name;
