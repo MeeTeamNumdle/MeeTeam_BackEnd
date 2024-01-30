@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,4 +33,10 @@ public class Tag extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
     private TagType type = TagType.MEETEAM;
+
+    @Builder
+    public Tag(String name, TagType type) {
+        this.name = name;
+        this.type = type;
+    }
 }

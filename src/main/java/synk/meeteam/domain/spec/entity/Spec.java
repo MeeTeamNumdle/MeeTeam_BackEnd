@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,4 +25,9 @@ public class Spec {
     @NotNull
     @Column(length = 50)
     private String name;
+
+    @Builder
+    public Spec(String name) {
+        this.name = name;
+    }
 }
