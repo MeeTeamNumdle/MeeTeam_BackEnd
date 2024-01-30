@@ -2,6 +2,7 @@ package synk.meeteam.infra.mail;
 
 import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_MAIL_SERVICE;
 import static synk.meeteam.infra.mail.MailText.CHAR_SET;
+import static synk.meeteam.infra.mail.MailText.FRONT_DOMAIN;
 import static synk.meeteam.infra.mail.MailText.MAIL_CONTENT_POSTFIX;
 import static synk.meeteam.infra.mail.MailText.MAIL_CONTENT_PREFIX;
 import static synk.meeteam.infra.mail.MailText.MAIL_TITLE;
@@ -57,7 +58,7 @@ public class MailService {
     }
 
     private static String createMailContent(String emailCode){
-        return MAIL_CONTENT_PREFIX + emailCode + MAIL_CONTENT_POSTFIX;
+        return MAIL_CONTENT_PREFIX + FRONT_DOMAIN + emailCode + MAIL_CONTENT_POSTFIX;
     }
 
     public UserVO verify(String emailCode) {
