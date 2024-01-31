@@ -45,6 +45,9 @@ public class RecruitmentFacade {
                 CreateCourseTagRequestDto.of(requestDto.courseRequestDto().isCourse(),
                         requestDto.courseRequestDto().courseTagName()));
 
+        // 커버 이미지 url 필요
+        String tempCoverImg = "https://meeteam-backend-bucket.s3.ap-northeast-2.amazonaws.com/TmpCoverImg.png";
+
         // 1. 밋팀 생성 - field
         String tempTitle = userService.getUserName(user) + TEMP_TITLE;
 
@@ -52,7 +55,7 @@ public class RecruitmentFacade {
                 CreateMeeteamRequestDto.of(user.getId(), tempTitle, null, true,
                         requestDto.courseRequestDto().isCourse(), requestDto.meeteamScope(), requestDto.meeteamCategory(),
                         requestDto.meeteamProceed(), requestDto.proceedingStart(), requestDto.proceedingEnd(),
-                        requestDto.isPublic(), null, requestDto.coverImageUrl(),
+                        requestDto.isPublic(), null, tempCoverImg,
                         meeteamTags), user);
 
 
