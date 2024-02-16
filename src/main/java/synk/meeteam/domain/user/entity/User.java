@@ -19,10 +19,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import synk.meeteam.domain.base.entity.BaseTimeEntity;
 import synk.meeteam.domain.university.entity.University;
 import synk.meeteam.domain.user.entity.enums.PlatformType;
 import synk.meeteam.domain.user.entity.enums.Role;
+import synk.meeteam.global.entity.BaseTimeEntity;
 
 
 

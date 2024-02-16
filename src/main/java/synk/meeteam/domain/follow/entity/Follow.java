@@ -15,8 +15,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import synk.meeteam.domain.base.entity.BaseTimeEntity;
 import synk.meeteam.domain.user.entity.User;
+import synk.meeteam.global.entity.BaseTimeEntity;
 
 @Getter
 @Setter

@@ -17,8 +17,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import synk.meeteam.domain.base.entity.BaseEntity;
 import synk.meeteam.domain.meeteam.entity.Meeteam;
+import synk.meeteam.global.entity.BaseEntity;
 
 @Getter
 @Setter

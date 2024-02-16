@@ -1,4 +1,4 @@
-package synk.meeteam.domain.base.entity;
+package synk.meeteam.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

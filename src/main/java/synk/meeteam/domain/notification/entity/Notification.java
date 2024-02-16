@@ -12,7 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import synk.meeteam.domain.base.entity.BaseEntity;
+import synk.meeteam.global.entity.BaseEntity;
 
 @Getter
 @Setter
