@@ -1,4 +1,4 @@
-package synk.meeteam.domain.meeteam_invite.entity;
+package synk.meeteam.domain.invited_user.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -25,14 +25,14 @@ import synk.meeteam.global.entity.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "meeteam_invite_uk",
+                name = "invited_user_uk",
                 columnNames = {"meeteam_id", "user_id"}
         )
 })
-public class MeeteamInvite extends BaseEntity {
+public class InvitedUser extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meeteam_invite_id")
+    @Column(name = "invited_user_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)
