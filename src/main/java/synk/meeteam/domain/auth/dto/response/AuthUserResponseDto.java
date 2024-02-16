@@ -2,7 +2,7 @@ package synk.meeteam.domain.auth.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import synk.meeteam.domain.user.entity.enums.Role;
+import synk.meeteam.domain.user.user.entity.enums.Role;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
 
 @Schema(name = "AuthUserResponseDto", description = "소셜 로그인 응답 Dto")

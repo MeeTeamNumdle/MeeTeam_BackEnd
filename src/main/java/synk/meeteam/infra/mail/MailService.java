@@ -20,7 +20,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
 import synk.meeteam.domain.auth.exception.AuthException;
-import synk.meeteam.domain.user.entity.UserVO;
+import synk.meeteam.domain.user.user.entity.UserVO;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
 
 @Service

@@ -6,13 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
-import synk.meeteam.domain.university.entity.University;
-import synk.meeteam.domain.university.repository.UniversityRepository;
-import synk.meeteam.domain.user.entity.User;
-import synk.meeteam.domain.user.entity.UserVO;
-import synk.meeteam.domain.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.entity.enums.Role;
-import synk.meeteam.domain.user.repository.UserRepository;
+import synk.meeteam.domain.common.university.entity.University;
+import synk.meeteam.domain.common.university.repository.UniversityRepository;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.entity.UserVO;
+import synk.meeteam.domain.user.user.entity.enums.PlatformType;
+import synk.meeteam.domain.user.user.entity.enums.Role;
+import synk.meeteam.domain.user.user.repository.UserRepository;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
 
 @Service

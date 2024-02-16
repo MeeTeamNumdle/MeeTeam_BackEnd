@@ -25,10 +25,10 @@ import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
-import synk.meeteam.domain.user.entity.User;
-import synk.meeteam.domain.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.entity.enums.Role;
-import synk.meeteam.domain.user.repository.UserRepository;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.entity.enums.PlatformType;
+import synk.meeteam.domain.user.user.entity.enums.Role;
+import synk.meeteam.domain.user.user.repository.UserRepository;
 import synk.meeteam.infra.redis.repository.RedisTokenRepository;
 import synk.meeteam.security.jwt.service.vo.TokenVO;
 

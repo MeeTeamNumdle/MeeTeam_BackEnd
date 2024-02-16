@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import synk.meeteam.domain.user.entity.User;
-import synk.meeteam.domain.user.entity.enums.Role;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.entity.enums.Role;
 
 @Getter
 @RequiredArgsConstructor

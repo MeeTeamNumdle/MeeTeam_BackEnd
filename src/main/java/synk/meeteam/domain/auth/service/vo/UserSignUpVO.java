@@ -2,9 +2,9 @@ package synk.meeteam.domain.auth.service.vo;
 
 
 import lombok.Builder;
-import synk.meeteam.domain.user.entity.User;
-import synk.meeteam.domain.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.entity.enums.Role;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.entity.enums.PlatformType;
+import synk.meeteam.domain.user.user.entity.enums.Role;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
 
 @Builder

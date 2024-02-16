@@ -2,7 +2,7 @@ package synk.meeteam.domain.auth.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import synk.meeteam.domain.user.entity.enums.PlatformType;
+import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 
 @Schema(name = "SignUpUserRequestDto", description = "임시 회원 가입 및 이메일 인증 요청 Dto")
 public record SignUpUserRequestDto(
