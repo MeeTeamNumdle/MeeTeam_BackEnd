@@ -19,9 +19,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import synk.meeteam.domain.common.department.entity.Department;
+import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.university.entity.University;
+import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.user.entity.enums.Role;
 import synk.meeteam.global.entity.BaseTimeEntity;
 
 
@@ -37,25 +39,30 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
+    //이메일
     @NotNull
     @Size(max = 100)
     @Column(length = 100)
     private String email;
 
+    //이름
     @NotNull
     @Size(max = 20)
     @Column(length = 20)
     private String name;
 
+    //닉네임
     @NotNull
     @Size(max = 20)
     @Column(length = 20, unique = true)
     private String nickname;
 
-    @Column(length = 100)
+    //비밀번호
+    @Column(length = 16)
     private String password;
 
-    @Column(length = 15)
+    //전화번호
+    @Column(length = 11)
     private String phoneNumber;
 
     //한줄 소개
@@ -66,24 +73,37 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String mainIntroduction;
 
+    //학점
     private Double gpa;
 
+    //입학년도
     @NotNull
     private Integer admissionYear;
 
+    //프로필 이미지 url
     @Column(length = 300)
     private String pictureUrl;
 
     //평가 점수
-    private String evaluationScore;
+    private Double evaluationScore;
 
-    //학사 정보
+    //학교
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "university_id")
     private University university;
 
+    //학과
+    @ManyToOne(fetch = LAZY, optional = false)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    //관심있는 역할
+    @ManyToOne(fetch = LAZY, optional = false)
+    @JoinColumn(name = "interest_role_id")
+    private Role interest_role;
+
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Authority authority;
 
     @Enumerated(EnumType.STRING)
     private PlatformType platformType; // KAKAO, NAVER, GOOGLE, NONE
@@ -103,23 +123,10 @@ public class User extends BaseTimeEntity {
         this.university = university;
     }
 
-    public void updateRole(Role role){
-        this.role = role;
-    }
-
-    // 유저 권한 설정 메소드
-    public void authorizeUser() {
-        this.role = Role.USER;
-    }
-
-    // 비밀번호 암호화 메소드
-    public void passwordEncode(PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(this.password);
-    }
-
     @Builder
     public User(String email, String name, String nickname, String password, String phoneNumber,
-                Integer admissionYear, Role role, PlatformType platformType, String platformId, University university) {
+                Integer admissionYear, Authority authority, PlatformType platformType, String platformId,
+                University university) {
         this.email = email;
         this.university = university;
         this.name = name;
@@ -127,8 +134,22 @@ public class User extends BaseTimeEntity {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.admissionYear = admissionYear;
-        this.role = role;
+        this.authority = authority;
         this.platformType = platformType;
         this.platformId = platformId;
+    }
+
+    public void updateRole(Authority authority) {
+        this.authority = authority;
+    }
+
+    // 비밀번호 암호화 메소드
+    public void passwordEncode(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    // 유저 권한 설정 메소드
+    public void authorizeUser() {
+        this.authority = Authority.USER;
     }
 }

@@ -10,8 +10,8 @@ import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.common.university.repository.UniversityRepository;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.UserVO;
+import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.user.entity.enums.Role;
 import synk.meeteam.domain.user.user.repository.UserRepository;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
 
@@ -41,7 +41,7 @@ public abstract class AuthService {
                 .phoneNumber(phoneNumber)
                 .platformType(request.platformType())
                 .platformId(id)
-                .role(Role.GUEST)
+                .authority(Authority.GUEST)
                 .build();
     }
 
@@ -78,7 +78,7 @@ public abstract class AuthService {
                 .phoneNumber(userVO.getPhoneNumber())
                 .admissionYear(userVO.getAdmissionYear())
                 .university(foundUniversity)
-                .role(Role.USER)
+                .authority(Authority.USER)
                 .platformType(userVO.getPlatformType())
                 .platformId(userVO.getPlatformId())
                 .build();

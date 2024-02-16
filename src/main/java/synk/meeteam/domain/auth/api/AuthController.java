@@ -27,7 +27,7 @@ import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
 import synk.meeteam.domain.common.university.service.UniversityService;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.UserVO;
-import synk.meeteam.domain.user.user.entity.enums.Role;
+import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.infra.mail.MailService;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
@@ -60,9 +60,9 @@ public class AuthController implements AuthApi {
         UserSignUpVO vo = authServiceProvider.getAuthService(requestDto.platformType())
                 .saveUserOrLogin(authorizationCode, requestDto);
 
-        if (vo.role() == Role.GUEST) {
+        if (vo.authority() == Authority.GUEST) {
             return ResponseEntity.ok(AuthUserResponseDto
-                    .of(vo.platformId(), vo.authType(), vo.name(), vo.role(), null, null));
+                    .of(vo.platformId(), vo.authType(), vo.name(), vo.authority(), null, null));
         }
 
         AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
@@ -92,7 +92,7 @@ public class AuthController implements AuthApi {
         User user = authServiceProvider.getAuthService(userVO.getPlatformType())
                 .createSocialUser(userVO, requestDto.nickName());
 
-        UserSignUpVO vo = UserSignUpVO.of(user, user.getPlatformType(), user.getRole(), AuthType.SIGN_UP);
+        UserSignUpVO vo = UserSignUpVO.of(user, user.getPlatformType(), user.getAuthority(), AuthType.SIGN_UP);
         AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);

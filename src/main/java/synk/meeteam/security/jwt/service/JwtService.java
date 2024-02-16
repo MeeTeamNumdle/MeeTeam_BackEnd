@@ -1,7 +1,6 @@
 package synk.meeteam.security.jwt.service;
 
 
-
 import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_ACCESS_TOKEN;
 import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_REFRESH_TOKEN;
 import static synk.meeteam.domain.auth.exception.AuthExceptionType.UNAUTHORIZED_ACCESS_TOKEN;
@@ -26,8 +25,8 @@ import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.user.entity.enums.Role;
 import synk.meeteam.domain.user.user.repository.UserRepository;
 import synk.meeteam.infra.redis.repository.RedisTokenRepository;
 import synk.meeteam.security.jwt.service.vo.TokenVO;
@@ -66,10 +65,11 @@ public class JwtService {
     public AuthUserResponseDto issueToken(UserSignUpVO vo) {
         String accessToken = jwtTokenProvider.createAccessToken(vo.platformId(), vo.platformType(), accessTokenExpirationPeriod);
 
-        if (vo.role().equals(Role.USER)) {
+        if (vo.authority().equals(Authority.USER)) {
             String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
             updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
-            return AuthUserResponseDto.of(vo.platformId(), vo.authType(), vo.name(), Role.USER, accessToken, refreshToken);
+            return AuthUserResponseDto.of(vo.platformId(), vo.authType(), vo.name(), Authority.USER, accessToken,
+                    refreshToken);
         }
 
         throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);

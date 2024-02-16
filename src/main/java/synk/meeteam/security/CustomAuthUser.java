@@ -6,14 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.domain.user.user.entity.enums.Role;
+import synk.meeteam.domain.user.user.entity.enums.Authority;
 
 @Getter
 @RequiredArgsConstructor
 public class CustomAuthUser implements UserDetails {
 
     private final User user;
-    private final Role authority;
+    private final Authority authority;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
