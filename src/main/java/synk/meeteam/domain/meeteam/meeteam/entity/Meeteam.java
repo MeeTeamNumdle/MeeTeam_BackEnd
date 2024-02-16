@@ -13,7 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +22,9 @@ import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseEntity;
+import synk.meeteam.global.entity.Category;
+import synk.meeteam.global.entity.ProceedType;
+import synk.meeteam.global.entity.Scope;
 
 @Getter
 @Setter
@@ -69,15 +72,25 @@ public class Meeteam extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
-    private MeeteamScope scope;
+    private Scope scope;
 
-    //기간 시작일
+    //유형
     @NotNull
-    private LocalDateTime proceedingStart;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
-    //기간 종료일
+    //진행방식
     @NotNull
-    private LocalDateTime proceedingEnd;
+    @Enumerated(EnumType.STRING)
+    private ProceedType proceedType;
+
+    //진행기간 시작일
+    @NotNull
+    private LocalDate proceedingStart;
+
+    //진행기간 종료일
+    @NotNull
+    private LocalDate proceedingEnd;
 
     //공개 여부
     @NotNull

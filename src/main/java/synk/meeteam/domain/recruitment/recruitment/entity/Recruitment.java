@@ -1,24 +1,23 @@
 package synk.meeteam.domain.recruitment.recruitment.entity;
 
-import static jakarta.persistence.FetchType.LAZY;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
 import synk.meeteam.global.entity.BaseEntity;
+import synk.meeteam.global.entity.Category;
+import synk.meeteam.global.entity.ProceedType;
+import synk.meeteam.global.entity.Scope;
 
 @Getter
 @Setter
@@ -30,22 +29,41 @@ public class Recruitment extends BaseEntity {
     @Column(name = "recruitment_id")
     private Long id;
 
-    @OneToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "meeteam_id")
-    private Meeteam meeteam;
-
+    //제목
     @NotNull
     @Size(max = 50)
     @Column(length = 50)
     private String title;
 
+    //내용
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    //범위
     @NotNull
-    @ColumnDefault("0")
-    private Boolean isOnline = false;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private Scope scope;
 
+    //유형
     @NotNull
-    private LocalDateTime deadline;
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    //진행방식
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private ProceedType proceedType;
+
+    //진행기간 시작일
+    @NotNull
+    private LocalDate proceedingStart;
+
+    //진행기간 종료일
+    @NotNull
+    private LocalDate proceedingEnd;
+
+    //마감일
+    @NotNull
+    private LocalDate deadline;
 }
