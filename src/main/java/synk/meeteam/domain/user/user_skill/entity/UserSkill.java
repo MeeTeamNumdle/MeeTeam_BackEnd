@@ -1,4 +1,4 @@
-package synk.meeteam.domain.recruitment.recruitment_member_spec.entity;
+package synk.meeteam.domain.user.user_skill.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -15,8 +15,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import synk.meeteam.domain.common.spec.entity.Spec;
-import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
+import synk.meeteam.domain.common.skill.entity.Skill;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.entity.BaseTimeEntity;
 
 @Getter
 @Setter
@@ -24,21 +25,21 @@ import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "recruitment_role_spec_uk",
-                columnNames = {"recruitment_role_id", "spec_id"}
+                name = "user_skill_uk",
+                columnNames = {"user_id", "skill_id"}
         )
 })
-public class RecruitmentRoleSpec {
+public class UserSkill extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recruitment_role_spec_id")
+    @Column(name = "user_skill_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "recruitment_role_id")
-    private RecruitmentRole recruitmentRole;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "spec_id")
-    private Spec spec;
+    @JoinColumn(name = "skill_id")
+    private Skill skill;
 }

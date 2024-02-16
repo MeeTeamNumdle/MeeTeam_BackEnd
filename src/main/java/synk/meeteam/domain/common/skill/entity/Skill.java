@@ -1,4 +1,4 @@
-package synk.meeteam.domain.common.spec.entity;
+package synk.meeteam.domain.common.skill.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,10 +15,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Spec {
+public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "spec_id")
+    @Column(name = "skill_id")
     private Long id;
 
     @NotNull
