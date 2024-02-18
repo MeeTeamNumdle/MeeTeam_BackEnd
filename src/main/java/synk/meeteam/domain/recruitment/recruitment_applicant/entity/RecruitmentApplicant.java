@@ -41,5 +41,6 @@ public class RecruitmentApplicant extends BaseTimeEntity {
     private Role role;
 
     //전할 말
+    @Column(length = 300)
     private String comment;
 }
