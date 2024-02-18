@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
 import synk.meeteam.domain.user.user.entity.User;
@@ -32,6 +33,7 @@ import synk.meeteam.global.entity.Scope;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class RecruitmentPost extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,7 +98,7 @@ public class RecruitmentPost extends BaseTimeEntity {
     //마감여부 저장
     @NotNull
     @ColumnDefault("0")
-    private boolean isClosed;
+    private Boolean isClosed;
 
     //밋팀
     @ManyToOne(fetch = LAZY)

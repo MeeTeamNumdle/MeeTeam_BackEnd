@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseEntity;
@@ -30,6 +31,7 @@ import synk.meeteam.global.entity.Scope;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Meeteam extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,12 +63,12 @@ public class Meeteam extends BaseEntity {
     //구인 글 존재 여부
     @NotNull
     @ColumnDefault("0")
-    private Boolean isRecruiting = false;
+    private Boolean isRecruiting;
 
     //수업 여부
     @NotNull
     @ColumnDefault("0")
-    private Boolean isCourse = false;
+    private Boolean isCourse;
 
     //범위
     @NotNull
@@ -95,7 +97,7 @@ public class Meeteam extends BaseEntity {
     //공개 여부
     @NotNull
     @ColumnDefault("1")
-    private Boolean isPublic = true;
+    private Boolean isPublic;
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "field_id")
