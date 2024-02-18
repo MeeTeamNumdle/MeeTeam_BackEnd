@@ -1,4 +1,4 @@
-package synk.meeteam.domain.recruitment.recruitment_member_skill.entity;
+package synk.meeteam.domain.recruitment.recruitment_role_skill.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
