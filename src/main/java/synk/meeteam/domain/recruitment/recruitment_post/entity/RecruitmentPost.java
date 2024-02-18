@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
+import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
 import synk.meeteam.global.entity.Category;
@@ -95,5 +96,11 @@ public class RecruitmentPost extends BaseTimeEntity {
     //마감여부 저장
     @NotNull
     @ColumnDefault("0")
-    private boolean isClose = false;
+    private boolean isClosed;
+
+    //밋팀
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "meeteam_id")
+    private Meeteam meeteam;
+
 }
