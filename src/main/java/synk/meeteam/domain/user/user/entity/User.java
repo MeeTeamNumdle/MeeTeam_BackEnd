@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.role.entity.Role;
@@ -85,6 +86,8 @@ public class User extends BaseTimeEntity {
     private String pictureUrl;
 
     //평가 점수
+    @NotNull
+    @ColumnDefault("0")
     private Double evaluationScore;
 
     //학교
@@ -100,7 +103,7 @@ public class User extends BaseTimeEntity {
     //관심있는 역할
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "interest_role_id")
-    private Role interest_role;
+    private Role interestRole;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -109,6 +112,27 @@ public class User extends BaseTimeEntity {
     private PlatformType platformType; // KAKAO, NAVER, GOOGLE, NONE
 
     private String platformId;
+
+    //평가 점수
+    @NotNull
+    @ColumnDefault("0")
+    private Long scoreTime;
+
+    @NotNull
+    @ColumnDefault("0")
+    private Long scoreInfluence;
+
+    @NotNull
+    @ColumnDefault("0")
+    private Long scoreParticipation;
+
+    @NotNull
+    @ColumnDefault("0")
+    private Long scoreCommunication;
+
+    @NotNull
+    @ColumnDefault("0")
+    private Long scoreProfessionalism;
 
 
     public void updateEmail(String email) {

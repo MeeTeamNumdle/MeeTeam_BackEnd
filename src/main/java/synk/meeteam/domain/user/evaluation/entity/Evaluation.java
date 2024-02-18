@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.meeteam.member.entity.Member;
 import synk.meeteam.domain.user.user.entity.User;
@@ -54,17 +55,6 @@ public class Evaluation extends BaseTimeEntity {
     private String comment;
 
     @NotNull
-    private Long scoreTime;
-
-    @NotNull
-    private Long scoreInfluence;
-
-    @NotNull
-    private Long scoreParticipation;
-
-    @NotNull
-    private Long scoreProfessionalism;
-
-    @NotNull
-    private Boolean blind;
+    @ColumnDefault("0")
+    private Boolean isBlind;
 }
