@@ -13,7 +13,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import synk.meeteam.domain.recruitment.recruitment.entity.Recruitment;
+import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
 
@@ -29,9 +30,16 @@ public class RecruitmentApplicant extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "recruitment_id")
-    private Recruitment recruitment;
+    private RecruitmentPost recruitmentPost;
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "applicant_id")
     private User applicant;
+
+    @ManyToOne(fetch = LAZY, optional = false)
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    //전할 말
+    private String comment;
 }

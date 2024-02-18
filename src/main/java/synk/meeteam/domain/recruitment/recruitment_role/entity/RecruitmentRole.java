@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import synk.meeteam.domain.common.role.entity.Role;
-import synk.meeteam.domain.recruitment.recruitment.entity.Recruitment;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 
 @Getter
 @Setter
@@ -29,7 +29,7 @@ public class RecruitmentRole {
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "recruitment_id")
-    private Recruitment recruitment;
+    private RecruitmentPost recruitmentPost;
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "role_id")

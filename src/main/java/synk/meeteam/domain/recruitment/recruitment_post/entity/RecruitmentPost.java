@@ -1,4 +1,7 @@
-package synk.meeteam.domain.recruitment.recruitment.entity;
+package synk.meeteam.domain.recruitment.recruitment_post.entity;
+
+import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +10,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -14,7 +19,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import synk.meeteam.global.entity.BaseEntity;
+import org.hibernate.annotations.ColumnDefault;
+import synk.meeteam.domain.common.field.entity.Field;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.entity.BaseTimeEntity;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.entity.Scope;
@@ -23,11 +31,16 @@ import synk.meeteam.global.entity.Scope;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Recruitment extends BaseEntity {
+public class RecruitmentPost extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recruitment_id")
     private Long id;
+
+    //작성자
+    @ManyToOne(fetch = LAZY, optional = false)
+    @JoinColumn(name = "writer_id")
+    private User writer;
 
     //제목
     @NotNull
@@ -50,6 +63,11 @@ public class Recruitment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    //분야
+    @ManyToOne(fetch = EAGER, optional = false)
+    @JoinColumn(name = "field_id")
+    private Field field;
+
     //진행방식
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -66,4 +84,16 @@ public class Recruitment extends BaseEntity {
     //마감일
     @NotNull
     private LocalDate deadline;
+
+    //북마크 수
+    private long bookmarkCount = 0L;
+
+    //카카오톡 링크
+    @Column(length = 300)
+    private String kakaoLink;
+
+    //마감여부 저장
+    @NotNull
+    @ColumnDefault("0")
+    private boolean isClose = false;
 }

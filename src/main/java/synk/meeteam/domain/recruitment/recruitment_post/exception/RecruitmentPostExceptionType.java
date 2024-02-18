@@ -1,9 +1,9 @@
-package synk.meeteam.domain.recruitment.recruitment.exception;
+package synk.meeteam.domain.recruitment.recruitment_post.exception;
 
 import org.springframework.http.HttpStatus;
 import synk.meeteam.global.common.exception.ExceptionType;
 
-public enum RecruitmentExceptionType implements ExceptionType {
+public enum RecruitmentPostExceptionType implements ExceptionType {
     ;
 
     @Override
