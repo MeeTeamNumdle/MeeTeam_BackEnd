@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.BaseEntity;
+import synk.meeteam.global.entity.BaseTimeEntity;
 
 @Getter
 @Setter
@@ -29,7 +29,7 @@ import synk.meeteam.global.entity.BaseEntity;
                 columnNames = {"meeteam_id", "user_id"}
         )
 })
-public class InvitedUser extends BaseEntity {
+public class InvitedUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invited_user_id")
