@@ -14,17 +14,16 @@ public record SignUpUserRequestDto(
         @Schema(description = "플랫폼 타입", example = "NAVER")
         PlatformType platformType,
         @NotNull
-        @Schema(description = "학사 이메일", example = "thdalsrb123@kw.ac.kr")
-        String email,
+        @Schema(description = "학사 이메일 계정", example = "thdalsrb123")
+        String emailId,
         @NotNull
-        @Schema(description = "학교 이름", example = "광운대학교")
-        String universityName,
+        @Schema(description = "학교 id", example = "광운대학교")
+        Long universityId,
         @NotNull
-        @Schema(description = "학과 이름", example = "소프트웨어학부")
-        String departmentName,
+        @Schema(description = "학과 id", example = "소프트웨어학부")
+        Long departmentId,
         @NotNull
         @Schema(description = "입학년도", example = "2018")
         int admissionYear
-
 ) {
 }

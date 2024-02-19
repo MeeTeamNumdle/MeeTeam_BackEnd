@@ -27,6 +27,8 @@ public class UserVO {
 
     private Long universityId;
 
+    private Long departmentId;
+
     private int admissionYear;
 
     @Indexed

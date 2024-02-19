@@ -56,13 +56,12 @@ public abstract class AuthService {
                 .build();
     }
 
-    public void updateUniversityInfo(SignUpUserRequestDto requestDTO, Long universityId) {
-
+    public void updateUniversityInfo(SignUpUserRequestDto requestDTO, String email) {
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
 
-        userVO.updateUniversityId(universityId);
-        userVO.updateEmail(requestDTO.email());
+        userVO.updateUniversityId(requestDTO.universityId());
         userVO.updateAdmissionYear(requestDTO.admissionYear());
+        userVO.updateEmail(email);
 
         redisUserRepository.save(userVO);
     }

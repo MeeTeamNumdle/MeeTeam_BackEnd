@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.user.user.entity.UserVO;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
@@ -31,14 +30,13 @@ public class MailService {
     private final JavaMailSender mailSender;
     private final RedisUserRepository redisUserRepository;
 
-    public void sendMail(SignUpUserRequestDto requestDTO, String platformId) {
+    public void sendMail(String platformId, String receiverMail) {
         String newEmailCode = UUID.randomUUID().toString();
 
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(platformId);
         userVO.updateEmailCode(newEmailCode);
         redisUserRepository.save(userVO);
 
-        String receiverMail = requestDTO.email();
         MimeMessage message = mailSender.createMimeMessage();
 
         try {

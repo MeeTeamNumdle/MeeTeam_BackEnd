@@ -49,18 +49,16 @@ public class RecruitmentComment extends BaseTimeEntity {
 
     //댓글, 대댓글 구분
     @NotNull
+    @ColumnDefault("1")
     private Boolean isParent;
 
     //그룹 번호
     @NotNull
-    private Long group_number;
+    private Long groupNumber;
 
-    /*
-    순서
-    단, 댓글 내에서의 정렬
-     */
+    //그룹 내 순서
     @NotNull
-    private Long order;
+    private Long groupOrder;
 
     @NotNull
     @ColumnDefault("0")

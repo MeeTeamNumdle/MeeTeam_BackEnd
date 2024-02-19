@@ -74,11 +74,9 @@ public class AuthController implements AuthApi {
     public ResponseEntity<SignUpUserResponseDto> createTempUserAndSendEmail(
             @RequestBody @Valid SignUpUserRequestDto requestDto
     ) {
-        Long universityId = universityService.getUniversityId(requestDto.universityName(), requestDto.departmentName(),
-                requestDto.email());
-
-        authServiceProvider.getAuthService(requestDto.platformType()).updateUniversityInfo(requestDto, universityId);
-        mailService.sendMail(requestDto, requestDto.platformId());
+        String email = universityService.getEmail(requestDto.universityId(), requestDto.emailId());
+        authServiceProvider.getAuthService(requestDto.platformType()).updateUniversityInfo(requestDto, email);
+        mailService.sendMail(requestDto.platformId(), email);
 
         return ResponseEntity.ok(SignUpUserResponseDto.of(requestDto.platformId()));
     }

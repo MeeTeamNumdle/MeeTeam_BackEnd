@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.role.entity.Role;
@@ -35,6 +36,7 @@ import synk.meeteam.global.entity.BaseTimeEntity;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "USERS")
+@DynamicInsert
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -165,7 +167,7 @@ public class User extends BaseTimeEntity {
         this.platformId = platformId;
     }
 
-    public void updateRole(Authority authority) {
+    public void updateAuthority(Authority authority) {
         this.authority = authority;
     }
 
