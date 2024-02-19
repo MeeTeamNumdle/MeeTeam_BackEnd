@@ -67,7 +67,7 @@ public class User extends BaseTimeEntity {
     private String password;
 
     //전화번호
-    @Column(length = 11)
+    @Column(length = 15)
     private String phoneNumber;
 
     //한줄 소개
