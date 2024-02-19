@@ -43,8 +43,8 @@ public class Meeteam extends BaseEntity {
     private User leader;
 
     @NotNull
-    @Column(length = 50)
-    @Size(max = 50)
+    @Column(length = 40)
+    @Size(max = 40)
     private String name;
 
     @NotNull

@@ -47,8 +47,8 @@ public class RecruitmentPost extends BaseTimeEntity {
 
     //제목
     @NotNull
-    @Size(max = 50)
-    @Column(length = 50)
+    @Size(max = 40)
+    @Column(length = 40)
     private String title;
 
     //내용

@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -54,8 +55,9 @@ public class User extends BaseTimeEntity {
 
     //닉네임
     @NotNull
-    @Size(max = 20)
-    @Column(length = 20, unique = true)
+    @NotBlank
+    @Size(min = 4, max = 16)
+    @Column(length = 16, unique = true)
     private String nickname;
 
     //비밀번호
