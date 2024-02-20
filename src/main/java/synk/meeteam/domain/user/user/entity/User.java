@@ -137,8 +137,8 @@ public class User extends BaseTimeEntity {
     @ColumnDefault("0")
     private Long scoreProfessionalism;
 
-    public String encryptUserId(Long userId){
-        return Encryption.encryptLong(userId);
+    public String encryptUserId(){
+        return Encryption.encryptLong(this.id);
     }
 
     public Long decryptUserId(String encryptedUserId){
