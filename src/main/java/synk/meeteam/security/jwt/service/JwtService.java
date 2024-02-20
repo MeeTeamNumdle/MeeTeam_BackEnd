@@ -28,6 +28,7 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.domain.user.user.repository.UserRepository;
+import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.redis.repository.RedisTokenRepository;
 import synk.meeteam.security.jwt.service.vo.TokenVO;
 
@@ -68,7 +69,7 @@ public class JwtService {
         if (vo.authority().equals(Authority.USER)) {
             String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
             updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
-            return AuthUserResponseDto.of(vo.platformId(), vo.authType(), vo.name(), Authority.USER, accessToken,
+            return AuthUserResponseDto.of(Encryption.encryptLong(vo.userId()),null, vo.authType(), vo.name(), vo.pictureUrl(), Authority.USER, accessToken,
                     refreshToken);
         }
 
