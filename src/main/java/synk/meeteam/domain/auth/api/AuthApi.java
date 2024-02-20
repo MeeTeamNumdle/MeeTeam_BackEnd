@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
-import synk.meeteam.domain.auth.dto.request.VerifyUserRequestDto;
+import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
@@ -56,7 +56,7 @@ public interface AuthApi {
     )
     @Operation(summary = "이메일 인증 완료 및 회원가입")
     ResponseEntity<AuthUserResponseDto> signUp(
-            @RequestBody @Valid VerifyUserRequestDto requestDto);
+            @RequestBody @Valid SignUpUserRequestDto requestDto);
 
 
     @ApiResponses(
