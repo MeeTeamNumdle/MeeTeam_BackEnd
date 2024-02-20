@@ -28,8 +28,7 @@ import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.global.entity.BaseTimeEntity;
-
-
+import synk.meeteam.global.util.Encryption;
 
 
 @Getter
@@ -90,7 +89,7 @@ public class User extends BaseTimeEntity {
     private String pictureUrl;
 
     //평가 점수
-    @NotNull
+
     @ColumnDefault("0")
     private Double evaluationScore;
 
@@ -105,7 +104,7 @@ public class User extends BaseTimeEntity {
     private Department department;
 
     //관심있는 역할
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "interest_role_id")
     private Role interestRole;
 
@@ -118,26 +117,33 @@ public class User extends BaseTimeEntity {
     private String platformId;
 
     //평가 점수
-    @NotNull
+
     @ColumnDefault("0")
     private Long scoreTime;
 
-    @NotNull
+
     @ColumnDefault("0")
     private Long scoreInfluence;
 
-    @NotNull
+
     @ColumnDefault("0")
     private Long scoreParticipation;
 
-    @NotNull
+
     @ColumnDefault("0")
     private Long scoreCommunication;
 
-    @NotNull
+
     @ColumnDefault("0")
     private Long scoreProfessionalism;
 
+    public String encryptUserId(Long userId){
+        return Encryption.encryptLong(userId);
+    }
+
+    public Long decryptUserId(String encryptedUserId){
+        return Encryption.decryptLong(encryptedUserId);
+    }
 
     public void updateEmail(String email) {
         this.email = email;
@@ -153,11 +159,13 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String email, String name, String nickname, String password, String phoneNumber,
-                Integer admissionYear, Authority authority, PlatformType platformType, String platformId,
-                University university) {
+                Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType, String platformId,
+                University university, Department department) {
         this.email = email;
         this.university = university;
+        this.department = department;
         this.name = name;
+        this.pictureUrl = pictureUrl;
         this.nickname = nickname;
         this.password = password;
         this.phoneNumber = phoneNumber;
