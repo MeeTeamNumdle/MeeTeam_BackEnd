@@ -61,6 +61,7 @@ public abstract class AuthService {
                 .build();
     }
 
+    @Transactional
     public void updateUniversityInfo(VerifyEmailRequestDto requestDTO, String email) {
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
 
@@ -72,6 +73,7 @@ public abstract class AuthService {
         redisUserRepository.save(userVO);
     }
 
+    @Transactional
     public User createSocialUser(UserVO userVO, String nickName) {
         University foundUniversity = universityRepository.findByIdOrElseThrowException(
                 userVO.getUniversityId());
