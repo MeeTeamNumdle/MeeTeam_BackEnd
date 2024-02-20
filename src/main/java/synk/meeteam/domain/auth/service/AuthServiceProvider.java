@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import synk.meeteam.domain.user.entity.enums.PlatformType;
+import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.infra.oauth.service.NaverAuthService;
 
 @Component

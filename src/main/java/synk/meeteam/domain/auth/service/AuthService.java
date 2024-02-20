@@ -6,13 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
-import synk.meeteam.domain.university.entity.University;
-import synk.meeteam.domain.university.repository.UniversityRepository;
-import synk.meeteam.domain.user.entity.User;
-import synk.meeteam.domain.user.entity.UserVO;
-import synk.meeteam.domain.user.entity.enums.PlatformType;
-import synk.meeteam.domain.user.entity.enums.Role;
-import synk.meeteam.domain.user.repository.UserRepository;
+import synk.meeteam.domain.common.university.entity.University;
+import synk.meeteam.domain.common.university.repository.UniversityRepository;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.entity.UserVO;
+import synk.meeteam.domain.user.user.entity.enums.Authority;
+import synk.meeteam.domain.user.user.entity.enums.PlatformType;
+import synk.meeteam.domain.user.user.repository.UserRepository;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
 
 @Service
@@ -41,7 +41,7 @@ public abstract class AuthService {
                 .phoneNumber(phoneNumber)
                 .platformType(request.platformType())
                 .platformId(id)
-                .role(Role.GUEST)
+                .authority(Authority.GUEST)
                 .build();
     }
 
@@ -56,13 +56,12 @@ public abstract class AuthService {
                 .build();
     }
 
-    public void updateUniversityInfo(SignUpUserRequestDto requestDTO, Long universityId) {
-
+    public void updateUniversityInfo(SignUpUserRequestDto requestDTO, String email) {
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
 
-        userVO.updateUniversityId(universityId);
-        userVO.updateEmail(requestDTO.email());
+        userVO.updateUniversityId(requestDTO.universityId());
         userVO.updateAdmissionYear(requestDTO.admissionYear());
+        userVO.updateEmail(email);
 
         redisUserRepository.save(userVO);
     }
@@ -78,7 +77,7 @@ public abstract class AuthService {
                 .phoneNumber(userVO.getPhoneNumber())
                 .admissionYear(userVO.getAdmissionYear())
                 .university(foundUniversity)
-                .role(Role.USER)
+                .authority(Authority.USER)
                 .platformType(userVO.getPlatformType())
                 .platformId(userVO.getPlatformId())
                 .build();

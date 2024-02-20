@@ -6,7 +6,7 @@ import static synk.meeteam.infra.redis.exception.RedisExceptionType.NOT_FOUND_TE
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import synk.meeteam.domain.user.entity.UserVO;
+import synk.meeteam.domain.user.user.entity.UserVO;
 import synk.meeteam.infra.redis.exception.RedisException;
 
 @Repository
