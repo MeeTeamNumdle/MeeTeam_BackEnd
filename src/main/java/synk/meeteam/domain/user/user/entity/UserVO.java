@@ -31,25 +31,32 @@ public class UserVO {
 
     private int admissionYear;
 
+    private String pictureUrl;
+
     @Indexed
     private String emailCode;
 
     @Builder
-    public UserVO(String platformId, String email, String name, String phoneNumber, PlatformType platformType) {
+    public UserVO(String platformId, String email, String name, String phoneNumber, PlatformType platformType,
+                  String pictureUrl) {
         this.platformId = platformId;
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.platformType = platformType;
+        this.pictureUrl = pictureUrl;
     }
 
     public void updateEmail(String email) {
         this.email = email;
     }
 
-    public void updateUniversityId(Long universityId) {
-        this.universityId = universityId;
+    public void updateUniversityId(Long universityId) {this.universityId = universityId;}
+
+    public void updateDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
+
 
     public void updateAdmissionYear(int admissionYear) {
         this.admissionYear = admissionYear;
