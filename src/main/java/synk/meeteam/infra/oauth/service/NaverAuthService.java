@@ -10,10 +10,10 @@ import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.AuthService;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
-import synk.meeteam.domain.university.repository.UniversityRepository;
-import synk.meeteam.domain.user.entity.User;
-import synk.meeteam.domain.user.entity.enums.Role;
-import synk.meeteam.domain.user.repository.UserRepository;
+import synk.meeteam.domain.common.university.repository.UniversityRepository;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.entity.enums.Authority;
+import synk.meeteam.domain.user.user.repository.UserRepository;
 import synk.meeteam.infra.oauth.service.vo.NaverMemberVO;
 import synk.meeteam.infra.oauth.service.vo.NaverTokenVO;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
@@ -47,7 +47,7 @@ public class NaverAuthService extends AuthService {
         User foundUser = getUser(request.platformType(), naverMemberInfo.getResponse().getId());
 
         if (foundUser != null) {
-            return UserSignUpVO.of(foundUser, request.platformType(), Role.USER, AuthType.LOGIN);
+            return UserSignUpVO.of(foundUser, request.platformType(), Authority.USER, AuthType.LOGIN);
         }
 
         // redis 사용, 무조건 새로 회원가입하는 경우
@@ -55,7 +55,7 @@ public class NaverAuthService extends AuthService {
                 naverMemberInfo.getResponse().getName(), naverMemberInfo.getResponse().getId(),
                 naverMemberInfo.getResponse().getMobile());
 
-        return UserSignUpVO.of(savedUser, request.platformType(), Role.GUEST, AuthType.SIGN_UP);
+        return UserSignUpVO.of(savedUser, request.platformType(), Authority.GUEST, AuthType.SIGN_UP);
 
     }
 

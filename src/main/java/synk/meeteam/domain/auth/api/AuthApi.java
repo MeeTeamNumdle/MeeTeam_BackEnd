@@ -17,7 +17,7 @@ import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.SignUpUserResponseDto;
-import synk.meeteam.domain.user.entity.User;
+import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.security.AuthUser;
 
 
