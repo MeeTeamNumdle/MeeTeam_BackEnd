@@ -16,19 +16,18 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
-import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
+import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyUserRequestDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
-import synk.meeteam.domain.auth.dto.response.SignUpUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.VerifyEmailResponseDto;
 import synk.meeteam.domain.auth.service.AuthServiceProvider;
 import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
 import synk.meeteam.domain.common.university.service.UniversityService;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.UserVO;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
-import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.infra.mail.MailService;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
 import synk.meeteam.security.AuthUser;
@@ -43,7 +42,6 @@ public class AuthController implements AuthApi {
     private final JwtService jwtService;
     private final MailService mailService;
     private final UniversityService universityService;
-    private final UserService userService;
 
     @Value("${spring.security.oauth2.client.naver.client-id}")
     private String clientId;
@@ -62,7 +60,7 @@ public class AuthController implements AuthApi {
 
         if (vo.authority() == Authority.GUEST) {
             return ResponseEntity.ok(AuthUserResponseDto
-                    .of(vo.platformId(), vo.authType(), vo.name(), vo.authority(), null, null));
+                    .of(null, vo.platformId(), vo.authType(), vo.name(), vo.pictureUrl(), vo.authority(), null, null));
         }
 
         AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
@@ -70,15 +68,15 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    @PostMapping("/social/email-verify")
-    public ResponseEntity<SignUpUserResponseDto> createTempUserAndSendEmail(
-            @RequestBody @Valid SignUpUserRequestDto requestDto
+    @PostMapping("/social/email-verification")
+    public ResponseEntity<VerifyEmailResponseDto> requestEmailVerify(
+            @RequestBody @Valid VerifyEmailRequestDto requestDto
     ) {
         String email = universityService.getEmail(requestDto.universityId(), requestDto.emailId());
         authServiceProvider.getAuthService(requestDto.platformType()).updateUniversityInfo(requestDto, email);
         mailService.sendMail(requestDto.platformId(), email);
 
-        return ResponseEntity.ok(SignUpUserResponseDto.of(requestDto.platformId()));
+        return ResponseEntity.ok(VerifyEmailResponseDto.of(requestDto.platformId()));
     }
 
     @Override
@@ -117,7 +115,7 @@ public class AuthController implements AuthApi {
             response.sendRedirect(
                     redirectURL);
         } catch (Exception e) {
-            log.info("authTest = {}", e);
+            log.info("authTest", e);
         }
 
         return "SUCCESS";
