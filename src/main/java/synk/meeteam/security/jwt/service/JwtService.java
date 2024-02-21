@@ -23,7 +23,7 @@ import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
-import synk.meeteam.domain.auth.service.vo.AuthUSerVo;
+import synk.meeteam.domain.auth.service.vo.AuthUserVo;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
@@ -63,7 +63,7 @@ public class JwtService {
     private final RedisTokenRepository redisTokenRepository;
 
     @Transactional
-    public AuthUserResponseDto issueToken(AuthUSerVo vo) {
+    public AuthUserResponseDto issueToken(AuthUserVo vo) {
         String accessToken = jwtTokenProvider.createAccessToken(vo.platformId(), vo.platformType(), accessTokenExpirationPeriod);
 
         if (vo.authority().equals(Authority.USER)) {

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
-import synk.meeteam.domain.auth.service.vo.AuthUSerVo;
+import synk.meeteam.domain.auth.service.vo.AuthUserVo;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.entity.University;
@@ -26,7 +26,7 @@ public abstract class AuthService {
     private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public abstract AuthUSerVo saveUserOrLogin(String platformType, AuthUserRequestDto request);
+    public abstract AuthUserVo saveUserOrLogin(String platformType, AuthUserRequestDto request);
 
     protected User getUser(PlatformType platformType, String platformId) {
         return userRepository.findByPlatformIdAndPlatformType(platformId, platformType)

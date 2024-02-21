@@ -9,7 +9,7 @@ import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.AuthService;
-import synk.meeteam.domain.auth.service.vo.AuthUSerVo;
+import synk.meeteam.domain.auth.service.vo.AuthUserVo;
 import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.repository.UniversityRepository;
 import synk.meeteam.domain.user.user.entity.User;
@@ -42,20 +42,20 @@ public class NaverAuthService extends AuthService {
     }
 
     @Override
-    public AuthUSerVo saveUserOrLogin(String authorizationCode, AuthUserRequestDto request) {
+    public AuthUserVo saveUserOrLogin(String authorizationCode, AuthUserRequestDto request) {
         String accessToken = getAccessToken(authorizationCode, clientId, clientSecret, state).getAccess_token();
         NaverMemberVO naverMemberInfo = getNaverUserInfo(accessToken);
         User foundUser = getUser(request.platformType(), naverMemberInfo.getResponse().getId());
 
         if (foundUser != null) {
-            return AuthUSerVo.of(foundUser, request.platformType(), Authority.USER, AuthType.LOGIN);
+            return AuthUserVo.of(foundUser, request.platformType(), Authority.USER, AuthType.LOGIN);
         }
 
         User savedUser = saveTempUser(request, naverMemberInfo.getResponse().getEmail(),
                 naverMemberInfo.getResponse().getName(), naverMemberInfo.getResponse().getId(),
                 naverMemberInfo.getResponse().getMobile(), naverMemberInfo.getResponse().getProfile_image());
 
-        return AuthUSerVo.of(savedUser, request.platformType(), Authority.GUEST, AuthType.SIGN_UP);
+        return AuthUserVo.of(savedUser, request.platformType(), Authority.GUEST, AuthType.SIGN_UP);
 
     }
 

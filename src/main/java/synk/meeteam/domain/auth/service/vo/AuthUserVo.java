@@ -8,10 +8,10 @@ import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
 
 @Builder
-public record AuthUSerVo(Long userId, String email, String name, String pictureUrl, PlatformType platformType,
+public record AuthUserVo(Long userId, String email, String name, String pictureUrl, PlatformType platformType,
                          Authority authority, String platformId, String phoneNumber, AuthType authType) {
-    public static AuthUSerVo of(User user, PlatformType platformType, Authority authority, AuthType authType) {
-        return AuthUSerVo.builder()
+    public static AuthUserVo of(User user, PlatformType platformType, Authority authority, AuthType authType) {
+        return AuthUserVo.builder()
                 .userId(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
