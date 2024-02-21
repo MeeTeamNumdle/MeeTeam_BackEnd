@@ -47,19 +47,11 @@ public class UserVO {
         this.pictureUrl = pictureUrl;
     }
 
-    public void updateEmail(String email) {
-        this.email = email;
-    }
-
-    public void updateUniversityId(Long universityId) {this.universityId = universityId;}
-
-    public void updateDepartmentId(Long departmentId) {
+    public void updateUniversityInfo(Long universityId, Long departmentId, int admissionYear, String email){
+        this.universityId = universityId;
         this.departmentId = departmentId;
-    }
-
-
-    public void updateAdmissionYear(int admissionYear) {
         this.admissionYear = admissionYear;
+        this.email = email;
     }
 
     public void updateEmailCode(String emailCode) {
