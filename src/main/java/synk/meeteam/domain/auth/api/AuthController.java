@@ -16,19 +16,19 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
+import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
-import synk.meeteam.domain.auth.dto.request.VerifyUserRequestDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.AuthUserResponseMapper;
 import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
-import synk.meeteam.domain.auth.dto.response.SignUpUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.VerifyEmailResponseDto;
 import synk.meeteam.domain.auth.service.AuthServiceProvider;
-import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
+import synk.meeteam.domain.auth.service.vo.AuthUserVo;
 import synk.meeteam.domain.common.university.service.UniversityService;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.UserVO;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
-import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.infra.mail.MailService;
 import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
 import synk.meeteam.security.AuthUser;
@@ -43,7 +43,10 @@ public class AuthController implements AuthApi {
     private final JwtService jwtService;
     private final MailService mailService;
     private final UniversityService universityService;
-    private final UserService userService;
+
+    // mapper
+    private final AuthUserResponseMapper authUserResponseMapper;
+
 
     @Value("${spring.security.oauth2.client.naver.client-id}")
     private String clientId;
@@ -51,47 +54,47 @@ public class AuthController implements AuthApi {
     private String redirectUri;
 
     @Override
-    @PostMapping("/social/login")
-    public ResponseEntity<AuthUserResponseDto> login(
+    @PostMapping("/social/login_or_signup")
+    public ResponseEntity<AuthUserResponseDto.InnerParent> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
             AuthUserRequestDto requestDto) {
 
-        UserSignUpVO vo = authServiceProvider.getAuthService(requestDto.platformType())
+        AuthUserVo vo = authServiceProvider.getAuthService(requestDto.platformType())
                 .saveUserOrLogin(authorizationCode, requestDto);
 
         if (vo.authority() == Authority.GUEST) {
-            return ResponseEntity.ok(AuthUserResponseDto
-                    .of(vo.platformId(), vo.authType(), vo.name(), vo.authority(), null, null));
+            AuthUserResponseDto.create responseDTO = authUserResponseMapper.ofCreate(vo.authType(), vo.authority(), vo.platformId());
+            return ResponseEntity.ok(responseDTO);
         }
 
-        AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
+        AuthUserResponseDto.login responseDTO = jwtService.issueToken(vo);
         return ResponseEntity.ok(responseDTO);
     }
 
     @Override
-    @PostMapping("/social/email-verify")
-    public ResponseEntity<SignUpUserResponseDto> createTempUserAndSendEmail(
-            @RequestBody @Valid SignUpUserRequestDto requestDto
+    @PostMapping("/social/email-verification")
+    public ResponseEntity<VerifyEmailResponseDto> requestEmailVerify(
+            @RequestBody @Valid VerifyEmailRequestDto requestDto
     ) {
         String email = universityService.getEmail(requestDto.universityId(), requestDto.emailId());
         authServiceProvider.getAuthService(requestDto.platformType()).updateUniversityInfo(requestDto, email);
         mailService.sendMail(requestDto.platformId(), email);
 
-        return ResponseEntity.ok(SignUpUserResponseDto.of(requestDto.platformId()));
+        return ResponseEntity.ok(VerifyEmailResponseDto.of(requestDto.platformId()));
     }
 
     @Override
     @PostMapping("/sign-up")
-    public ResponseEntity<AuthUserResponseDto> signUp(
-            @RequestBody @Valid VerifyUserRequestDto requestDto) {
+    public ResponseEntity<AuthUserResponseDto.login> signUp(
+            @RequestBody @Valid SignUpUserRequestDto requestDto) {
 
         UserVO userVO = mailService.verify(requestDto.emailCode());
         User user = authServiceProvider.getAuthService(userVO.getPlatformType())
                 .createSocialUser(userVO, requestDto.nickName());
 
-        UserSignUpVO vo = UserSignUpVO.of(user, user.getPlatformType(), user.getAuthority(), AuthType.SIGN_UP);
-        AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
+        AuthUserVo vo = AuthUserVo.of(user, user.getPlatformType(), user.getAuthority(), AuthType.SIGN_UP);
+        AuthUserResponseDto.login responseDTO = jwtService.issueToken(vo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
@@ -105,8 +108,9 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/logout")
-    public ResponseEntity<LogoutUserResponseDto> logout(@AuthUser final User user) {
-        return ResponseEntity.ok(jwtService.logout(user));
+    public ResponseEntity<Void> logout(@AuthUser final User user) {
+        jwtService.logout(user);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/authTest")
@@ -117,7 +121,7 @@ public class AuthController implements AuthApi {
             response.sendRedirect(
                     redirectURL);
         } catch (Exception e) {
-            log.info("authTest = {}", e);
+            log.info("authTest", e);
         }
 
         return "SUCCESS";

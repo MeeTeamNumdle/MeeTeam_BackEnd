@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.user.user.entity.UserVO;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
@@ -30,6 +31,7 @@ public class MailService {
     private final JavaMailSender mailSender;
     private final RedisUserRepository redisUserRepository;
 
+    @Transactional
     public void sendMail(String platformId, String receiverMail) {
         String newEmailCode = UUID.randomUUID().toString();
 
@@ -59,6 +61,7 @@ public class MailService {
         return MAIL_CONTENT_PREFIX + FRONT_DOMAIN + emailCode + MAIL_CONTENT_POSTFIX;
     }
 
+    @Transactional(readOnly = true)
     public UserVO verify(String emailCode) {
         return redisUserRepository.findByEmailCodeOrElseThrowException(emailCode);
     }

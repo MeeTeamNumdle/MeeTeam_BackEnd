@@ -19,15 +19,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.AuthUserResponseMapper;
 import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
-import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
+import synk.meeteam.domain.auth.service.vo.AuthUserVo;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.domain.user.user.repository.UserRepository;
+import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.redis.repository.RedisTokenRepository;
 import synk.meeteam.security.jwt.service.vo.TokenVO;
 
@@ -61,18 +63,22 @@ public class JwtService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTokenRepository redisTokenRepository;
 
+    // mapper
+    private final AuthUserResponseMapper authUserResponseMapper;
+
     @Transactional
-    public AuthUserResponseDto issueToken(UserSignUpVO vo) {
+    public AuthUserResponseDto.login issueToken(AuthUserVo vo) {
         String accessToken = jwtTokenProvider.createAccessToken(vo.platformId(), vo.platformType(), accessTokenExpirationPeriod);
 
-        if (vo.authority().equals(Authority.USER)) {
-            String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
-            updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
-            return AuthUserResponseDto.of(vo.platformId(), vo.authType(), vo.name(), Authority.USER, accessToken,
-                    refreshToken);
+        if (!vo.authority().equals(Authority.USER)) {
+            throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
         }
 
-        throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
+        String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
+        updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
+
+        return authUserResponseMapper.ofLogin(vo.authType(), vo.authority(), Encryption.encryptLong(vo.userId()),
+                vo.name(), vo.pictureUrl(), accessToken, refreshToken);
     }
 
     @Transactional
@@ -104,12 +110,10 @@ public class JwtService {
     }
 
     @Transactional
-    public LogoutUserResponseDto logout(User user){
+    public void logout(User user){
         TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(user.getPlatformId());
         foundRefreshToken.updateRefreshToken(null);
         redisTokenRepository.save(foundRefreshToken);
-
-        return LogoutUserResponseDto.of(user.getPlatformId());
     }
 
 
