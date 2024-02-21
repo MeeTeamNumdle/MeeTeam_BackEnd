@@ -3,7 +3,7 @@ package synk.meeteam.domain.auth.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-@Schema(name = "SignUpUserResponseDto", description = "회원가입 응답 Dto")
+@Schema(name = "VerifyEmailResponseDto", description = "회원가입 응답 Dto")
 public record VerifyEmailResponseDto(
         @NotNull
         @Schema(description = "플랫폼 Id", example = "Di7lChMGxjZVTai6d76Ho1YLDU_xL8tl1CfdPMV5SQM")
