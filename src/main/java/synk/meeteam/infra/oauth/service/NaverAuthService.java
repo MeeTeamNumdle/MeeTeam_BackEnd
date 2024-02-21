@@ -9,7 +9,8 @@ import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
 import synk.meeteam.domain.auth.service.AuthService;
-import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
+import synk.meeteam.domain.auth.service.vo.AuthUserVo;
+import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.repository.UniversityRepository;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
@@ -36,26 +37,25 @@ public class NaverAuthService extends AuthService {
     @Value("${spring.security.oauth2.client.naver.token-uri.path}")
     private String tokenUriPath;
 
-    public NaverAuthService(UserRepository userRepository, RedisUserRepository redisUserRepository, UniversityRepository universityRepository) {
-        super(userRepository, redisUserRepository, universityRepository);
+    public NaverAuthService(UserRepository userRepository, RedisUserRepository redisUserRepository, UniversityRepository universityRepository, DepartmentRepository departmentRepository) {
+        super(userRepository, redisUserRepository, universityRepository, departmentRepository);
     }
 
     @Override
-    public UserSignUpVO saveUserOrLogin(String authorizationCode, AuthUserRequestDto request) {
+    public AuthUserVo saveUserOrLogin(String authorizationCode, AuthUserRequestDto request) {
         String accessToken = getAccessToken(authorizationCode, clientId, clientSecret, state).getAccess_token();
         NaverMemberVO naverMemberInfo = getNaverUserInfo(accessToken);
         User foundUser = getUser(request.platformType(), naverMemberInfo.getResponse().getId());
 
         if (foundUser != null) {
-            return UserSignUpVO.of(foundUser, request.platformType(), Authority.USER, AuthType.LOGIN);
+            return AuthUserVo.of(foundUser, request.platformType(), Authority.USER, AuthType.LOGIN);
         }
 
-        // redis 사용, 무조건 새로 회원가입하는 경우
         User savedUser = saveTempUser(request, naverMemberInfo.getResponse().getEmail(),
                 naverMemberInfo.getResponse().getName(), naverMemberInfo.getResponse().getId(),
-                naverMemberInfo.getResponse().getMobile());
+                naverMemberInfo.getResponse().getMobile(), naverMemberInfo.getResponse().getProfile_image());
 
-        return UserSignUpVO.of(savedUser, request.platformType(), Authority.GUEST, AuthType.SIGN_UP);
+        return AuthUserVo.of(savedUser, request.platformType(), Authority.GUEST, AuthType.SIGN_UP);
 
     }
 

@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
-import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
-import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
+import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
+import synk.meeteam.domain.auth.service.vo.AuthUserVo;
+import synk.meeteam.domain.common.department.entity.Department;
+import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.common.university.repository.UniversityRepository;
 import synk.meeteam.domain.user.user.entity.User;
@@ -21,9 +23,10 @@ public abstract class AuthService {
     private final UserRepository userRepository;
     private final RedisUserRepository redisUserRepository;
     private final UniversityRepository universityRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public abstract UserSignUpVO saveUserOrLogin(String platformType, AuthUserRequestDto request);
+    public abstract AuthUserVo saveUserOrLogin(String platformType, AuthUserRequestDto request);
 
     protected User getUser(PlatformType platformType, String platformId) {
         return userRepository.findByPlatformIdAndPlatformType(platformId, platformType)
@@ -31,8 +34,8 @@ public abstract class AuthService {
     }
 
     protected User saveTempUser(AuthUserRequestDto request, String email, String name, String id,
-                            String phoneNumber) {
-        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber);
+                                String phoneNumber, String pictureUrl) {
+        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber, pictureUrl);
         redisUserRepository.save(tempSocialUser);
 
         return User.builder()
@@ -42,33 +45,37 @@ public abstract class AuthService {
                 .platformType(request.platformType())
                 .platformId(id)
                 .authority(Authority.GUEST)
+                .pictureUrl(pictureUrl)
                 .build();
     }
 
     private static UserVO createTempSocialUser(String email, String name, PlatformType platformType, String id,
-                                               String phoneNumber){
+                                               String phoneNumber, String pictureUrl) {
         return UserVO.builder()
                 .email(email)
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .platformType(platformType)
                 .platformId(id)
+                .pictureUrl(pictureUrl)
                 .build();
     }
 
-    public void updateUniversityInfo(SignUpUserRequestDto requestDTO, String email) {
+    @Transactional
+    public void updateUniversityInfo(VerifyEmailRequestDto requestDTO, String email) {
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
-
-        userVO.updateUniversityId(requestDTO.universityId());
-        userVO.updateAdmissionYear(requestDTO.admissionYear());
-        userVO.updateEmail(email);
+        userVO.updateUniversityInfo(requestDTO.universityId(), requestDTO.departmentId(), requestDTO.admissionYear(),
+                email);
 
         redisUserRepository.save(userVO);
     }
 
+    @Transactional
     public User createSocialUser(UserVO userVO, String nickName) {
         University foundUniversity = universityRepository.findByIdOrElseThrowException(
                 userVO.getUniversityId());
+        Department foundDepartment = departmentRepository.findByIdOrElseThrowException(
+                userVO.getDepartmentId());
 
         User newUser = User.builder()
                 .email(userVO.getEmail())
@@ -77,6 +84,7 @@ public abstract class AuthService {
                 .phoneNumber(userVO.getPhoneNumber())
                 .admissionYear(userVO.getAdmissionYear())
                 .university(foundUniversity)
+                .department(foundDepartment)
                 .authority(Authority.USER)
                 .platformType(userVO.getPlatformType())
                 .platformId(userVO.getPlatformId())

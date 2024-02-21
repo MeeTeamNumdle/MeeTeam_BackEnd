@@ -20,5 +20,6 @@ public class NaverMemberVO {
         private String email;
         private String mobile;
         private String name;
+        private String profile_image;
     }
 }
