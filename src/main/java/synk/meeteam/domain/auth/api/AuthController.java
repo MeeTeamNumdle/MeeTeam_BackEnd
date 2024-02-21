@@ -108,8 +108,9 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/logout")
-    public ResponseEntity<LogoutUserResponseDto> logout(@AuthUser final User user) {
-        return ResponseEntity.ok(jwtService.logout(user));
+    public ResponseEntity<Void> logout(@AuthUser final User user) {
+        jwtService.logout(user);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/authTest")

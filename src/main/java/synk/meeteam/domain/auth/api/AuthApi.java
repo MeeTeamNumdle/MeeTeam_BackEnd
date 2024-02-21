@@ -76,5 +76,5 @@ public interface AuthApi {
             }
     )
     @Operation(summary = "로그아웃")
-    ResponseEntity<LogoutUserResponseDto> logout(@AuthUser final User user);
+    ResponseEntity<Void> logout(@AuthUser final User user);
 }

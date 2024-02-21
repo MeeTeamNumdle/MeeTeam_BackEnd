@@ -110,12 +110,10 @@ public class JwtService {
     }
 
     @Transactional
-    public LogoutUserResponseDto logout(User user){
+    public void logout(User user){
         TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(user.getPlatformId());
         foundRefreshToken.updateRefreshToken(null);
         redisTokenRepository.save(foundRefreshToken);
-
-        return LogoutUserResponseDto.of(user.getPlatformId());
     }
 
 
