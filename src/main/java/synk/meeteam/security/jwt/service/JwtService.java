@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.AuthUserResponseMapper;
 import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
@@ -62,18 +63,22 @@ public class JwtService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTokenRepository redisTokenRepository;
 
+    // mapper
+    private final AuthUserResponseMapper authUserResponseMapper;
+
     @Transactional
-    public AuthUserResponseDto issueToken(AuthUserVo vo) {
+    public AuthUserResponseDto.login issueToken(AuthUserVo vo) {
         String accessToken = jwtTokenProvider.createAccessToken(vo.platformId(), vo.platformType(), accessTokenExpirationPeriod);
 
-        if (vo.authority().equals(Authority.USER)) {
-            String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
-            updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
-            return AuthUserResponseDto.of(Encryption.encryptLong(vo.userId()),null, vo.authType(), vo.name(), vo.pictureUrl(), Authority.USER, accessToken,
-                    refreshToken);
+        if (!vo.authority().equals(Authority.USER)) {
+            throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
         }
 
-        throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
+        String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
+        updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
+
+        return authUserResponseMapper.ofLogin(vo.authType(), vo.authority(), Encryption.encryptLong(vo.userId()),
+                vo.name(), vo.pictureUrl(), accessToken, refreshToken);
     }
 
     @Transactional

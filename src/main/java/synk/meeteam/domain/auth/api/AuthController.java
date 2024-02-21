@@ -19,6 +19,7 @@ import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
+import synk.meeteam.domain.auth.dto.response.AuthUserResponseMapper;
 import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.VerifyEmailResponseDto;
@@ -43,6 +44,10 @@ public class AuthController implements AuthApi {
     private final MailService mailService;
     private final UniversityService universityService;
 
+    // mapper
+    private final AuthUserResponseMapper authUserResponseMapper;
+
+
     @Value("${spring.security.oauth2.client.naver.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.client.naver.redirect-uri}")
@@ -50,7 +55,7 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/social/login")
-    public ResponseEntity<AuthUserResponseDto> login(
+    public ResponseEntity<AuthUserResponseDto.InnerParent> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
             AuthUserRequestDto requestDto) {
@@ -59,11 +64,11 @@ public class AuthController implements AuthApi {
                 .saveUserOrLogin(authorizationCode, requestDto);
 
         if (vo.authority() == Authority.GUEST) {
-            return ResponseEntity.ok(AuthUserResponseDto
-                    .of(null, vo.platformId(), vo.authType(), vo.name(), vo.pictureUrl(), vo.authority(), null, null));
+            AuthUserResponseDto.create responseDTO = authUserResponseMapper.ofCreate(vo.authType(), vo.authority(), vo.platformId());
+            return ResponseEntity.ok(responseDTO);
         }
 
-        AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
+        AuthUserResponseDto.login responseDTO = jwtService.issueToken(vo);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -81,7 +86,7 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/sign-up")
-    public ResponseEntity<AuthUserResponseDto> signUp(
+    public ResponseEntity<AuthUserResponseDto.login> signUp(
             @RequestBody @Valid SignUpUserRequestDto requestDto) {
 
         UserVO userVO = mailService.verify(requestDto.emailCode());
@@ -89,7 +94,7 @@ public class AuthController implements AuthApi {
                 .createSocialUser(userVO, requestDto.nickName());
 
         AuthUserVo vo = AuthUserVo.of(user, user.getPlatformType(), user.getAuthority(), AuthType.SIGN_UP);
-        AuthUserResponseDto responseDTO = jwtService.issueToken(vo);
+        AuthUserResponseDto.login responseDTO = jwtService.issueToken(vo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
