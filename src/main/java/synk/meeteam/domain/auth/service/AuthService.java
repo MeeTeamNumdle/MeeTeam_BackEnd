@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
-import synk.meeteam.domain.auth.service.vo.UserSignUpVO;
+import synk.meeteam.domain.auth.service.vo.AuthUSerVo;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.entity.University;
@@ -26,7 +26,7 @@ public abstract class AuthService {
     private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public abstract UserSignUpVO saveUserOrLogin(String platformType, AuthUserRequestDto request);
+    public abstract AuthUSerVo saveUserOrLogin(String platformType, AuthUserRequestDto request);
 
     protected User getUser(PlatformType platformType, String platformId) {
         return userRepository.findByPlatformIdAndPlatformType(platformId, platformType)
@@ -34,7 +34,7 @@ public abstract class AuthService {
     }
 
     protected User saveTempUser(AuthUserRequestDto request, String email, String name, String id,
-                            String phoneNumber, String pictureUrl) {
+                                String phoneNumber, String pictureUrl) {
         UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber, pictureUrl);
         redisUserRepository.save(tempSocialUser);
 
@@ -50,7 +50,7 @@ public abstract class AuthService {
     }
 
     private static UserVO createTempSocialUser(String email, String name, PlatformType platformType, String id,
-                                               String phoneNumber, String pictureUrl){
+                                               String phoneNumber, String pictureUrl) {
         return UserVO.builder()
                 .email(email)
                 .name(name)
@@ -64,11 +64,8 @@ public abstract class AuthService {
     @Transactional
     public void updateUniversityInfo(VerifyEmailRequestDto requestDTO, String email) {
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
-
-        userVO.updateUniversityId(requestDTO.universityId());
-        userVO.updateDepartmentId(requestDTO.departmentId());
-        userVO.updateAdmissionYear(requestDTO.admissionYear());
-        userVO.updateEmail(email);
+        userVO.updateUniversityInfo(requestDTO.universityId(), requestDTO.departmentId(), requestDTO.admissionYear(),
+                email);
 
         redisUserRepository.save(userVO);
     }
