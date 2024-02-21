@@ -54,7 +54,7 @@ public class AuthController implements AuthApi {
     private String redirectUri;
 
     @Override
-    @PostMapping("/social/login")
+    @PostMapping("/social/login_or_signup")
     public ResponseEntity<AuthUserResponseDto.InnerParent> login(
             @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
