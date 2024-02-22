@@ -12,17 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
-import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
+import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseMapper;
-import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
-import synk.meeteam.domain.auth.dto.response.VerifyEmailResponseDto;
 import synk.meeteam.domain.auth.service.AuthServiceProvider;
 import synk.meeteam.domain.auth.service.vo.AuthUserVo;
 import synk.meeteam.domain.common.university.service.UniversityService;
@@ -54,17 +51,16 @@ public class AuthController implements AuthApi {
     private String redirectUri;
 
     @Override
-    @PostMapping("/social/login_or_signup")
+    @PostMapping("/social/login-or-signup")
     public ResponseEntity<AuthUserResponseDto.InnerParent> login(
-            @RequestHeader(value = "authorization-code") final String authorizationCode,
-            @RequestBody @Valid final
-            AuthUserRequestDto requestDto) {
+            @RequestBody @Valid final AuthUserRequestDto requestDto) {
 
         AuthUserVo vo = authServiceProvider.getAuthService(requestDto.platformType())
-                .saveUserOrLogin(authorizationCode, requestDto);
+                .saveUserOrLogin(requestDto.authorizationCode(), requestDto);
 
         if (vo.authority() == Authority.GUEST) {
-            AuthUserResponseDto.create responseDTO = authUserResponseMapper.ofCreate(vo.authType(), vo.authority(), vo.platformId());
+            AuthUserResponseDto.create responseDTO = authUserResponseMapper.ofCreate(vo.authType(), vo.authority(),
+                    vo.platformId());
             return ResponseEntity.ok(responseDTO);
         }
 
@@ -74,14 +70,14 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/social/email-verification")
-    public ResponseEntity<VerifyEmailResponseDto> requestEmailVerify(
+    public ResponseEntity<Void> requestEmailVerify(
             @RequestBody @Valid VerifyEmailRequestDto requestDto
     ) {
         String email = universityService.getEmail(requestDto.universityId(), requestDto.emailId());
         authServiceProvider.getAuthService(requestDto.platformType()).updateUniversityInfo(requestDto, email);
         mailService.sendMail(requestDto.platformId(), email);
 
-        return ResponseEntity.ok(VerifyEmailResponseDto.of(requestDto.platformId()));
+        return ResponseEntity.ok().build();
     }
 
     @Override
