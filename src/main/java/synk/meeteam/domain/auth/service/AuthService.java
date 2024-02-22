@@ -64,7 +64,7 @@ public abstract class AuthService {
     @Transactional
     public void updateUniversityInfo(VerifyEmailRequestDto requestDTO, String email) {
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
-        userVO.updateUniversityInfo(requestDTO.universityId(), requestDTO.departmentId(), requestDTO.admissionYear(),
+        userVO.updateUniversityInfo(requestDTO.universityId(), requestDTO.departmentId(), requestDTO.year(),
                 email);
 
         redisUserRepository.save(userVO);

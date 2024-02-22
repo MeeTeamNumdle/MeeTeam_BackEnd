@@ -24,6 +24,6 @@ public record VerifyEmailRequestDto(
         Long departmentId,
         @NotNull
         @Schema(description = "입학년도", example = "2018")
-        int admissionYear
+        int year
 ) {
 }
