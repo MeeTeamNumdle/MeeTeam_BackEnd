@@ -11,14 +11,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
-import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.dto.request.SignUpUserRequestDto;
+import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
-import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
-import synk.meeteam.domain.auth.dto.response.VerifyEmailResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.security.AuthUser;
 
@@ -35,7 +32,6 @@ public interface AuthApi {
     )
     @Operation(summary = "소셜 로그인", description = "authType: LOGIN(200) or SIGN_UP(201), authority: USER(200) or GUEST(201)")
     ResponseEntity<AuthUserResponseDto.InnerParent> login(
-            @RequestHeader(value = "authorization-code") final String authorizationCode,
             @RequestBody @Valid final
             AuthUserRequestDto requestDto);
 
@@ -46,7 +42,7 @@ public interface AuthApi {
             }
     )
     @Operation(summary = "이메일 인증을 위한 요청(해당 API 호출 후, 사용자 메일주소로 메일이 발송됨)")
-    ResponseEntity<VerifyEmailResponseDto> requestEmailVerify(
+    ResponseEntity<Void> requestEmailVerify(
             @RequestBody @Valid VerifyEmailRequestDto requestDto
     );
 
