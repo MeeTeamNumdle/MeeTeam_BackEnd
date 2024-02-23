@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum ProceedType {
-    ON_LINE("온라인"),
-    OFF_LINE("오프라인"),
-    ON_AND_OFFLINE("온/오프라인");
+public enum LinkType {
+    KAKAO("카카오톡"),
+    DISCORD("디스코드"),
+    NOTION("노션"),
+    SLACK("슬랙");
 
     private final String name;
 }

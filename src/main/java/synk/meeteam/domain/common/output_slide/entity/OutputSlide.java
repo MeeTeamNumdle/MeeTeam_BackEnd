@@ -17,7 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.common.output.entity.Output;
 import synk.meeteam.global.entity.BaseTimeEntity;
 
@@ -25,7 +24,6 @@ import synk.meeteam.global.entity.BaseTimeEntity;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicInsert
 public class OutputSlide extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,8 +40,7 @@ public class OutputSlide extends BaseTimeEntity {
     @Size(max = 300)
     private String url;
 
-    @NotNull
     @ColumnDefault("0")
-    private Long seq;
+    private long seq;
 
 }

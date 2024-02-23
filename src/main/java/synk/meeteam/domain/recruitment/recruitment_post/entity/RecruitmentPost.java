@@ -23,8 +23,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
-import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.BaseEntity;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.entity.Scope;
@@ -34,16 +33,11 @@ import synk.meeteam.global.entity.Scope;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
-public class RecruitmentPost extends BaseTimeEntity {
+public class RecruitmentPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recruitment_id")
     private Long id;
-
-    //작성자
-    @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "writer_id")
-    private User writer;
 
     //제목
     @NotNull
@@ -96,9 +90,8 @@ public class RecruitmentPost extends BaseTimeEntity {
     private String kakaoLink;
 
     //마감여부 저장
-    @NotNull
     @ColumnDefault("0")
-    private Boolean isClosed;
+    private boolean isClosed = false;
 
     //밋팀
     @ManyToOne(fetch = LAZY)
