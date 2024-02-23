@@ -8,6 +8,6 @@ public record GetUniversityDto(
         @Schema(description = "대학교 이름", example = "광운대학교")
         String universityName,
         @Schema(description = "대학교 이메일 도메인", example = "kw.ac.kr")
-        String universityRegex
+        String universityDomain
 ) {
 }
