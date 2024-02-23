@@ -17,7 +17,7 @@ public class UserController implements UserApi {
 
     @Override
     @GetMapping("/search/check-duplicate")
-    public CheckDuplicateNicknameResponseDto checkDuplicateNickname(@RequestParam String nickname) {
+    public CheckDuplicateNicknameResponseDto checkDuplicateNickname(@RequestParam("nickname") String nickname) {
         boolean available = userService.checkDuplicateNickname(nickname);
 
         return CheckDuplicateNicknameResponseDto.of(available);
