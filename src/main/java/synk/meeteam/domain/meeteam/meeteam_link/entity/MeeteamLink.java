@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
 import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.LinkType;
 
 @Getter
 @Setter
@@ -38,6 +39,6 @@ public class MeeteamLink extends BaseTimeEntity {
     private String url;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10)
+    @Column(length = 15)
     private LinkType type;
 }
