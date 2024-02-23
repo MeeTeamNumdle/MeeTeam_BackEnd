@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.meeteam.member.entity.Member;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
@@ -34,7 +33,6 @@ import synk.meeteam.global.entity.BaseTimeEntity;
                 columnNames = {"user_id", "member_id"}
         )
 })
-@DynamicInsert
 public class Evaluation extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +52,6 @@ public class Evaluation extends BaseTimeEntity {
     @NotNull
     private String comment;
 
-    @NotNull
     @ColumnDefault("0")
-    private Boolean isBlind;
+    private boolean isBlind = false;
 }

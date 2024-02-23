@@ -16,9 +16,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import synk.meeteam.domain.meeteam.meeteam_link.entity.LinkType;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.LinkType;
 
 @Getter
 @Setter
@@ -40,5 +40,6 @@ public class UserLink extends BaseTimeEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(length = 15)
     private LinkType type;
 }
