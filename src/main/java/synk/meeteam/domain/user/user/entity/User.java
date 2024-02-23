@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.role.entity.Role;
@@ -35,7 +34,6 @@ import synk.meeteam.global.util.Encryption;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "USERS")
-@DynamicInsert
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +43,7 @@ public class User extends BaseTimeEntity {
     //이메일
     @NotNull
     @Size(max = 100)
-    @Column(length = 100)
+    @Column(length = 100, updatable = false)
     private String email;
 
     //이름
@@ -78,7 +76,10 @@ public class User extends BaseTimeEntity {
     private String mainIntroduction;
 
     //학점
-    private Double gpa;
+    private double gpa = 0.0;
+
+    //최대학점
+    private double maxGpa = 4.5;
 
     //입학년도
     @NotNull
@@ -89,13 +90,12 @@ public class User extends BaseTimeEntity {
     private String pictureUrl;
 
     //평가 점수
-
     @ColumnDefault("0")
-    private Double evaluationScore;
+    private double evaluationScore;
 
     //학교
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "university_id")
+    @JoinColumn(name = "university_id", updatable = false)
     private University university;
 
     //학과
@@ -119,47 +119,28 @@ public class User extends BaseTimeEntity {
     //평가 점수
 
     @ColumnDefault("0")
-    private Long scoreTime;
+    private long scoreTime = 0;
 
 
     @ColumnDefault("0")
-    private Long scoreInfluence;
+    private long scoreInfluence = 0;
 
 
     @ColumnDefault("0")
-    private Long scoreParticipation;
+    private long scoreParticipation = 0;
 
 
     @ColumnDefault("0")
-    private Long scoreCommunication;
+    private long scoreCommunication = 0;
 
 
     @ColumnDefault("0")
-    private Long scoreProfessionalism;
-
-    public String encryptUserId(){
-        return Encryption.encryptLong(this.id);
-    }
-
-    public Long decryptUserId(String encryptedUserId){
-        return Encryption.decryptLong(encryptedUserId);
-    }
-
-    public void updateEmail(String email) {
-        this.email = email;
-    }
-
-    public void updateAdmissionYear(int admissionYear) {
-        this.admissionYear = admissionYear;
-    }
-
-    public void updateUniversity(University university){
-        this.university = university;
-    }
+    private long scoreProfessionalism = 0;
 
     @Builder
     public User(String email, String name, String nickname, String password, String phoneNumber,
-                Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType, String platformId,
+                Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType,
+                String platformId,
                 University university, Department department) {
         this.email = email;
         this.university = university;
@@ -173,6 +154,26 @@ public class User extends BaseTimeEntity {
         this.authority = authority;
         this.platformType = platformType;
         this.platformId = platformId;
+    }
+
+    public String encryptUserId() {
+        return Encryption.encryptLong(this.id);
+    }
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updateAdmissionYear(int admissionYear) {
+        this.admissionYear = admissionYear;
+    }
+
+    public Long decryptUserId(String encryptedUserId) {
+        return Encryption.decryptLong(encryptedUserId);
+    }
+
+    public void updateUniversity(University university) {
+        this.university = university;
     }
 
     public void updateAuthority(Authority authority) {

@@ -9,11 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 
@@ -35,6 +35,6 @@ public class RecruitmentRole {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @NotNull
-    private Long count;
+    @ColumnDefault("0")
+    private long count = 0L;
 }
