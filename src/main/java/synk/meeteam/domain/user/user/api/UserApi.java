@@ -3,6 +3,7 @@ package synk.meeteam.domain.user.user.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
@@ -16,5 +17,6 @@ public interface UserApi {
             }
     )
     @Operation(summary = "닉네임 중복 확인 API")
+    @SecurityRequirements
     CheckDuplicateNicknameResponseDto checkDuplicateNickname(@RequestParam String nickname);
 }
