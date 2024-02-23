@@ -8,6 +8,12 @@ import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 public record AuthUserRequestDto(
         @NotNull
         @Schema(description = "소셜 플랫폼 타입", example = "NAVER")
-        PlatformType platformType) {
+        PlatformType platformType,
+
+        @NotNull
+        @Schema(description = "인증 코드", example = "IdZSsbPHKG4cf53Zol")
+        String authorizationCode
+
+) {
 
 }
