@@ -76,5 +76,6 @@ public interface AuthApi {
             }
     )
     @Operation(summary = "로그아웃")
+    @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> logout(@AuthUser final User user);
 }
