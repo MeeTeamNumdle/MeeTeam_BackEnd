@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -21,6 +23,7 @@ import synk.meeteam.security.AuthUser;
 
 
 @Tag(name = "auth", description = "인증 관련 API")
+@SecurityRequirements
 public interface AuthApi {
 
     @ApiResponses(
@@ -64,6 +67,7 @@ public interface AuthApi {
             }
     )
     @Operation(summary = "액세스 토큰 & 리프레시 토큰 재발급", description = "액세스 토큰 및 리프레시 토큰을 재발급 받습니다.")
+    @SecurityRequirement(name = "Authorization-refresh")
     ResponseEntity<ReissueUserResponseDto> reissue(HttpServletRequest request);
 
     @ApiResponses(
