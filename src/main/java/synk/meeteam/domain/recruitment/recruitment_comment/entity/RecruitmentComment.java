@@ -16,17 +16,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
-import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicInsert
-public class RecruitmentComment extends BaseTimeEntity {
+public class RecruitmentComment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recruitment_comment_id")
@@ -36,11 +33,6 @@ public class RecruitmentComment extends BaseTimeEntity {
     @JoinColumn(name = "recruitment_post_id")
     private RecruitmentPost recruitmentPost;
 
-    //작성자
-    @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "writer_id")
-    private User writer;
-
     //내용
     @NotNull
     @Size(max = 100)
@@ -48,19 +40,15 @@ public class RecruitmentComment extends BaseTimeEntity {
     private String comment;
 
     //댓글, 대댓글 구분
-    @NotNull
     @ColumnDefault("1")
-    private Boolean isParent;
+    private boolean isParent = true;
 
     //그룹 번호
-    @NotNull
-    private Long groupNumber;
+    private long groupNumber;
 
     //그룹 내 순서
-    @NotNull
-    private Long groupOrder;
+    private long groupOrder;
 
-    @NotNull
     @ColumnDefault("0")
-    private Boolean isDeleted;
+    private boolean isDeleted = false;
 }
