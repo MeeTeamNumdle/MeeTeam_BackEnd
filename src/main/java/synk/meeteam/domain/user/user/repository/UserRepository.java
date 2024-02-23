@@ -11,6 +11,8 @@ import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long userId);
 
+    Optional<User> findByNickname(String nickname);
+
     Optional<User> findByPlatformIdAndPlatformType(String platformId, PlatformType platformType);
 
     Optional<User> findByPlatformId(String platformId);
