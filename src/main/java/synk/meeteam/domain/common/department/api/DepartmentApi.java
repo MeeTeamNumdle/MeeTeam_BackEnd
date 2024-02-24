@@ -20,5 +20,5 @@ public interface DepartmentApi {
     )
     @Operation(summary = "특정 학교의 학과 조회 API")
     @SecurityRequirements
-    ResponseEntity<List<GetDepartmentResponseDto>> getDepartments(@RequestParam("university") Long universityId);
+    ResponseEntity<List<GetDepartmentResponseDto>> getDepartments(@RequestParam("university-id") Long universityId);
 }
