@@ -29,4 +29,9 @@ public class University {
     @NotNull
     @Column(length = 20)
     private String emailRegex;
+
+    public University(String name, String emailRegex) {
+        this.name = name;
+        this.emailRegex = emailRegex;
+    }
 }
