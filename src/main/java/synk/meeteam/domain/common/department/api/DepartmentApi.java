@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,5 +21,6 @@ public interface DepartmentApi {
     )
     @Operation(summary = "특정 학교의 학과 조회 API")
     @SecurityRequirements
-    ResponseEntity<List<GetDepartmentResponseDto>> getDepartments(@RequestParam("university") Long universityId);
+    ResponseEntity<List<GetDepartmentResponseDto>> getDepartments(
+            @RequestParam("university") @NotNull Long universityId);
 }
