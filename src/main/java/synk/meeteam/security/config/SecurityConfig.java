@@ -33,10 +33,10 @@ public class SecurityConfig {
             "/webjars/**",
 
             // Authentication
-            "/auth/**", "/login/**","/authTest", "/user/search/check-duplicate",
+            "/auth/**", "/login/**", "/authTest", "/user/search/check-duplicate", "/department",
 
             // client
-            "/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**", "/actuator/health"
+            "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
