@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import synk.meeteam.domain.common.university.dto.response.GetUniversityDto;
+import synk.meeteam.domain.common.university.dto.response.UniversityDto;
 import synk.meeteam.domain.common.university.service.UniversityService;
 
 @RestController
@@ -18,8 +18,8 @@ public class UniversityController implements UniversityApi {
 
     @GetMapping
     @Override
-    public ResponseEntity<List<GetUniversityDto>> getUniversities() {
-        List<GetUniversityDto> list = universityService.getUniversities().stream().map(GetUniversityDto::of).toList();
+    public ResponseEntity<List<UniversityDto>> getUniversities() {
+        List<UniversityDto> list = universityService.getUniversities().stream().map(UniversityDto::of).toList();
         return ResponseEntity.ok(list);
     }
 }

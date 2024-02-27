@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import synk.meeteam.domain.common.university.dto.response.GetUniversityDto;
+import synk.meeteam.domain.common.university.dto.response.UniversityDto;
 
 @Tag(name = "university", description = "대학교 관련 API")
 public interface UniversityApi {
@@ -19,5 +19,5 @@ public interface UniversityApi {
     )
     @Operation(summary = "대학교 목록 조회 API")
     @SecurityRequirements
-    ResponseEntity<List<GetUniversityDto>> getUniversities();
+    ResponseEntity<List<UniversityDto>> getUniversities();
 }
