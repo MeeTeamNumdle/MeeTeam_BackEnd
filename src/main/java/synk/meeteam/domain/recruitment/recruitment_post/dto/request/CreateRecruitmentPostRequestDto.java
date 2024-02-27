@@ -33,13 +33,13 @@ public record CreateRecruitmentPostRequestDto(
         ProceedType proceedType,
         @NotNull
         @Schema(description = "수업 관련 정보")
-        CourseTagDto courseTagDto,
+        CourseTagDto courseTag,
         @NotNull
         @Schema(description = "태그", example = "[웹개발, AI, 졸업작품]")
         List<String> Tags,
         @NotNull
         @Schema(description = "필요한 역할들(List 형태로)", example = "")
-        List<RecruitmentRoleDto> recruitmentRoleDtos,
+        List<RecruitmentRoleDto> recruitmentRoles,
         @NotBlank
         @Schema(description = "제목", example = "졸작 사람 구합니다!!")
         String title,
