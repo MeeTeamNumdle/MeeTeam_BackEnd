@@ -19,4 +19,9 @@ public class UniversityService {
         String emailFormat = "%s@%s";
         return String.format(emailFormat, emailId, university.getEmailRegex());
     }
+
+    @Transactional(readOnly = true)
+    public University getUniversity(Long universityId) {
+        return universityRepository.findByIdOrElseThrowException(universityId);
+    }
 }
