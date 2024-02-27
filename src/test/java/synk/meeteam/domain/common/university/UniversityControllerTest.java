@@ -1,10 +1,11 @@
 package synk.meeteam.domain.common.university;
 
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.nimbusds.jose.shaded.gson.Gson;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import synk.meeteam.domain.common.university.api.UniversityController;
+import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.common.university.service.UniversityService;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,14 +44,15 @@ public class UniversityControllerTest {
         // given
         final String url = "/university";
         doReturn(UniversityFixture.createUniversities()).when(universityService).getUniversities();
+        List<University> universities = UniversityFixture.createUniversities();
 
         // when
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url));
 
         // then
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]").exists());
-
+        for (int cnt = 0; cnt < universities.size(); cnt++) {
+            resultActions.andExpect(jsonPath("$[" + cnt + "].universityName", notNullValue()));
+        }
     }
 }
