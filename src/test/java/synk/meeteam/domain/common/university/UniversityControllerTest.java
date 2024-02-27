@@ -1,6 +1,5 @@
 package synk.meeteam.domain.common.university;
 
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -52,7 +51,7 @@ public class UniversityControllerTest {
 
         // then
         for (int cnt = 0; cnt < universities.size(); cnt++) {
-            resultActions.andExpect(jsonPath("$[" + cnt + "].universityName", notNullValue()));
+            resultActions.andExpect(jsonPath("$[" + cnt + "].universityName").value(universities.get(cnt).getName()));
         }
     }
 }
