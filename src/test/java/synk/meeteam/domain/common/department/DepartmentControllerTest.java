@@ -47,13 +47,16 @@ public class DepartmentControllerTest {
 
     @Test
     public void 특정대학학과리스트조회_학과리스트반환_특정대학이주어질때() throws Exception {
+        // given
         final String url = "/department";
         University university = new University(1L, "광운대학교", "kw.ac.kr");
         doReturn(DepartmentFixture.createDepartments()).when(departmentService).getDepartmentsByUniversity(university);
         doReturn(university).when(universityService).getUniversity(1L);
 
+        // when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get(url).param("university", "1"));
 
+        // then
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").exists());
     }

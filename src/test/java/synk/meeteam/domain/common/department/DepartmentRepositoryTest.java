@@ -20,19 +20,28 @@ public class DepartmentRepositoryTest {
 
     @Test
     public void 특정대학학과리스트조회_학과리스트반환_특정대학이주어질때() {
+        // given
         University university = new University(1L, "광운대학교", "kw.ac.kr");
         universityRepository.saveAndFlush(university);
         Department department = new Department(1L, university, "소프트웨어학부");
         departmentRepository.saveAndFlush(department);
 
+        // when
         List<Department> departments = departmentRepository.findAllByUniversity(university);
+
+        // then
         Assertions.assertThat(departments.size()).isNotEqualTo(0);
     }
 
     @Test
     public void 특정대학학과리스트조회_예외발생_유효하지않은대학이주어질때() {
+        // given
         University university = new University(100L, "광운대학교", "kw.ac.kr");
+
+        // when
         List<Department> departments = departmentRepository.findAllByUniversity(university);
+
+        // then
         Assertions.assertThat(departments).isEmpty();
     }
 }

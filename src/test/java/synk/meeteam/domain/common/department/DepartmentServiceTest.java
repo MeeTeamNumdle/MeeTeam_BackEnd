@@ -24,10 +24,14 @@ public class DepartmentServiceTest {
 
     @Test
     public void 특정대학학과리스트조회_학과리스트반환_특정대학이주어질때() {
+        // given
         University university = new University(1L, "광운대학교", "kw.ac.kr");
         doReturn(DepartmentFixture.createDepartments()).when(departmentRepository).findAllByUniversity(university);
 
+        // when
         List<Department> departments = departmentService.getDepartmentsByUniversity(university);
+
+        // then
         Assertions.assertThat(departments).isNotEmpty();
     }
 }
