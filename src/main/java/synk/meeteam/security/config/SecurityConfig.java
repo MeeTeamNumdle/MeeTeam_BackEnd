@@ -50,8 +50,8 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://meeteam.co.kr", "localhost:5173")
-                        .allowedOriginPatterns("https://meeteam.co.kr", "localhost:5173")
+                        .allowedOrigins("https://meeteam.co.kr", "http://localhost:5173")
+                        .allowedOriginPatterns("https://meeteam.co.kr", "http://localhost:5173")
                         .allowedMethods(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .headers((headerConfig) ->
                         headerConfig.frameOptions(FrameOptionsConfig::disable)
                 )
-              //  .userDetailsService(memberAuthService)
+        //  .userDetailsService(memberAuthService)
         ;
 
         //== URL별 권한 관리 옵션 ==//
@@ -86,7 +86,6 @@ public class SecurityConfig {
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
-
 
         return http.build();
     }
