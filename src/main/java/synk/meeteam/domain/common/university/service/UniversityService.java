@@ -25,4 +25,9 @@ public class UniversityService {
     public List<University> getUniversities() {
         return universityRepository.findAll();
     }
+  
+    @Transactional(readOnly = true)
+    public University getUniversity(Long universityId) {
+        return universityRepository.findByIdOrElseThrowException(universityId);
+    }
 }

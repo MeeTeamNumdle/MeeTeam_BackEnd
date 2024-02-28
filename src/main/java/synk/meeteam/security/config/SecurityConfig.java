@@ -33,7 +33,7 @@ public class SecurityConfig {
             "/webjars/**",
 
             // Authentication
-            "/auth/**", "/login/**", "/authTest", "/user/search/check-duplicate", "/university",
+            "/auth/**", "/login/**", "/authTest", "/user/search/check-duplicate", "/university", "/department",
 
             // client
             "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health"
