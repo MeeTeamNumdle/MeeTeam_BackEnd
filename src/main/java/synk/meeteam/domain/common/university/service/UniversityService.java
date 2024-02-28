@@ -1,5 +1,6 @@
 package synk.meeteam.domain.common.university.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,11 @@ public class UniversityService {
         return String.format(emailFormat, emailId, university.getEmailRegex());
     }
 
+    @Transactional(readOnly = true)
+    public List<University> getUniversities() {
+        return universityRepository.findAll();
+    }
+  
     @Transactional(readOnly = true)
     public University getUniversity(Long universityId) {
         return universityRepository.findByIdOrElseThrowException(universityId);
