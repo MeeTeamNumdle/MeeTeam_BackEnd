@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -98,4 +99,23 @@ public class RecruitmentPost extends BaseEntity {
     @JoinColumn(name = "meeteam_id")
     private Meeteam meeteam;
 
+    @Builder
+    public RecruitmentPost(String title, String content, Scope scope, Category category, Field field,
+                           ProceedType proceedType, LocalDate proceedingStart, LocalDate proceedingEnd,
+                           LocalDate deadline,
+                           long bookmarkCount, String kakaoLink, boolean isClosed, Meeteam meeteam) {
+        this.title = title;
+        this.content = content;
+        this.scope = scope;
+        this.category = category;
+        this.field = field;
+        this.proceedType = proceedType;
+        this.proceedingStart = proceedingStart;
+        this.proceedingEnd = proceedingEnd;
+        this.deadline = deadline;
+        this.bookmarkCount = bookmarkCount;
+        this.kakaoLink = kakaoLink;
+        this.isClosed = isClosed;
+        this.meeteam = meeteam;
+    }
 }

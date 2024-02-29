@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,4 +25,10 @@ public class Field {
     @NotNull
     @Column(length = 20)
     private String name;
+
+    @Builder
+    public Field(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
