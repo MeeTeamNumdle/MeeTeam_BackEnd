@@ -3,6 +3,7 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.global.entity.Category;
@@ -29,5 +30,5 @@ public interface RecruitmentPostMapper {
     @Mapping(source = "requestDto.scope", target = "scope", qualifiedByName = "scopeToEnum")
     @Mapping(source = "requestDto.category", target = "category", qualifiedByName = "categoryToEnum")
     @Mapping(source = "requestDto.proceedType", target = "proceedType", qualifiedByName = "proceedTypeToEnum")
-    RecruitmentPost toRecruitmentEntity(CreateRecruitmentPostRequestDto requestDto);
+    RecruitmentPost toRecruitmentEntity(CreateRecruitmentPostRequestDto requestDto, Field field);
 }
