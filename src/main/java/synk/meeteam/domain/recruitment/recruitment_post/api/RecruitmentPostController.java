@@ -28,10 +28,10 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<CreateRecruitmentPostResponseDto> createRecruitmentPost(
             @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto) {
 
-        // field 가져오기
+        // field 가져오기 (아직 개발 X)
         Field tmpField = new Field(1L, "개발");
 
-        RecruitmentPost recruitmentPost = CreateRecruitmentPostRequestDto.toRecruitmentEntity(requestDto, tmpField);
+        RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, tmpField);
 
         // null 부분은 아직 개발 X
         return ResponseEntity.status(HttpStatus.CREATED).body(CreateRecruitmentPostResponseDto.from(
