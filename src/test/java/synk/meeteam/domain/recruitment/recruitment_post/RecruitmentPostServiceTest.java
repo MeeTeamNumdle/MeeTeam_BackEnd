@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_post;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE_EXCEED_40;
 
 import jakarta.validation.ConstraintViolationException;
@@ -46,6 +47,7 @@ public class RecruitmentPostServiceTest {
     @Test
     public void 구인글생성_예외발생_제목이40자넘는경우() {
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE_EXCEED_40);
+        doThrow(ConstraintViolationException.class).when(recruitmentPostRepository).save(recruitmentPost);
 
         // when, then
         Assertions.assertThatThrownBy(() -> {
