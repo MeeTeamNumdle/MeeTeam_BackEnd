@@ -22,7 +22,7 @@ public record CreateRecruitmentPostRequestDto(
         @NotNull
         @Schema(description = "[시작 기간, 종료기간]", example = "[\"2023-02-01\",\"2023-07-01\"]")
         List<LocalDate> proceedingPeriod,
-        @NotBlank
+        @NotNull
         @Schema(description = "분야", example = "개발")
         Long fieldId,
         @NotNull
