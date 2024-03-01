@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.field.entity.Field;
+import synk.meeteam.domain.common.field.service.FieldService;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.service.RoleService;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.service.SkillService;
+import synk.meeteam.domain.common.tag.entity.Tag;
+import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
@@ -22,16 +25,19 @@ import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.facade.RecruitmentPostFacade;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
+import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/recruitment/post")
 public class RecruitmentPostController implements RecruitmentPostApi {
 
+    private final Long DEVELOP_ID = 1L;
+
     private final RecruitmentPostFacade recruitmentPostFacade;
 
     private final RoleService roleService;
-    //    private final FieldService fieldService;
+    private final FieldService fieldService;
     private final SkillService skillService;
 
     private final RecruitmentPostMapper recruitmentPostMapper;
@@ -41,30 +47,53 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<CreateRecruitmentPostResponseDto> createRecruitmentPost(
             @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto) {
 
-        // field 가져오기 (아직 개발 X)
-        Field tmpField = new Field(1L, "개발");
+        Field field = fieldService.findByFieldId(DEVELOP_ID);
 
-        RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, tmpField);
+        RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field);
 
         List<RecruitmentRoleSkill> recruitmentRoleSkills = new ArrayList<>();
+        List<RecruitmentRole> recruitmentRoles = getRecruitmentRoles(requestDto, recruitmentPost,
+                recruitmentRoleSkills);
 
-        List<RecruitmentRole> recruitmentRoles = requestDto.recruitmentRoles().stream().map(recruitmentRole -> {
+        List<RecruitmentTag> recruitmentTags = getRecruitmentTags(requestDto, recruitmentPost);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(CreateRecruitmentPostResponseDto.from(
+                recruitmentPostFacade.createRecruitmentPost(recruitmentPost, recruitmentRoles, recruitmentRoleSkills,
+                        recruitmentTags)));
+    }
+
+    private List<RecruitmentRole> getRecruitmentRoles(CreateRecruitmentPostRequestDto requestDto,
+                                                      RecruitmentPost recruitmentPost,
+                                                      List<RecruitmentRoleSkill> recruitmentRoleSkills) {
+        return requestDto.recruitmentRoles().stream().map(recruitmentRole -> {
             Role role = roleService.findRoleById(recruitmentRole.roleId());
             RecruitmentRole recruitmentRoleEntity = recruitmentPostMapper.toRecruitmentRoleEntity(recruitmentPost, role,
                     recruitmentRole.count());
 
             recruitmentRole.skillIds().stream().forEach(skillId -> {
-                Skill skill = skillService.findById(skillId);
+                Skill skill = skillService.findBySkillId(skillId);
                 recruitmentRoleSkills.add(recruitmentPostMapper.toRecruitmentSkillEntity(recruitmentRoleEntity, skill));
             });
             return recruitmentRoleEntity;
         }).toList();
+    }
 
-        // recruitmentTags 생성 아직 개발 X
+    private List<RecruitmentTag> getRecruitmentTags(CreateRecruitmentPostRequestDto requestDto,
+                                                    RecruitmentPost recruitmentPost) {
+        List<RecruitmentTag> recruitmentTags = new ArrayList<>();
+        recruitmentTags.addAll(requestDto.Tags().stream()
+                .map(tagName -> recruitmentPostMapper.toTagEntity(tagName, TagType.MEETEAM))
+                .map(tag -> recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost, tag))
+                .toList());
 
-        // null 부분은 아직 개발 X
-        return ResponseEntity.status(HttpStatus.CREATED).body(CreateRecruitmentPostResponseDto.from(
-                recruitmentPostFacade.createRecruitmentPost(recruitmentPost, recruitmentRoles, recruitmentRoleSkills,
-                        null)));
+        if (requestDto.courseTag().isCourse()) {
+            Tag tagEntity = recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseTagName(), TagType.COURSE);
+            RecruitmentTag recruitmentTagEntity = recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost,
+                    tagEntity);
+            recruitmentTags.add(recruitmentTagEntity);
+            recruitmentTags.add(recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost,
+                    recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseTagName(), TagType.PROFESSOR)));
+        }
+        return recruitmentTags;
     }
 }
