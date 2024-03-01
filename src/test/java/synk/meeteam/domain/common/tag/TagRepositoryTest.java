@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.common.tag.repository.TagRepository;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class TagRepositoryTest {
     @Autowired
     private TagRepository tagRepository;

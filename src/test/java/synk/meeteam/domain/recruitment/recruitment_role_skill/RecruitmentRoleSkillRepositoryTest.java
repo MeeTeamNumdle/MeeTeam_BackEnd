@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.repository.SkillRepository;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
@@ -13,6 +14,7 @@ import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.Recruitment
 import synk.meeteam.domain.recruitment.recruitment_role_skill.repository.RecruitmentRoleSkillRepository;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class RecruitmentRoleSkillRepositoryTest {
     @Autowired
     private RecruitmentRoleSkillRepository recruitmentRoleSkillRepository;

@@ -4,11 +4,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.exception.SkillException;
 import synk.meeteam.domain.common.skill.repository.SkillRepository;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class SkillRepositoryTest {
     @Autowired
     private SkillRepository skillRepository;

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
@@ -17,6 +18,7 @@ import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.repository.RecruitmentRoleRepository;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class RecruitmentRoleRepositoryTest {
     @Autowired
     private RecruitmentRoleRepository recruitmentRoleRepository;

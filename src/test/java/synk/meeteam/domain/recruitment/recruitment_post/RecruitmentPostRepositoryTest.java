@@ -7,10 +7,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class RecruitmentPostRepositoryTest {
 
     @Autowired
