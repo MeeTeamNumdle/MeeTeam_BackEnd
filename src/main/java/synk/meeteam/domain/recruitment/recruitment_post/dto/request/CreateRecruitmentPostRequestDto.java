@@ -23,7 +23,7 @@ public record CreateRecruitmentPostRequestDto(
         @Schema(description = "[시작 기간, 종료기간]", example = "[\"2023-02-01\",\"2023-07-01\"]")
         List<LocalDate> proceedingPeriod,
         @NotNull
-        @Schema(description = "분야", example = "개발")
+        @Schema(description = "분야 (개발 == 1)", example = "1")
         Long fieldId,
         @NotNull
         @Schema(description = "진행방식", example = "온라인")
@@ -38,7 +38,7 @@ public record CreateRecruitmentPostRequestDto(
         @Schema(description = "필요한 역할들(List 형태로)", example = "")
         List<RecruitmentRoleDto> recruitmentRoles,
         @NotBlank
-        @Size(max = 40)
+        @Size(min = 5, max = 40)
         @Schema(description = "제목", example = "졸작 사람 구합니다!!")
         String title,
         @NotNull
