@@ -11,7 +11,7 @@ public record RecruitmentRoleDto(
         @Schema(description = "필요한 사람 수 ", example = "2")
         int count,
         @NotNull
-        @Schema(description = "필요한 스킬들", example = "[1, 2, 3")
+        @Schema(description = "필요한 스킬들", example = "\"[1, 2, 3]\"")
         List<Long> skillIds
 ) {
 }
