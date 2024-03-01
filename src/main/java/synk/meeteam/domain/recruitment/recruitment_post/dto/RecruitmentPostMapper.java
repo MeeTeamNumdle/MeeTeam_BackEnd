@@ -8,10 +8,13 @@ import org.mapstruct.Named;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.skill.entity.Skill;
+import synk.meeteam.domain.common.tag.entity.Tag;
+import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
+import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.entity.Scope;
@@ -42,6 +45,12 @@ public interface RecruitmentPostMapper {
     RecruitmentRole toRecruitmentRoleEntity(RecruitmentPost recruitmentPost, Role role, int count);
 
     RecruitmentRoleSkill toRecruitmentSkillEntity(RecruitmentRole recruitmentRole, Skill skill);
+
+    RecruitmentTag toRecruitmentTagEntity(RecruitmentPost recruitmentPost, Tag tag);
+
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "type", target = "type")
+    Tag toTagEntity(String name, TagType type);
 
     @Named("scopeToEnum")
     static Scope scopeToEnum(String scope) {
