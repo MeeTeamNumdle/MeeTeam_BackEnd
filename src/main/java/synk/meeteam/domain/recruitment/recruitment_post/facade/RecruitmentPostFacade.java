@@ -11,6 +11,7 @@ import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleS
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.service.RecruitmentRoleSkillService;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
+import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class RecruitmentPostFacade {
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentRoleSkillService recruitmentRoleSkillService;
-    //   private final RecruitmentTagService recruitmentTagService;
+    private final RecruitmentTagService recruitmentTagService;
 
     @Transactional
     public Long createRecruitmentPost(RecruitmentPost recruitmentPost, List<RecruitmentRole> recruitmentRoles,
@@ -27,13 +28,11 @@ public class RecruitmentPostFacade {
 
         RecruitmentPost newRecruitmentPost = recruitmentPostService.createRecruitmentPost(recruitmentPost);
 
-        recruitmentRoles.stream()
-                .forEach(recruitmentRole -> recruitmentRoleService.createRecruitmentRoleV2(recruitmentRole));
+        recruitmentRoles.forEach(recruitmentRoleService::createRecruitmentRoleV2);
 
-        recruitmentRoleSkills.forEach(
-                recruitmentRoleSkill -> recruitmentRoleSkillService.createRecruitmentRoleSkill(recruitmentRoleSkill));
+        recruitmentRoleSkills.forEach(recruitmentRoleSkillService::createRecruitmentRoleSkill);
 
-        //    recruitmentTags.stream().forEach(recruitmentTag -> recruitmentTagService.createRecruitmentTag(recruitmentTag));
+        recruitmentTags.forEach(recruitmentTagService::createRecruitmentTag);
 
         return newRecruitmentPost.getId();
     }
