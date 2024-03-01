@@ -41,7 +41,7 @@ public class RecruitmentTagServiceTest {
         Tag tag = TagFixture.createCoureNanmeTag("이름");
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
-        doReturn(Optional.ofNullable(null)).when(tagRepository).findById(tag.getId());
+        doReturn(Optional.ofNullable(null)).when(tagRepository).findByName(tag.getName());
         doReturn(tag).when(tagRepository).save(tag);
         doReturn(recruitmentTag).when(recruitmentTagRepository).save(recruitmentTag);
 
@@ -61,7 +61,7 @@ public class RecruitmentTagServiceTest {
         Tag tag = TagFixture.createCoureNanmeTag("이름");
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
-        doReturn(Optional.ofNullable(tag)).when(tagRepository).findById(tag.getId());
+        doReturn(Optional.ofNullable(tag)).when(tagRepository).findByName(tag.getName());
         doReturn(recruitmentTag).when(recruitmentTagRepository).save(recruitmentTag);
 
         // when
@@ -80,7 +80,7 @@ public class RecruitmentTagServiceTest {
         Tag tag = TagFixture.createCoureNanmeTag("이름");
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
-        doReturn(Optional.ofNullable(tag)).when(tagRepository).findById(tag.getId());
+        doReturn(Optional.ofNullable(tag)).when(tagRepository).findByName(tag.getName());
         doThrow(DataIntegrityViolationException.class).when(recruitmentTagRepository).save(recruitmentTag);
 
         // when, then
@@ -95,7 +95,7 @@ public class RecruitmentTagServiceTest {
         Tag tag = TagFixture.createCoureNanmeTag(NAME_EXCEED_15);
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
-        doReturn(Optional.ofNullable(null)).when(tagRepository).findById(tag.getId());
+        doReturn(Optional.ofNullable(null)).when(tagRepository).findByName(tag.getName());
         doThrow(InvalidDataAccessApiUsageException.class).when(tagRepository).save(tag);
 
         // when, then
