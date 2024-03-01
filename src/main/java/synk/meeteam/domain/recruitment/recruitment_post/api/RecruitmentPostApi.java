@@ -3,7 +3,6 @@ package synk.meeteam.domain.recruitment.recruitment_post.api;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,8 +34,8 @@ public interface RecruitmentPostApi {
             value = {
                     @ApiResponse(responseCode = "200", description = "구인글 조회 성공"
                             , content = {
-                            @Content(mediaType = APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = GetRecruitmentPostResponseDto.class)))
-                    }),
+                            @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = GetRecruitmentPostResponseDto.class))
+                    })
             }
     )
     @Operation(summary = "특정 구인글 조회 API")
