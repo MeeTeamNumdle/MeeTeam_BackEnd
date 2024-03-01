@@ -1,35 +1,39 @@
 package synk.meeteam.domain.recruitment.recruitment_post.facade;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
+import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
+import synk.meeteam.domain.recruitment.recruitment_role_skill.service.RecruitmentRoleSkillService;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 
 @Service
 @RequiredArgsConstructor
 public class RecruitmentPostFacade {
     private final RecruitmentPostService recruitmentPostService;
-    //    private final RecruitmentRoleService recruitmentRole;
-//    private final RecruitmentRoleSkillService recruitmentRoleSkill;
-//    private final RecruitmentTagService recruitmentTagService;
-    private final RecruitmentPostMapper recruitmentPostMapper;
+    private final RecruitmentRoleService recruitmentRoleService;
+    private final RecruitmentRoleSkillService recruitmentRoleSkillService;
+    //   private final RecruitmentTagService recruitmentTagService;
 
     @Transactional
-    public Long createRecruitmentPost(RecruitmentPost recruitmentPost, RecruitmentRole recruitmentRole,
-                                      RecruitmentRoleSkill recruitmentRoleSkill, RecruitmentTag recruitmentTag) {
-        // recruitment_post 생성
+    public Long createRecruitmentPost(RecruitmentPost recruitmentPost, List<RecruitmentRole> recruitmentRoles,
+                                      List<RecruitmentRoleSkill> recruitmentRoleSkills,
+                                      List<RecruitmentTag> recruitmentTags) {
+
         RecruitmentPost newRecruitmentPost = recruitmentPostService.createRecruitmentPost(recruitmentPost);
 
-        // recruitment_role 생성
+        recruitmentRoles.stream()
+                .forEach(recruitmentRole -> recruitmentRoleService.createRecruitmentRoleV2(recruitmentRole));
 
-        // recruitment_role_skill 생성
+        recruitmentRoleSkills.forEach(
+                recruitmentRoleSkill -> recruitmentRoleSkillService.createRecruitmentRoleSkill(recruitmentRoleSkill));
 
-        // recruitment_tag 생성
+        //    recruitmentTags.stream().forEach(recruitmentTag -> recruitmentTagService.createRecruitmentTag(recruitmentTag));
 
         return newRecruitmentPost.getId();
     }
