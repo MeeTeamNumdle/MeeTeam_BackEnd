@@ -18,7 +18,7 @@ public record GetRecruitmentPostApplyInfoResponseDto(
         @Schema(description = "학사 이메일", example = "thdalsrb123@kw.ac.kr")
         String email,
         @Schema(description = "지원 가능한 구인 역할", example = "")
-        List<GetRecruitmentRoleResponseDto> availableRecruitmentRoles
+        List<GetRecruitmentRoleResponseDto> RecruitmentRoles
 
 ) {
 }
