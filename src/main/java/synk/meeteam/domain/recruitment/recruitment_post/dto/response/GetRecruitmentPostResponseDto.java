@@ -7,6 +7,8 @@ import java.util.List;
 public record GetRecruitmentPostResponseDto(
         @Schema(description = "내가 해당 글의 작성자인지", example = "true")
         boolean isWriter,
+        @Schema(description = "유형", example = "프로젝트")
+        String category,
         @Schema(description = "글 제목", example = "팀원을 구합니다!")
         String title,
         @Schema(description = "해당 글 작성날짜", example = "2024-03-15")
