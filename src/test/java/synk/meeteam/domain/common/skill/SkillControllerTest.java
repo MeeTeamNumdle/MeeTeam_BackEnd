@@ -35,7 +35,7 @@ public class SkillControllerTest {
     }
 
     @Test
-    public void 스킬검색() throws Exception {
+    public void 스킬자동완성검색_스킬결과반환() throws Exception {
         //given
         final String url = "/skill/list";
         doReturn(SkillFixtures.createDtoByKeyword자바()).when(skillService).searchByKeyword("자바", 5);
