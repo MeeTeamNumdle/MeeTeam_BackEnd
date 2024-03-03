@@ -25,7 +25,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return null;
     }
 
-    @GetMapping
+    @GetMapping("/apply")
     @Override
     public ResponseEntity<GetRecruitmentPostApplyInfoResponseDto> getApplyInfo(@AuthUser User user) {
         return null;
