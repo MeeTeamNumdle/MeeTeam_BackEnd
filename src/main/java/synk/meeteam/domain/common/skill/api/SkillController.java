@@ -8,16 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
+import synk.meeteam.domain.common.skill.service.SkillService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/skill")
 public class SkillController implements SkillApi {
+
+    private final SkillService skillService;
+
     @Override
-    @GetMapping("/list")
+    @GetMapping(value = "/list")
     public ResponseEntity<List<SkillDto>> getTotalSkills(
-            @RequestParam(name = "keyword", required = false) String keyword,
-            @RequestParam(name = "limit", defaultValue = "5") long limit) {
-        return null;
+            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
+
+        return ResponseEntity.ok().body(skillService.searchByKeyword(keyword, limit));
     }
 }
