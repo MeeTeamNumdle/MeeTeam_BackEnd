@@ -18,7 +18,7 @@ import synk.meeteam.domain.common.skill.dto.SkillDto;
 
 @Tag(name = "Skill", description = "스킬 관련 API")
 public interface SkillApi {
-    @Operation(summary = "키워드 기반 스킬 목록 조회 API", description = """
+    @Operation(summary = "키워드 기반 스킬 목록 조회(자동완성) API", description = """
             **키워드**로 시작하는 스킬 목록을 조회합니다. \s
             이때, 스킬명이 따로 없다면 전체 목록을 조회합니다. \s
             조회 시, 최대 갯수를 제한하여 받을 수 있습니다. 기본값은 **5개** 입니다. \s
@@ -36,6 +36,6 @@ public interface SkillApi {
             }
     )
     @SecurityRequirements
-    ResponseEntity<List<SkillDto>> getTotalSkills(@Parameter(description = "키워드") String keyword,
-                                                  @Parameter(description = "조회 갯수") long limit);
+    ResponseEntity<List<SkillDto>> searchSkill(@Parameter(description = "키워드") String keyword,
+                                               @Parameter(description = "조회 갯수") long limit);
 }
