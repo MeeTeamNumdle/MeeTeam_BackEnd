@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
 @Schema(name = "GetRecruitmentPostApplyInfoResponseDto", description = "신청 정보 조회 Dto")
-public record GetRecruitmentPostApplyInfoResponseDto(
+public record GetApplyInfoResponseDto(
         @Schema(description = "신청자 이름", example = "송민규")
         String name,
         @Schema(description = "신청자 평점", example = "4.4")
@@ -18,7 +18,7 @@ public record GetRecruitmentPostApplyInfoResponseDto(
         @Schema(description = "학사 이메일", example = "thdalsrb123@kw.ac.kr")
         String email,
         @Schema(description = "지원 가능한 구인 역할", example = "")
-        List<GetRecruitmentRoleResponseDto> recruitmentRoles
+        List<GetApplyRecruitmentRoleResponseDto> recruitmentRoles
 
 ) {
 }
