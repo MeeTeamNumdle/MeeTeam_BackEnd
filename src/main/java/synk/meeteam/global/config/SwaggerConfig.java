@@ -6,10 +6,11 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.security.SecuritySchemes;
-import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,10 +21,6 @@ import org.springframework.context.annotation.Configuration;
         security = {
                 @SecurityRequirement(name = "Authorization"),
                 @SecurityRequirement(name = "Authorization-refresh")
-        },
-        servers = {
-                @Server(url = "http://localhost:8080", description = "local server"),
-                @Server(url = "https://api.meeteam.com", description = "dev server")
         })
 @SecuritySchemes({
         @SecurityScheme(name = "Authorization",
@@ -39,11 +36,29 @@ import org.springframework.context.annotation.Configuration;
 })
 @Configuration
 public class SwaggerConfig {
+
+
+    private static String SERVER_DOMAIN;
+
+    public SwaggerConfig(@Value("${domain.server-domain}") String serverDomain) {
+        SERVER_DOMAIN = serverDomain;
+    }
+
     @Bean
     public OpenAPI openAPI() {
-        return new OpenAPI()
+        io.swagger.v3.oas.models.servers.Server devServer = new io.swagger.v3.oas.models.servers.Server();
+        devServer.setDescription("dev server");
+        devServer.setUrl(SERVER_DOMAIN);
+
+        io.swagger.v3.oas.models.servers.Server localServer = new io.swagger.v3.oas.models.servers.Server();
+        localServer.setDescription("local server");
+        localServer.setUrl("http://localhost:5173");
+
+        OpenAPI info = new OpenAPI()
                 .components(new Components())
                 .info(apiInfo());
+        info.setServers(Arrays.asList(localServer, devServer));
+        return info;
     }
 
     private Info apiInfo() {
