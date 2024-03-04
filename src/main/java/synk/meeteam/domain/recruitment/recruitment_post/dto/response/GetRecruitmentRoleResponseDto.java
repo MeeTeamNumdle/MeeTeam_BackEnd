@@ -6,7 +6,10 @@ import jakarta.validation.constraints.NotNull;
 
 public record GetRecruitmentRoleResponseDto(
         @NotNull
-        @Schema(description = "지원 가능한 역할", example = "백엔드개발자")
+        @Schema(description = "지원 가능한 역할 id", example = "1")
+        Long roleId,
+        @NotNull
+        @Schema(description = "지원 가능한 역할 이름", example = "백엔드개발자")
         String roleName
 ) {
 }
