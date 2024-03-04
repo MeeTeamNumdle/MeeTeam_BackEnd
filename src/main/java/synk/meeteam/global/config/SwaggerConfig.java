@@ -59,7 +59,7 @@ public class SwaggerConfig {
                 .info(apiInfo());
 
         info.setServers(Arrays.asList(devServer, localServer));
-      
+
         return info;
     }
 
