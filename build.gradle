@@ -88,6 +88,10 @@ dependencies {
 
     // mac m1 setting
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
+
+    // aws
+    implementation "software.amazon.awssdk:s3:2.21.0"
+
 }
 
 tasks.named('test') {
