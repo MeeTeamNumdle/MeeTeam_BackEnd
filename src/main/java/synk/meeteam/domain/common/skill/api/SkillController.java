@@ -18,8 +18,8 @@ public class SkillController implements SkillApi {
     private final SkillService skillService;
 
     @Override
-    @GetMapping(value = "/list")
-    public ResponseEntity<List<SkillDto>> getTotalSkills(
+    @GetMapping("/list")
+    public ResponseEntity<List<SkillDto>> searchSkill(
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
 
