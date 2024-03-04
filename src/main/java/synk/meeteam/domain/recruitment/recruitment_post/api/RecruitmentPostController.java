@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyRecruitmentRoleResponseDto;
@@ -50,4 +51,11 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                         "명품학과", 2018, "miekkse@kw.kr", recruitmentRoles));
     }
 
+
+    @PostMapping("/apply")
+    @Override
+    public ResponseEntity<Void> applyRecruitment(applyRecruitmentRequestDto requestDto, User user) {
+
+        return ResponseEntity.ok().build();
+    }
 }
