@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.security.AuthUser;
@@ -43,6 +44,16 @@ public interface RecruitmentPostApi {
     @SecurityRequirements
     ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
             @Valid @RequestParam Long id, @AuthUser User user);
+
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "신청 정보 조회 성공"),
+            }
+    )
+    @Operation(summary = "신청 정보 조회 API")
+    ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(
+            @AuthUser User user);
 
     @ApiResponses(
             value = {

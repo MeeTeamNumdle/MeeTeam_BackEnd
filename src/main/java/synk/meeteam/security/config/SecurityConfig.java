@@ -34,6 +34,7 @@ public class SecurityConfig {
 
             // Authentication
             "/auth/**", "/login/**", "/authTest", "/user/search/check-duplicate", "/university", "/department",
+            "/skill/**",
 
             // client
             "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health"
@@ -50,8 +51,9 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://meeteam.co.kr", "http://localhost:5173")
-                        .allowedOriginPatterns("https://meeteam.co.kr", "http://localhost:5173")
+                        .allowedOrigins("https://meeteam.co.kr", "http://localhost:5173", "http://localhost:8080")
+                        .allowedOriginPatterns("https://meeteam.co.kr", "http://localhost:5173",
+                                "http://localhost:8080")
                         .allowedMethods(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
