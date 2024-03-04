@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
@@ -31,5 +32,12 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(@Valid @RequestParam Long id,
                                                                             @AuthUser User user) {
         return null;
+    }
+
+    @PostMapping("/apply")
+    @Override
+    public ResponseEntity<Void> applyRecruitment(applyRecruitmentRequestDto requestDto, User user) {
+
+        return ResponseEntity.ok().build();
     }
 }

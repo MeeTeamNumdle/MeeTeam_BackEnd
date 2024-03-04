@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
@@ -42,4 +43,16 @@ public interface RecruitmentPostApi {
     @SecurityRequirements
     ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
             @Valid @RequestParam Long id, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "구인 신청 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "구인 신청 API")
+    ResponseEntity<Void> applyRecruitment(
+            @Valid applyRecruitmentRequestDto requestDto, @AuthUser User user);
 }
