@@ -1,4 +1,4 @@
-package synk.meeteam.domain.common.skill;
+package synk.meeteam.domain.common.role;
 
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -15,43 +15,40 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import synk.meeteam.domain.common.skill.api.SkillController;
-import synk.meeteam.domain.common.skill.service.SkillService;
+import synk.meeteam.domain.common.role.api.RoleController;
+import synk.meeteam.domain.common.role.service.RoleService;
 
 @ExtendWith(MockitoExtension.class)
-public class SkillControllerTest {
+public class RoleControllerTest {
+
     @InjectMocks
-    private SkillController skillController;
+    private RoleController roleController;
 
     @Mock
-    private SkillService skillService;
+    private RoleService roleService;
 
     private MockMvc mockMvc;
     private Gson gson;
 
     @BeforeEach
     public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(skillController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(roleController).build();
     }
 
     @Test
-    void 스킬자동완성검색_스킬결과반환() throws Exception {
+    void 역할자동완성검색_역할목록반환() throws Exception {
         //given
-        final String url = "/skill/search";
-        doReturn(SkillFixture.createDtoByKeyword자바()).when(skillService).searchByKeyword("자바", 5);
+        final String url = "/role/search";
+        doReturn(RoleFixture.createRoleDtos()).when(roleService).searchByKeyword("웹 개발자", 5);
 
         //when
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get(url).param("keyword", "자바"));
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get(url).param("keyword", "웹 개발자"));
 
         //then
         String expectName = "$[?(@.name=='%s')]";
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0]").exists())
-                .andExpect(jsonPath("$[1]").exists())
-                .andExpect(jsonPath(expectName, "자바").exists())
-                .andExpect(jsonPath(expectName, "자바스크립트").exists());
+                .andExpect(jsonPath(expectName, "웹 개발자").exists());
     }
-
-
 }
