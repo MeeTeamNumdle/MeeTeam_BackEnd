@@ -7,6 +7,7 @@ import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFi
 
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,12 +17,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import synk.meeteam.domain.common.tag.TagFixture;
 import synk.meeteam.domain.common.tag.entity.Tag;
+import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.common.tag.repository.TagRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.repository.RecruitmentTagRepository;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
+import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 
 @ExtendWith(MockitoExtension.class)
 public class RecruitmentTagServiceTest {
@@ -101,6 +104,44 @@ public class RecruitmentTagServiceTest {
         // when, then
         Assertions.assertThatThrownBy(() -> recruitmentTagService.createRecruitmentTag(recruitmentTag)).isInstanceOf(
                 InvalidDataAccessApiUsageException.class);
+    }
+
+    @Test
+    @DisplayName("해당 메서드는 페치 조인을 사용한다.")
+    void 구인태그조회_구인태그및수업태그반환_수업관련구인글경우() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
+        Tag tag = TagFixture.createTag("대학생", TagType.MEETEAM);
+        doReturn(RecruitmentTagFixture.createRecruitmentTags(recruitmentPost, tag)).when(recruitmentTagRepository)
+                .findByPostIdWithTag(1L);
+
+        // when
+        RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(1L);
+
+        // then
+        Assertions.assertThat(recruitmentTagVO)
+                .extracting("courseName", "courseProfessor")
+                .containsExactly("응소실", "김용혁");
+        Assertions.assertThat(recruitmentTagVO.recruitmentTags().get(0))
+                .extracting("recruitmentPost", "tag")
+                .containsExactly(recruitmentPost, tag);
+    }
+
+    @Test
+    void 구인태그조회_구인태그반환_수업관련구인글아닌경우() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
+        Tag tag = TagFixture.createTag("대학생", TagType.MEETEAM);
+        doReturn(RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag)).when(recruitmentTagRepository)
+                .findByPostIdWithTag(1L);
+
+        // when
+        RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(1L);
+
+        // then
+        Assertions.assertThat(recruitmentTagVO.recruitmentTags().get(0))
+                .extracting("recruitmentPost", "tag")
+                .containsExactly(recruitmentPost, tag);
     }
 
 }
