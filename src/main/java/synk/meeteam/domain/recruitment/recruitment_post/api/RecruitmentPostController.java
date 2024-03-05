@@ -71,6 +71,34 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                         recruitmentTags)));
     }
 
+    @GetMapping
+    @Override
+    public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(@Valid @RequestParam Long id,
+                                                                            @AuthUser User user) {
+
+        return null;
+    }
+
+    @GetMapping("/apply")
+    @Override
+    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@AuthUser User user) {
+        List<GetApplyRecruitmentRoleResponseDto> recruitmentRoles = new ArrayList<>();
+        recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(1L, "백엔드개발자"));
+        recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(2L, "프론트엔드개발자"));
+
+        return ResponseEntity.ok()
+                .body(new GetApplyInfoResponseDto("송민규", 4.43, "명문대학교",
+                        "명품학과", 2018, "miekkse@kw.kr", recruitmentRoles));
+    }
+
+
+    @PostMapping("/apply")
+    @Override
+    public ResponseEntity<Void> applyRecruitment(applyRecruitmentRequestDto requestDto, User user) {
+
+        return ResponseEntity.ok().build();
+    }
+
     private List<RecruitmentRole> getRecruitmentRoles(CreateRecruitmentPostRequestDto requestDto,
                                                       RecruitmentPost recruitmentPost,
                                                       List<RecruitmentRoleSkill> recruitmentRoleSkills) {
@@ -104,32 +132,5 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                     recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseTagName(), TagType.PROFESSOR)));
         }
         return recruitmentTags;
-    }
-
-    @GetMapping
-    @Override
-    public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(@Valid @RequestParam Long id,
-                                                                            @AuthUser User user) {
-        return null;
-    }
-
-    @GetMapping("/apply")
-    @Override
-    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@AuthUser User user) {
-        List<GetApplyRecruitmentRoleResponseDto> recruitmentRoles = new ArrayList<>();
-        recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(1L, "백엔드개발자"));
-        recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(2L, "프론트엔드개발자"));
-
-        return ResponseEntity.ok()
-                .body(new GetApplyInfoResponseDto("송민규", 4.43, "명문대학교",
-                        "명품학과", 2018, "miekkse@kw.kr", recruitmentRoles));
-    }
-
-
-    @PostMapping("/apply")
-    @Override
-    public ResponseEntity<Void> applyRecruitment(applyRecruitmentRequestDto requestDto, User user) {
-
-        return ResponseEntity.ok().build();
     }
 }
