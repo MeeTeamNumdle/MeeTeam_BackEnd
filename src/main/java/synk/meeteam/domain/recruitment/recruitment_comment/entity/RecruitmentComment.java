@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,4 +52,15 @@ public class RecruitmentComment extends BaseEntity {
 
     @ColumnDefault("0")
     private boolean isDeleted = false;
+
+    @Builder
+    public RecruitmentComment(RecruitmentPost recruitmentPost, String content, boolean isParent, long groupNumber,
+                              long groupOrder, boolean isDeleted) {
+        this.recruitmentPost = recruitmentPost;
+        this.content = content;
+        this.isParent = isParent;
+        this.groupNumber = groupNumber;
+        this.groupOrder = groupOrder;
+        this.isDeleted = isDeleted;
+    }
 }
