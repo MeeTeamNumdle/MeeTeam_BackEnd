@@ -10,7 +10,7 @@ import synk.meeteam.domain.common.field.repository.FieldRepository;
 public class FieldService {
     private final FieldRepository fieldRepository;
 
-    public Field findByFieldId(Long fieldId) {
+    public Field findById(Long fieldId) {
         return fieldRepository.findByIdOrElseThrowException(fieldId);
     }
 }

@@ -47,7 +47,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<CreateRecruitmentPostResponseDto> createRecruitmentPost(
             @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto) {
 
-        Field field = fieldService.findByFieldId(DEVELOP_ID);
+        Field field = fieldService.findById(DEVELOP_ID);
 
         RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field);
 
