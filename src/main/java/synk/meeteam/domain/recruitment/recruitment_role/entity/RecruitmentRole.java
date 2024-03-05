@@ -58,4 +58,11 @@ public class RecruitmentRole {
         this.role = role;
         this.count = count;
     }
+
+    public boolean isAvailableRecruitmentRole() {
+        if (recruitedCount >= count) {
+            return false;
+        }
+        return true;
+    }
 }
