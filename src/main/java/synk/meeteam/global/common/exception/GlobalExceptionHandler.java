@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseCustomException.class)
     public ResponseEntity<ExceptionResponse> handleBaseException(BaseCustomException e) {
         ExceptionType exceptionType = e.getExceptionType();
-        log.info(String.format(LOG_FORMAT, e.getMessage()), e);
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)  // @Notnull 오류
     public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException e) {
         ExceptionType exceptionType = INVALID_INPUT_VALUE;
-        log.info(String.format(LOG_FORMAT, e.getMessage()), e);
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)  // null value 오류
     public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         ExceptionType exceptionType = INVALID_INPUT_VALUE;
-        log.info(String.format(LOG_FORMAT, e.getMessage()), e);
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)  // null value 오류
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         ExceptionType exceptionType = INVALID_INPUT_VALUE;
-        log.info(String.format(LOG_FORMAT, e.getMessage()), e);
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         ExceptionType exceptionType = INVALID_INPUT_VALUE;
-        log.info(String.format(LOG_FORMAT, e.getMessage()), e);
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception e) {
         ExceptionType exceptionType = SERVER_ERROR;
-        log.info(String.format(LOG_FORMAT, e.getMessage()), e);
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
