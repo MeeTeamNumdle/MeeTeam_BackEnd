@@ -5,6 +5,7 @@ import static synk.meeteam.global.common.exception.GlobalExceptionType.INVALID_I
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -56,13 +57,12 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ExceptionResponse> handleException(Exception e) {
-//        ExceptionType exceptionType = SERVER_ERROR;
-//        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
-//        return ResponseEntity.status(exceptionType.httpStatus())
-//                .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleException(Exception e) {
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ExceptionResponse.of("스웨거오류", "스웨거 오류입니다."));
+    }
 
 }
 
