@@ -2,6 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 
 public record GetApplyRecruitmentRoleResponseDto(
         @NotNull
@@ -11,4 +12,8 @@ public record GetApplyRecruitmentRoleResponseDto(
         @Schema(description = "지원 가능한 역할 이름", example = "백엔드개발자")
         String roleName
 ) {
+        public static GetApplyRecruitmentRoleResponseDto from(RecruitmentRole recruitmentRole) {
+                return new GetApplyRecruitmentRoleResponseDto(recruitmentRole.getRole().getId(),
+                        recruitmentRole.getRole().getName());
+        }
 }
