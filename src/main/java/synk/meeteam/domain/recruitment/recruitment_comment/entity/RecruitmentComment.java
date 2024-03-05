@@ -37,7 +37,7 @@ public class RecruitmentComment extends BaseEntity {
     @NotNull
     @Size(max = 100)
     @Column(length = 100)
-    private String comment;
+    private String content;
 
     //댓글, 대댓글 구분
     @ColumnDefault("1")
