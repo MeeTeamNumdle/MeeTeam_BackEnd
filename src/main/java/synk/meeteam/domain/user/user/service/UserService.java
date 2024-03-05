@@ -20,4 +20,9 @@ public class UserService {
         }
         return true;
     }
+
+    @Transactional(readOnly = true)
+    public User findById(Long userId) {
+        return userRepository.findByIdOrElseThrow(userId);
+    }
 }
