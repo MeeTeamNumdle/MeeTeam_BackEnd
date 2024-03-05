@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.exception.SkillException;
 
-public interface SkillRepository extends JpaRepository<Skill, Long> {
+public interface SkillRepository extends JpaRepository<Skill, Long>, SkillRepositoryCustom {
     Optional<Skill> findById(Long skillId);
 
     default Skill findByIdOrElseThrowException(Long skillId) {

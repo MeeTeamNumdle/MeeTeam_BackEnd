@@ -34,6 +34,7 @@ public class SecurityConfig {
 
             // Authentication
             "/auth/**", "/login/**", "/authTest", "/user/search/check-duplicate", "/university", "/department",
+            "/skill/**",
 
             // client
             "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health"
@@ -50,8 +51,9 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://nonsoolmate.com", "localhost:3000")
-                        .allowedOriginPatterns("https://nonsoolmate.com", "localhost:3000")
+                        .allowedOrigins("https://meeteam.co.kr", "http://localhost:5173", "http://localhost:8080")
+                        .allowedOriginPatterns("https://meeteam.co.kr", "http://localhost:5173",
+                                "http://localhost:8080")
                         .allowedMethods(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
@@ -75,7 +77,7 @@ public class SecurityConfig {
                 .headers((headerConfig) ->
                         headerConfig.frameOptions(FrameOptionsConfig::disable)
                 )
-              //  .userDetailsService(memberAuthService)
+        //  .userDetailsService(memberAuthService)
         ;
 
         //== URL별 권한 관리 옵션 ==//
@@ -86,7 +88,6 @@ public class SecurityConfig {
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
-
 
         return http.build();
     }

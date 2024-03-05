@@ -29,7 +29,7 @@ public class RecruitmentRoleSkillRepositoryTest {
     void 구인역할스킬저장_구인역할스킬저장성공_정상입력경우() {
         // given
         RecruitmentRole recruitmentRole = recruitmentRoleRepository.findById(1L).orElse(null);
-        Skill skill = skillRepository.findById(2L).orElse(null);
+        Skill skill = skillRepository.findById(6L).orElse(null);
         RecruitmentRoleSkill recruitmentRoleSkill = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
                 recruitmentRole, skill);
 
