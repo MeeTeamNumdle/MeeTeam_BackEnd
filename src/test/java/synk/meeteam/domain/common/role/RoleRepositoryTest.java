@@ -30,7 +30,7 @@ public class RoleRepositoryTest {
     @Test
     void 특정역할조회_예외발생_유효하지않은Id입력값() {
         // given
-        Long input = 14L;
+        Long input = 0L;
 
         // when, then
         Assertions.assertThatThrownBy(() -> roleRepository.findByIdOrElseThrowException(input))
