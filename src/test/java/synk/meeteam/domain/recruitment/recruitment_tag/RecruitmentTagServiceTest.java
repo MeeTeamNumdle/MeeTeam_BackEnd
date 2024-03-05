@@ -132,7 +132,7 @@ public class RecruitmentTagServiceTest {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
         Tag tag = TagFixture.createTag("대학생", TagType.MEETEAM);
-        doReturn(RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag)).when(recruitmentTagRepository)
+        doReturn(RecruitmentTagFixture.createRecruitmentTags(recruitmentPost, tag)).when(recruitmentTagRepository)
                 .findByPostIdWithTag(1L);
 
         // when

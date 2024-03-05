@@ -18,7 +18,8 @@ public class RecruitmentCommentRepositoryCustomImpl implements RecruitmentCommen
     @Override
     public List<RecruitmentCommentVO> findAllByRecruitmentId(Long postId) {
         return queryFactory
-                .select(Projections.constructor(RecruitmentCommentVO.class, recruitmentComment.id, user.nickname,
+                .select(Projections.constructor(RecruitmentCommentVO.class, recruitmentComment.id, user.id,
+                        user.nickname,
                         user.pictureUrl, recruitmentComment.content, recruitmentComment.createdAt,
                         recruitmentComment.isParent, recruitmentComment.groupNumber, recruitmentComment.groupOrder,
                         recruitmentComment.isDeleted))
