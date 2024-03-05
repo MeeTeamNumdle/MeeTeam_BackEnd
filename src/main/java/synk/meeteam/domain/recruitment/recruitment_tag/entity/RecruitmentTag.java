@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,4 +35,13 @@ public class RecruitmentTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    @Builder
+    public RecruitmentTag(RecruitmentPost recruitmentPost, Tag tag) {
+        this.recruitmentPost = recruitmentPost;
+        this.tag = tag;
+    }
+
+    public void updateTag(Tag tag) {
+        this.tag = tag;
+    }
 }

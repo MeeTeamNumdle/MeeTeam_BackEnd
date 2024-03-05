@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import synk.meeteam.domain.auth.exception.AuthException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     private final ObjectMapper objectMapper;
@@ -30,6 +32,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 
             String error = objectMapper.writeValueAsString(e.getExceptionType());
             response.getWriter().write(error);
+        } catch (Exception e) {
+            log.error("", e);
         }
     }
 }
