@@ -36,6 +36,7 @@ public interface SkillApi {
             }
     )
     @SecurityRequirements
+    @Tag(name = "AutoComplete", description = "자동완성")
     ResponseEntity<List<SkillDto>> searchSkill(@Parameter(description = "키워드") String keyword,
                                                @Parameter(description = "조회 갯수") long limit);
 }
