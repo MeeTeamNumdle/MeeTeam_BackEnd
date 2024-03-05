@@ -9,6 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +20,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
 
 @Getter
 @Setter
@@ -38,6 +42,9 @@ public class RecruitmentRole {
 
     @ColumnDefault("0")
     private long count = 0L;
+
+    @OneToMany(mappedBy = "recruitmentRole")
+    private List<RecruitmentRoleSkill> recruitmentRoleSkills = new ArrayList<>();
 
     @Builder
     public RecruitmentRole(RecruitmentPost recruitmentPost, Role role, long count) {
