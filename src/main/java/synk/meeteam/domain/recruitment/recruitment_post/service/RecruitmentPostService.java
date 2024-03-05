@@ -13,7 +13,7 @@ public class RecruitmentPostService {
     private final RecruitmentPostRepository recruitmentPostRepository;
 
     @Transactional
-    public RecruitmentPost createRecruitmentPost(RecruitmentPost recruitmentPost) {
+    public RecruitmentPost writeRecruitmentPost(RecruitmentPost recruitmentPost) {
         return recruitmentPostRepository.save(recruitmentPost);
     }
 }

@@ -32,7 +32,7 @@ public class RecruitmentPostServiceTest {
                 .save(recruitmentPost);
 
         // when
-        RecruitmentPost savedRecruitmentPost = recruitmentPostService.createRecruitmentPost(recruitmentPost);
+        RecruitmentPost savedRecruitmentPost = recruitmentPostService.writeRecruitmentPost(recruitmentPost);
 
         // then
         Assertions.assertThat(savedRecruitmentPost)
@@ -51,7 +51,7 @@ public class RecruitmentPostServiceTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> {
-            recruitmentPostService.createRecruitmentPost(recruitmentPost);
+            recruitmentPostService.writeRecruitmentPost(recruitmentPost);
         }).isInstanceOf(ConstraintViolationException.class);
     }
 }

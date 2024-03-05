@@ -26,7 +26,7 @@ public class RecruitmentPostFacade {
                                       List<RecruitmentRoleSkill> recruitmentRoleSkills,
                                       List<RecruitmentTag> recruitmentTags) {
 
-        RecruitmentPost newRecruitmentPost = recruitmentPostService.createRecruitmentPost(recruitmentPost);
+        RecruitmentPost newRecruitmentPost = recruitmentPostService.writeRecruitmentPost(recruitmentPost);
 
         recruitmentRoles.forEach(recruitmentRoleService::createRecruitmentRoleV2);
 
