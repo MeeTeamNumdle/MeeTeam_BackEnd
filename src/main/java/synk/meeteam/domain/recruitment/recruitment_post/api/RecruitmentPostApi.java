@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.GetApplyInfoRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -53,8 +54,8 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "신청 정보 조회 API")
-    ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(
-            @AuthUser User user);
+    ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@Valid @RequestBody GetApplyInfoRequestDto requestDto,
+                                                         @AuthUser User user);
 
     @ApiResponses(
             value = {

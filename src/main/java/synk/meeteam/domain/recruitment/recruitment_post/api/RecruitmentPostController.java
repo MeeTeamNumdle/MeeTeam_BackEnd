@@ -23,6 +23,7 @@ import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.GetApplyInfoRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -109,14 +110,20 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @GetMapping("/apply")
     @Override
-    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@AuthUser User user) {
-        List<GetApplyRecruitmentRoleResponseDto> recruitmentRoles = new ArrayList<>();
-        recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(1L, "백엔드개발자"));
-        recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(2L, "프론트엔드개발자"));
+    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@Valid @RequestBody GetApplyInfoRequestDto requestDto,
+                                                                @AuthUser User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(requestDto.postId());
+        User foundUser = userService.findById(user.getId());
+        List<RecruitmentRole> availableRecruitmentRole = recruitmentRoleService.findAvailableRecruitmentRole(
+                recruitmentPost);
+        List<GetApplyRecruitmentRoleResponseDto> availableRecruitmentRoleDtos = availableRecruitmentRole.stream()
+                .map(GetApplyRecruitmentRoleResponseDto::from).toList();
 
         return ResponseEntity.ok()
-                .body(new GetApplyInfoResponseDto("송민규", 4.43, "명문대학교",
-                        "명품학과", 2018, "miekkse@kw.kr", recruitmentRoles));
+                .body(new GetApplyInfoResponseDto(foundUser.getName(), foundUser.getEvaluationScore(),
+                        foundUser.getUniversity().getName(), foundUser.getDepartment().getName(),
+                        foundUser.getAdmissionYear(),
+                        foundUser.getEmail(), availableRecruitmentRoleDtos));
     }
 
 
