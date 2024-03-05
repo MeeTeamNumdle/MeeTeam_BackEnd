@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,4 +42,10 @@ public class RecruitmentRoleSkill {
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "skill_id")
     private Skill skill;
+
+    @Builder
+    public RecruitmentRoleSkill(RecruitmentRole recruitmentRole, Skill skill) {
+        this.recruitmentRole = recruitmentRole;
+        this.skill = skill;
+    }
 }

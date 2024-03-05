@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
@@ -30,7 +31,7 @@ public interface RecruitmentPostApi {
     )
     @Operation(summary = "구인글 생성 API")
     ResponseEntity<CreateRecruitmentPostResponseDto> createRecruitmentPost(
-            @Valid CreateRecruitmentPostRequestDto requestDto);
+            @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto);
 
     @ApiResponses(
             value = {

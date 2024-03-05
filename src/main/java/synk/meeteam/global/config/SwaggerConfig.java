@@ -36,9 +36,7 @@ import org.springframework.context.annotation.Configuration;
 })
 @Configuration
 public class SwaggerConfig {
-
-
-    private static String SERVER_DOMAIN;
+    private String SERVER_DOMAIN;
 
     public SwaggerConfig(@Value("${domain.server-domain}") String serverDomain) {
         SERVER_DOMAIN = serverDomain;

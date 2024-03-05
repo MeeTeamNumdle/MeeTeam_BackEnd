@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,4 +38,11 @@ public class RecruitmentRole {
 
     @ColumnDefault("0")
     private long count = 0L;
+
+    @Builder
+    public RecruitmentRole(RecruitmentPost recruitmentPost, Role role, long count) {
+        this.recruitmentPost = recruitmentPost;
+        this.role = role;
+        this.count = count;
+    }
 }
