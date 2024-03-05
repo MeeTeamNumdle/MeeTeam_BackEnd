@@ -1,7 +1,6 @@
 package synk.meeteam.global.common.exception;
 
 import static synk.meeteam.global.common.exception.GlobalExceptionType.INVALID_INPUT_VALUE;
-import static synk.meeteam.global.common.exception.GlobalExceptionType.SERVER_ERROR;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -57,13 +56,13 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception e) {
-        ExceptionType exceptionType = SERVER_ERROR;
-        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
-        return ResponseEntity.status(exceptionType.httpStatus())
-                .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ExceptionResponse> handleException(Exception e) {
+//        ExceptionType exceptionType = SERVER_ERROR;
+//        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
+//        return ResponseEntity.status(exceptionType.httpStatus())
+//                .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
+//    }
 
 }
 
