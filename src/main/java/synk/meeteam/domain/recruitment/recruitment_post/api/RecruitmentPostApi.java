@@ -44,7 +44,7 @@ public interface RecruitmentPostApi {
     @Operation(summary = "특정 구인글 조회 API")
     @SecurityRequirements
     ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @Valid @RequestParam Long id, @AuthUser User user);
+            @Valid @RequestParam(value = "id") Long postId, @AuthUser User user);
 
 
     @ApiResponses(

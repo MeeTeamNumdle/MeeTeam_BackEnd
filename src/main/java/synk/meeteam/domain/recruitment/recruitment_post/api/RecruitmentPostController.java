@@ -20,19 +20,26 @@ import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.service.SkillService;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
+import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyRecruitmentRoleResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.facade.RecruitmentPostFacade;
+import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
+import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
+import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
+import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.security.AuthUser;
 
 
@@ -45,9 +52,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     private final RecruitmentPostFacade recruitmentPostFacade;
 
+    private final RecruitmentPostService recruitmentPostService;
+    private final RecruitmentRoleService recruitmentRoleService;
+    private final RecruitmentTagService recruitmentTagService;
+    private final RecruitmentCommentService recruitmentCommentService;
     private final RoleService roleService;
     private final FieldService fieldService;
     private final SkillService skillService;
+    private final UserService userService;
 
     private final RecruitmentPostMapper recruitmentPostMapper;
 
@@ -73,10 +85,26 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @GetMapping
     @Override
-    public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(@Valid @RequestParam Long id,
-                                                                            @AuthUser User user) {
+    public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
+            @Valid @RequestParam(value = "id") Long postId,
+            @AuthUser User user) {
+        // 단일 트랜잭션으로 하지 않아도 될듯
+        // 트랜잭션으로 하지 않아도 될듯?
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
 
-        return null;
+        User writer = userService.findById(recruitmentPost.getCreatedBy());
+
+        List<RecruitmentRole> recruitmentRoles = recruitmentRoleService.findByRecruitmentPostId(
+                recruitmentPost.getId());
+
+        RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(postId);
+
+        List<GetCommentResponseDto> recruitmentCommentDtos = recruitmentCommentService.getRecruitmentComments(
+                recruitmentPost);
+
+        return ResponseEntity.ok()
+                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, recruitmentRoles, writer, recruitmentTagVO,
+                        recruitmentCommentDtos));
     }
 
     @GetMapping("/apply")
@@ -99,6 +127,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.ok().build();
     }
 
+    ////////////////  변환 로직들  ////////////////
     private List<RecruitmentRole> getRecruitmentRoles(CreateRecruitmentPostRequestDto requestDto,
                                                       RecruitmentPost recruitmentPost,
                                                       List<RecruitmentRoleSkill> recruitmentRoleSkills) {
