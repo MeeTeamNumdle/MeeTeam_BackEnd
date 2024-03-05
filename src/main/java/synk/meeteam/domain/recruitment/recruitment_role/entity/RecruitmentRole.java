@@ -41,7 +41,13 @@ public class RecruitmentRole {
     private Role role;
 
     @ColumnDefault("0")
-    private long count = 0L;
+    private long count = 0L;  // 구인하는 인원
+
+    @ColumnDefault("0")
+    private long applicantCount = 0L;  // 지원한 인원
+
+    @ColumnDefault("0")
+    private long recruitedCount = 0L;  // 구인된 인원
 
     @OneToMany(mappedBy = "recruitmentRole")
     private List<RecruitmentRoleSkill> recruitmentRoleSkills = new ArrayList<>();
