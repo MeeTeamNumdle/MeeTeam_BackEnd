@@ -31,6 +31,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/webjars/**",
+            "swagger-ui/github-markdown-css.",
 
             // Authentication
             "/auth/**", "/login/**", "/authTest", "/user/search/check-duplicate", "/university", "/department",
@@ -38,6 +39,12 @@ public class SecurityConfig {
 
             // client
             "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health"
+    };
+
+    private static final String[] SEMI_AUTH_WHITELIST = {
+            // 꼭 GET만 가능해야 하는 리스트
+
+            "/recruitment/post"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -83,6 +90,7 @@ public class SecurityConfig {
         //== URL별 권한 관리 옵션 ==//
         http.authorizeHttpRequests(auth -> {
                     auth.requestMatchers(AUTH_WHITELIST).permitAll();
+                    auth.requestMatchers(org.springframework.http.HttpMethod.GET, SEMI_AUTH_WHITELIST).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
