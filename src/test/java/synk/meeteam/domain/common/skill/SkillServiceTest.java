@@ -59,7 +59,7 @@ public class SkillServiceTest {
         long limit = 3;
 
         doReturn(
-                SkillFixtures.createDtoByKeyword자바()
+                SkillFixture.createDtoByKeyword자바()
         ).when(skillRepository).findAllByKeywordAndTopLimit(keyword, limit);
 
         //when
