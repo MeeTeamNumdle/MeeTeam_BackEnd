@@ -1,5 +1,6 @@
-package synk.meeteam.domain.common.skill.api;
+package synk.meeteam.domain.common.role.api;
 
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -7,22 +8,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import synk.meeteam.domain.common.skill.dto.SkillDto;
-import synk.meeteam.domain.common.skill.service.SkillService;
+import synk.meeteam.domain.common.role.dto.RoleDto;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/skill")
-public class SkillController implements SkillApi {
+@RequestMapping("/role")
+public class RoleController implements RoleApi {
 
-    private final SkillService skillService;
 
-    @Override
     @GetMapping("/search")
-    public ResponseEntity<List<SkillDto>> searchSkill(
+    @Override
+    public ResponseEntity<List<RoleDto>> searchRole(
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
 
-        return ResponseEntity.ok().body(skillService.searchByKeyword(keyword, limit));
+        List<RoleDto> roles = Arrays.asList(new RoleDto(1L, "웹 개발자"), new RoleDto(2L, "서버 개발자"));
+        return ResponseEntity.ok(roles);
     }
 }
