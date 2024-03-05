@@ -125,4 +125,11 @@ public class RecruitmentPost extends BaseEntity {
         this.isClosed = isClosed;
         this.meeteam = meeteam;
     }
+
+    public double getResponseRate() {
+        if (applicantCount == 0) {
+            return 0;
+        }
+        return ((double) responseCount / applicantCount) * 100;
+    }
 }

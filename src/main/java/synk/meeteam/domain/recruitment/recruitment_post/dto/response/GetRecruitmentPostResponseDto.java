@@ -91,8 +91,6 @@ public record GetRecruitmentPostResponseDto(
 
         List<TagDto> tagDtos = recruitmentTagVO.recruitmentTags().stream().map(TagDto::from).toList();
 
-        double responseRate = ((double) recruitmentPost.getResponseCount() / recruitmentPost.getApplicantCount()) * 100;
-
         return GetRecruitmentPostResponseDto.builder()
                 .isWriter(isWriter)
                 .category(recruitmentPost.getCategory().name())
@@ -100,7 +98,7 @@ public record GetRecruitmentPostResponseDto(
                 .createdAt(recruitmentPost.getCreatedAt().toString())
                 .bookmarkCount(recruitmentPost.getBookmarkCount())
                 .writerNickname(writer.getNickname())
-                .responseRate(responseRate)
+                .responseRate(recruitmentPost.getResponseRate())
                 .writerScore(writer.getEvaluationScore())
                 .proceedingStart(recruitmentPost.getProceedingStart().toString())
                 .proceedingEnd(recruitmentPost.getProceedingEnd().toString())
