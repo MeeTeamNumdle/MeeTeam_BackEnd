@@ -2,6 +2,11 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import lombok.Builder;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
+import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
+import synk.meeteam.domain.user.user.entity.User;
 
 @Schema(name = "GetRecruitmentPostResponseDto", description = "구인글 조회 Dto")
 public record GetRecruitmentPostResponseDto(
@@ -14,11 +19,11 @@ public record GetRecruitmentPostResponseDto(
         @Schema(description = "해당 글 작성날짜", example = "2024-03-15")
         String createdAt,
         @Schema(description = "북마크 횟수", example = "13")
-        int bookmarkCount,
+        long bookmarkCount,
         @Schema(description = "작성자 닉네임", example = "song123")
         String writerNickname,
         @Schema(description = "응답률", example = "90")
-        int responseRate,
+        double responseRate,
         @Schema(description = "작성자 평점", example = "4.5")
         double writerScore,
         @Schema(description = "진행 시작 날짜", example = "2024-04-15")
@@ -36,7 +41,7 @@ public record GetRecruitmentPostResponseDto(
         @Schema(description = "교수 이름", example = "최웅철")
         String courseProfessor,
         @Schema(description = "구인 태그", example = "")
-        List<TagDto> Tags,
+        List<TagDto> tags,
         @Schema(description = "구인 역할", example = "")
         List<GetRecruitmentRoleResponseDto> recruitmentRoles,
         @Schema(description = "상세 내용", example = "안녕하세요. 저는 팀원을...")
@@ -45,4 +50,70 @@ public record GetRecruitmentPostResponseDto(
         List<GetCommentResponseDto> comments
 
 ) {
+    @Builder
+    public GetRecruitmentPostResponseDto(boolean isWriter, String category, String title, String createdAt,
+                                         long bookmarkCount, String writerNickname, double responseRate,
+                                         double writerScore,
+                                         String proceedingStart, String proceedingEnd, String proceedType,
+                                         String deadline,
+                                         String scope, String courseName, String courseProfessor, List<TagDto> tags,
+                                         List<GetRecruitmentRoleResponseDto> recruitmentRoles, String content,
+                                         List<GetCommentResponseDto> comments) {
+        this.isWriter = isWriter;
+        this.category = category;
+        this.title = title;
+        this.createdAt = createdAt;
+        this.bookmarkCount = bookmarkCount;
+        this.writerNickname = writerNickname;
+        this.responseRate = responseRate;
+        this.writerScore = writerScore;
+        this.proceedingStart = proceedingStart;
+        this.proceedingEnd = proceedingEnd;
+        this.proceedType = proceedType;
+        this.deadline = deadline;
+        this.scope = scope;
+        this.courseName = courseName;
+        this.courseProfessor = courseProfessor;
+        this.tags = tags;
+        this.recruitmentRoles = recruitmentRoles;
+        this.content = content;
+        this.comments = comments;
+    }
+
+    public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost,
+                                                     List<RecruitmentRole> recruitmentRoles, User writer,
+                                                     RecruitmentTagVO recruitmentTagVO,
+                                                     List<GetCommentResponseDto> recruitmentCommentDtos) {
+        boolean isWriter = writer.getId().equals(recruitmentPost.getCreatedBy());
+        List<GetRecruitmentRoleResponseDto> getRecruitmentRoleDtos = recruitmentRoles.stream()
+                .map(GetRecruitmentRoleResponseDto::from)
+                .toList();
+
+        List<TagDto> tagDtos = recruitmentTagVO.recruitmentTags().stream().map(TagDto::from).toList();
+
+        double responseRate = ((double) recruitmentPost.getResponseCount() / recruitmentPost.getApplicantCount()) * 100;
+
+        return GetRecruitmentPostResponseDto.builder()
+                .isWriter(isWriter)
+                .category(recruitmentPost.getCategory().name())
+                .title(recruitmentPost.getTitle())
+                .createdAt(recruitmentPost.getCreatedAt().toString())
+                .bookmarkCount(recruitmentPost.getBookmarkCount())
+                .writerNickname(writer.getNickname())
+                .responseRate(responseRate)
+                .writerScore(writer.getEvaluationScore())
+                .proceedingStart(recruitmentPost.getProceedingStart().toString())
+                .proceedingEnd(recruitmentPost.getProceedingEnd().toString())
+                .proceedType(recruitmentPost.getProceedType().name())
+                .deadline(recruitmentPost.getDeadline().toString())
+                .scope(recruitmentPost.getScope().name())
+                .courseName(recruitmentTagVO.courseName())
+                .courseProfessor(recruitmentTagVO.courseProfessor())
+                .tags(tagDtos)
+                .recruitmentRoles(getRecruitmentRoleDtos)
+                .content(recruitmentPost.getContent())
+                .comments(recruitmentCommentDtos)
+                .build();
+
+    }
 }
