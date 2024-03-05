@@ -12,7 +12,7 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     // 트랜잭션으로 부터 자유로운 로직이기에 트랜잭션 어노테이션 제외
-    public Role findRoleById(Long roleId) {
+    public Role findById(Long roleId) {
         return roleRepository.findByIdOrElseThrowException(roleId);
     }
 }

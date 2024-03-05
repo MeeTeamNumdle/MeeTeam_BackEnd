@@ -30,7 +30,7 @@ public class RoleServiceTest {
         doReturn(role).when(roleRepository).findByIdOrElseThrowException(input);
 
         // when
-        Role foundRole = roleService.findRoleById(input);
+        Role foundRole = roleService.findById(input);
 
         // then
         Assertions.assertThat(foundRole.getName()).isEqualTo(role.getName());
@@ -43,6 +43,6 @@ public class RoleServiceTest {
         doThrow(RoleException.class).when(roleRepository).findByIdOrElseThrowException(input);
 
         // when, then
-        Assertions.assertThatThrownBy(() -> roleService.findRoleById(input)).isInstanceOf(RoleException.class);
+        Assertions.assertThatThrownBy(() -> roleService.findById(input)).isInstanceOf(RoleException.class);
     }
 }

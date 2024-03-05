@@ -66,7 +66,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                                                       RecruitmentPost recruitmentPost,
                                                       List<RecruitmentRoleSkill> recruitmentRoleSkills) {
         return requestDto.recruitmentRoles().stream().map(recruitmentRole -> {
-            Role role = roleService.findRoleById(recruitmentRole.roleId());
+            Role role = roleService.findById(recruitmentRole.roleId());
             RecruitmentRole recruitmentRoleEntity = recruitmentPostMapper.toRecruitmentRoleEntity(recruitmentPost, role,
                     recruitmentRole.count());
 
