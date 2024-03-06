@@ -1,5 +1,8 @@
 package synk.meeteam.domain.common.tag;
 
+import java.util.ArrayList;
+import java.util.List;
+import synk.meeteam.domain.common.tag.dto.SearchTagDto;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
 
@@ -25,5 +28,23 @@ public class TagFixture {
                 .name(name)
                 .type(TagType.PROFESSOR)
                 .build();
+    }
+
+    public static List<SearchTagDto> createTagDtos() {
+        List<SearchTagDto> tagDtos = new ArrayList<>();
+        tagDtos.add(new SearchTagDto(1L, "웹개발"));
+        return tagDtos;
+    }
+
+    public static List<SearchTagDto> createCourseTagDtos() {
+        List<SearchTagDto> tagDtos = new ArrayList<>();
+        tagDtos.add(new SearchTagDto(1L, "응용소프트웨어실습"));
+        return tagDtos;
+    }
+
+    public static List<SearchTagDto> createProfessorTagDtos() {
+        List<SearchTagDto> tagDtos = new ArrayList<>();
+        tagDtos.add(new SearchTagDto(2L, "문승현"));
+        return tagDtos;
     }
 }

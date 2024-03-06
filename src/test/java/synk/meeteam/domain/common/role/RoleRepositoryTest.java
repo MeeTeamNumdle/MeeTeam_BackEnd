@@ -1,10 +1,14 @@
 package synk.meeteam.domain.common.role;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import synk.meeteam.domain.common.role.dto.RoleDto;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.exception.RoleException;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
@@ -24,7 +28,7 @@ public class RoleRepositoryTest {
         Role role = roleRepository.findByIdOrElseThrowException(input);
 
         // then
-        Assertions.assertThat(role).isNotNull();
+        assertThat(role).isNotNull();
     }
 
     @Test
@@ -36,4 +40,36 @@ public class RoleRepositoryTest {
         Assertions.assertThatThrownBy(() -> roleRepository.findByIdOrElseThrowException(input))
                 .isInstanceOf(RoleException.class);
     }
+
+    @Test
+    void 역할목록조회_역할DTO반환_keyword는공백일때() {
+        //given
+        String keyword = "";
+        long limit = 5;
+
+        //when
+        List<RoleDto> roles = roleRepository.findAllByKeywordAndTopLimit(keyword, limit);
+
+        //then
+        assertThat(roles).extracting("name").containsExactlyInAnyOrder(
+                "웹 개발자", "서버 개발자", "자바 개발자", "파이썬 개발자", "데이터 엔지니어"
+        );
+        assertThat(roles.size()).isEqualTo(5);
+    }
+
+    @Test
+    void 역할목록조회_역할DTO반환_keyword는웹일때() {
+        //given
+        String keyword = "웹";
+        long limit = 5;
+
+        //when
+        List<RoleDto> roles = roleRepository.findAllByKeywordAndTopLimit(keyword, limit);
+
+        //then
+        assertThat(roles).extracting("name").contains("웹 개발자");
+        assertThat(roles.size()).isEqualTo(1);
+    }
+
+
 }

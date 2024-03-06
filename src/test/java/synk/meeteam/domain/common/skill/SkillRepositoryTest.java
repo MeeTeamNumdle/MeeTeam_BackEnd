@@ -3,8 +3,6 @@ package synk.meeteam.domain.common.skill;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +19,8 @@ public class SkillRepositoryTest {
     @Autowired
     private SkillRepository skillRepository;
 
-    @PersistenceContext
-    private EntityManager em;
-
-//    @BeforeEach
-//    void setup() {
-//        List<Skill> skills = SkillFixtures.createSkills();
-//        skills.forEach((skill) -> em.persist(skill));
-//    }
-
     @Test
-    public void 스킬목록조회_스킬목록Dto반환_keyword는공백limit는5일때() {
+    void 스킬목록조회_스킬목록Dto반환_keyword는공백limit는5일때() {
         //given
         String keyword = "";
         long limit = 5;
@@ -47,34 +36,34 @@ public class SkillRepositoryTest {
     }
 
     @Test
-    public void 스킬목록조회_스킬목록Dto반환_keyword는자바limit는1일때() {
+    void 스킬목록조회_스킬목록Dto반환_keyword는node이고limit는1일때() {
         //given
-        String keyword = "자바";
+        String keyword = "node";
         long limit = 1;
 
         //when
         List<SkillDto> skills = skillRepository.findAllByKeywordAndTopLimit(keyword, limit);
 
         //then
-        assertThat(skills).extracting("name").containsExactly("자바");
+        assertThat(skills).extracting("name").containsExactly("node.js");
     }
 
     @Test
-    public void 스킬목록조회_스킬목록Dto반환_keyword는자바limit는5일때() {
+    void 스킬목록조회_스킬목록Dto반환_keyword는n이고limit는5일때() {
         //given
-        String keyword = "자바";
+        String keyword = "n";
         long limit = 5;
 
         //when
         List<SkillDto> skills = skillRepository.findAllByKeywordAndTopLimit(keyword, limit);
 
         //then
-        assertThat(skills).extracting("name").containsExactly("자바", "자바스크립트");
+        assertThat(skills).extracting("name").containsExactly("next.js", "node.js");
         assertThat(skills.size()).isEqualTo(2);
     }
 
     @Test
-    public void 스킬목록조회_빈배열반환_keyword는객체limit는5일때() {
+    void 스킬목록조회_빈배열반환_keyword는객체이고limit는5일때() {
         //given
         String keyword = "객체";
         long limit = 5;

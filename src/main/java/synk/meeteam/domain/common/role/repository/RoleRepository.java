@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.exception.RoleException;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long>, RoleRepositoryCustom {
     Optional<Role> findById(Long roleId);
 
     default Role findByIdOrElseThrowException(Long roleId) {
