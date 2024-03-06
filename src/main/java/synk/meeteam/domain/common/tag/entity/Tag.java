@@ -26,7 +26,7 @@ public class Tag extends BaseEntity {
     private Long id;
 
     @NotNull
-    @Column(length = 15)
+    @Column(length = 15, unique = true)
     private String name;
 
     @NotNull

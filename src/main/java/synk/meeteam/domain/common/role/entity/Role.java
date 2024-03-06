@@ -23,7 +23,7 @@ public class Role {
     private Long id;
 
     @NotNull
-    @Column(length = 50)
+    @Column(length = 50, unique = true)
     private String name;
 
     @Builder

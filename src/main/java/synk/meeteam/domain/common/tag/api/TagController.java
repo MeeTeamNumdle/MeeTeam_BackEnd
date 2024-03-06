@@ -1,6 +1,5 @@
 package synk.meeteam.domain.common.tag.api;
 
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,39 +7,45 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import synk.meeteam.domain.common.tag.dto.TagDto;
+import synk.meeteam.domain.common.tag.dto.SearchTagDto;
+import synk.meeteam.domain.common.tag.entity.TagType;
+import synk.meeteam.domain.common.tag.service.TagService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tag")
 public class TagController implements TagApi {
 
+    private final TagService tagService;
+
     @GetMapping("/search")
     @Override
-    public ResponseEntity<List<TagDto>> searchTag(
+    public ResponseEntity<List<SearchTagDto>> searchTag(
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
+        List<SearchTagDto> tags = tagService.searchByKeywordAndType(keyword, limit, TagType.MEETEAM);
 
-        List<TagDto> tags = Arrays.asList(new TagDto(1L, "웹개발"), new TagDto(2L, "앱개발"));
         return ResponseEntity.ok(tags);
     }
 
     @GetMapping("/search/course")
     @Override
-    public ResponseEntity<List<TagDto>> searchCourse(
+    public ResponseEntity<List<SearchTagDto>> searchCourse(
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
 
-        List<TagDto> course = Arrays.asList(new TagDto(1L, "응용소프트웨어실습"), new TagDto(2L, "리눅스활용실습"));
+        List<SearchTagDto> course = tagService.searchByKeywordAndType(keyword, limit, TagType.COURSE);
+
         return ResponseEntity.ok(course);
     }
 
     @GetMapping("/search/professor")
     @Override
-    public ResponseEntity<List<TagDto>> searchProfessor(
+    public ResponseEntity<List<SearchTagDto>> searchProfessor(
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
-        List<TagDto> professors = Arrays.asList(new TagDto(1L, "문승현"), new TagDto(2L, "김진우"));
+        List<SearchTagDto> professors = tagService.searchByKeywordAndType(keyword, limit, TagType.PROFESSOR);
+
         return ResponseEntity.ok(professors);
     }
 

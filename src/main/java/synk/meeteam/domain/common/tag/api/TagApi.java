@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import synk.meeteam.domain.common.tag.dto.TagDto;
+import synk.meeteam.domain.common.tag.dto.SearchTagDto;
 
 @Tag(name = "Tag", description = "태그 관련 API")
 public interface TagApi {
@@ -29,7 +29,7 @@ public interface TagApi {
                     @ApiResponse(responseCode = "200", description = "조회 성공"
                             , content = {
                             @Content(mediaType = APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = TagDto.class)), examples = {
+                                    array = @ArraySchema(schema = @Schema(implementation = SearchTagDto.class)), examples = {
                                     @ExampleObject(name = "키워드 없이 조회", value = "[{\"id\":1,\"name\":\"웹개발\"}, {\"id\":2,\"name\":\"앱개발\"}]"),
                                     @ExampleObject(name = "키워드가 \"앱\"일 경우", value = "[{\"id\":2,\"name\":\"앱개발\"}]"),
                                     @ExampleObject(name = "키워드가 \"태그\"일 경우", value = "[]"),
@@ -38,8 +38,8 @@ public interface TagApi {
     )
     @SecurityRequirements
     @Tag(name = "AutoComplete", description = "자동완성")
-    ResponseEntity<List<TagDto>> searchTag(@Parameter(description = "키워드") String keyword,
-                                           @Parameter(description = "조회 갯수") long limit);
+    ResponseEntity<List<SearchTagDto>> searchTag(@Parameter(description = "키워드") String keyword,
+                                                 @Parameter(description = "조회 갯수") long limit);
 
     @Operation(summary = "키워드 기반 수업명 조회(자동완성) API", description = """
             **키워드**로 시작하는 스킬 목록을 조회합니다. \s
@@ -52,7 +52,7 @@ public interface TagApi {
                     @ApiResponse(responseCode = "200", description = "조회 성공"
                             , content = {
                             @Content(mediaType = APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = TagDto.class)), examples = {
+                                    array = @ArraySchema(schema = @Schema(implementation = SearchTagDto.class)), examples = {
                                     @ExampleObject(name = "키워드 없이 조회", value = "[{\"id\":1,\"name\":\"응용소프트웨어실습\"}, {\"id\":2,\"name\":\"리눅스활용실습\"}]"),
                                     @ExampleObject(name = "키워드가 \"리\"일 경우", value = "[{\"id\":2,\"name\":\"리눅스활용실습\"}]"),
                                     @ExampleObject(name = "키워드가 \"수업\"일 경우", value = "[]"),
@@ -61,8 +61,8 @@ public interface TagApi {
     )
     @SecurityRequirements
     @Tag(name = "AutoComplete", description = "자동완성")
-    ResponseEntity<List<TagDto>> searchCourse(@Parameter(description = "키워드") String keyword,
-                                              @Parameter(description = "조회 갯수") long limit);
+    ResponseEntity<List<SearchTagDto>> searchCourse(@Parameter(description = "키워드") String keyword,
+                                                    @Parameter(description = "조회 갯수") long limit);
 
     @Operation(summary = "키워드 기반 교수명 조회(자동완성) API", description = """
             **키워드**로 시작하는 스킬 목록을 조회합니다. \s
@@ -75,7 +75,7 @@ public interface TagApi {
                     @ApiResponse(responseCode = "200", description = "조회 성공"
                             , content = {
                             @Content(mediaType = APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = TagDto.class)), examples = {
+                                    array = @ArraySchema(schema = @Schema(implementation = SearchTagDto.class)), examples = {
                                     @ExampleObject(name = "키워드 없이 조회", value = "[{\"id\":1,\"name\":\"문승현\"}, {\"id\":2,\"name\":\"김진우\"}]"),
                                     @ExampleObject(name = "키워드가 \"김\"일 경우", value = "[{\"id\":2,\"name\":\"김진우\"}]"),
                                     @ExampleObject(name = "키워드가 \"교수\"일 경우", value = "[]"),
@@ -84,7 +84,7 @@ public interface TagApi {
     )
     @SecurityRequirements
     @Tag(name = "AutoComplete", description = "자동완성")
-    ResponseEntity<List<TagDto>> searchProfessor(@Parameter(description = "키워드") String keyword,
-                                                 @Parameter(description = "조회 갯수") long limit);
+    ResponseEntity<List<SearchTagDto>> searchProfessor(@Parameter(description = "키워드") String keyword,
+                                                       @Parameter(description = "조회 갯수") long limit);
 
 }
