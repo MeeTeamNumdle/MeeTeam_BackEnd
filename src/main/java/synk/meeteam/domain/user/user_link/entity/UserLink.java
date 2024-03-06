@@ -4,8 +4,6 @@ import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
-import synk.meeteam.global.entity.LinkType;
 
 @Getter
 @Setter
@@ -38,8 +35,5 @@ public class UserLink extends BaseTimeEntity {
     @Column(length = 500)
     private String url;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(length = 15)
-    private LinkType type;
+    private String description;
 }
