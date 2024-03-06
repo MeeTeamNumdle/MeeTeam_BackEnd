@@ -58,7 +58,7 @@ public class SkillRepositoryTest {
         List<SkillDto> skills = skillRepository.findAllByKeywordAndTopLimit(keyword, limit);
 
         //then
-        assertThat(skills).extracting("name").containsExactly("node.js", "next.js");
+        assertThat(skills).extracting("name").containsExactly("next.js", "node.js");
         assertThat(skills.size()).isEqualTo(2);
     }
 
