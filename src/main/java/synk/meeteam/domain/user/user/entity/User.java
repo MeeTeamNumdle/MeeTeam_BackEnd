@@ -63,9 +63,15 @@ public class User extends BaseTimeEntity {
     @Column(length = 16)
     private String password;
 
+    @ColumnDefault("1")
+    private boolean isEmailPublic = true;
+
     //전화번호
     @Column(length = 15)
     private String phoneNumber;
+
+    @ColumnDefault("0")
+    private boolean isPhonePublic = false;
 
     //한줄 소개
     @Column(length = 20)
