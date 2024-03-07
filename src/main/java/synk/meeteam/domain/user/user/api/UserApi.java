@@ -5,11 +5,26 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.security.AuthUser;
 
 @Tag(name = "user", description = "유저 관련 API")
 public interface UserApi {
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "프로필 정보 업데이트에 성공하였습니다."),
+                    @ApiResponse(responseCode = "400", description = "요청하신 정보가 올바르지 않습니다."),
+            }
+    )
+    @Operation(summary = "유저 프로필 저장 API")
+    @SecurityRequirements
+    ResponseEntity<Void> saveProfile(@AuthUser User user, @RequestBody UpdateProfileRequestDto requestDto);
 
     @ApiResponses(
             value = {
@@ -18,5 +33,5 @@ public interface UserApi {
     )
     @Operation(summary = "닉네임 중복 확인 API")
     @SecurityRequirements
-    CheckDuplicateNicknameResponseDto checkDuplicateNickname(@RequestParam String nickname);
+    ResponseEntity<CheckDuplicateNicknameResponseDto> checkDuplicateNickname(@RequestParam String nickname);
 }
