@@ -8,6 +8,7 @@ import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
 
+@Builder
 @Schema(name = "GetRecruitmentPostResponseDto", description = "구인글 조회 Dto")
 public record GetRecruitmentPostResponseDto(
         @Schema(description = "내가 해당 글의 작성자인지", example = "true")
@@ -50,36 +51,6 @@ public record GetRecruitmentPostResponseDto(
         List<GetCommentResponseDto> comments
 
 ) {
-    @Builder
-    public GetRecruitmentPostResponseDto(boolean isWriter, String category, String title, String createdAt,
-                                         long bookmarkCount, String writerNickname, double responseRate,
-                                         double writerScore,
-                                         String proceedingStart, String proceedingEnd, String proceedType,
-                                         String deadline,
-                                         String scope, String courseName, String courseProfessor, List<TagDto> tags,
-                                         List<GetRecruitmentRoleResponseDto> recruitmentRoles, String content,
-                                         List<GetCommentResponseDto> comments) {
-        this.isWriter = isWriter;
-        this.category = category;
-        this.title = title;
-        this.createdAt = createdAt;
-        this.bookmarkCount = bookmarkCount;
-        this.writerNickname = writerNickname;
-        this.responseRate = responseRate;
-        this.writerScore = writerScore;
-        this.proceedingStart = proceedingStart;
-        this.proceedingEnd = proceedingEnd;
-        this.proceedType = proceedType;
-        this.deadline = deadline;
-        this.scope = scope;
-        this.courseName = courseName;
-        this.courseProfessor = courseProfessor;
-        this.tags = tags;
-        this.recruitmentRoles = recruitmentRoles;
-        this.content = content;
-        this.comments = comments;
-    }
-
     public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost,
                                                      List<RecruitmentRole> recruitmentRoles, User writer,
                                                      RecruitmentTagVO recruitmentTagVO,
