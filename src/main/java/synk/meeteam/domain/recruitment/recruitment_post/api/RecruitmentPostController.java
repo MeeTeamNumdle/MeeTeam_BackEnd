@@ -94,8 +94,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         User writer = userService.findById(recruitmentPost.getCreatedBy());
 
-        List<RecruitmentRole> recruitmentRoles = recruitmentRoleService.findByRecruitmentPostId(
-                recruitmentPost.getId());
+        List<RecruitmentRole> recruitmentRoles = recruitmentRoleService.findByRecruitmentPostId(postId);
 
         RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(postId);
 
