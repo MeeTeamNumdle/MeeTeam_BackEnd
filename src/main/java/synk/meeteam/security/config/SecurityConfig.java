@@ -35,10 +35,11 @@ public class SecurityConfig {
 
             // Authentication
             "/auth/**", "/login/**", "/authTest", "/user/search/check-duplicate", "/university", "/department",
-            "/skill/**",
 
             // client
-            "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health"
+            "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health",
+
+            "/skill/**", "/tag/**", "/role/**",
     };
 
     private static final String[] SEMI_AUTH_WHITELIST = {

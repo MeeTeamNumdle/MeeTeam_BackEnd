@@ -1,4 +1,4 @@
-package synk.meeteam.domain.common.skill.api;
+package synk.meeteam.domain.common.role.api;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -14,11 +14,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import synk.meeteam.domain.common.skill.dto.SkillDto;
+import synk.meeteam.domain.common.role.dto.RoleDto;
 
-@Tag(name = "Skill", description = "스킬 관련 API")
-public interface SkillApi {
-    @Operation(summary = "키워드 기반 스킬 목록 조회(자동완성) API", description = """
+@Tag(name = "Role", description = "역할 관련 API")
+public interface RoleApi {
+    @Operation(summary = "키워드 기반 역할 목록 조회(자동완성) API", description = """
             **키워드**로 시작하는 스킬 목록을 조회합니다. \s
             이때, 스킬명이 따로 없다면 전체 목록을 조회합니다. \s
             조회 시, 최대 갯수를 제한하여 받을 수 있습니다. 기본값은 **5개** 입니다. \s
@@ -26,17 +26,16 @@ public interface SkillApi {
             """)
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공"
-                            , content = {
-                            @Content(mediaType = APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = SkillDto.class)), examples = {
-                                    @ExampleObject(name = "키워드 없이 조회", value = "[{\"id\":1,\"name\":\"파이썬\"}, {\"id\":2,\"name\":\"스프링\"}]"),
-                                    @ExampleObject(name = "키워드가 \"스\"일 경우", value = "[{\"id\":2,\"name\":\"스프링\"}]"),
-                                    @ExampleObject(name = "키워드가 \"객체\"일 경우", value = "[]"),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = RoleDto.class)), examples = {
+                                    @ExampleObject(name = "키워드 없이 조회", value = "[{\"id\":2,\"name\":\"웹 개발자\"}, {\"id\":3,\"name\":\"서버 개발자\"}]"),
+                                    @ExampleObject(name = "키워드가 \"서버\"일 경우", value = "[{\"id\":3,\"name\":\"서버 개발자\"}]"),
+                                    @ExampleObject(name = "키워드가 \"역할\"일 경우", value = "[]"),
                             })}),
             }
     )
     @SecurityRequirements
     @Tag(name = "AutoComplete", description = "자동완성")
-    ResponseEntity<List<SkillDto>> searchSkill(@Parameter(description = "키워드") String keyword,
-                                               @Parameter(description = "조회 갯수") long limit);
+    ResponseEntity<List<RoleDto>> searchRole(@Parameter(description = "키워드") String keyword,
+                                             @Parameter(description = "조회 갯수") long limit);
 }

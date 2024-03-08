@@ -1,4 +1,4 @@
-package synk.meeteam.domain.user.user_link.entity;
+package synk.meeteam.domain.user.sub_email.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -9,31 +9,23 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.BaseTimeEntity;
 
-@Getter
-@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserLink extends BaseTimeEntity {
+public class SubEmail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_link_id")
+    @Column(name = "sub_email_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull
-    @Column(length = 500)
-    private String url;
+    private String email;
 
-    private String description;
+    private boolean isPublic;
 }
