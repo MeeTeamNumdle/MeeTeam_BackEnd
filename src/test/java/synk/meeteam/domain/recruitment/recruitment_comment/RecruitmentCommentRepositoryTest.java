@@ -21,10 +21,10 @@ public class RecruitmentCommentRepositoryTest {
         Long postId = 1L;
 
         // when
-        List<RecruitmentCommentVO> commentVOS = recruitmentCommentRepository.findAllByRecruitmentId(postId);
+        List<RecruitmentCommentVO> commentVOs = recruitmentCommentRepository.findAllByRecruitmentId(postId);
 
         // then
-        for (RecruitmentCommentVO vo : commentVOS) {
+        for (RecruitmentCommentVO vo : commentVOs) {
             Assertions.assertThat(vo.getNickname()).isEqualTo("송민규짱짱맨");
         }
 
