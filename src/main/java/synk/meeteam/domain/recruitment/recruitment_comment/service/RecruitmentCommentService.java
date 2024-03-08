@@ -21,12 +21,12 @@ public class RecruitmentCommentService {
     // 가공된 형태를 많이 사용할 것 같다.
     // 그래서 Dto를 바로 반환하는 식으로 만들었다.
     public List<GetCommentResponseDto> getRecruitmentComments(RecruitmentPost recruitmentPost) {
-        List<RecruitmentCommentVO> commentVOS = recruitmentCommentRepository.findAllByRecruitmentId(
+        List<RecruitmentCommentVO> commentVOs = recruitmentCommentRepository.findAllByRecruitmentId(
                 recruitmentPost.getId());
 
         // 그룹 번호로 매핑(key:group id)
         HashMap<Long, GetCommentResponseDto> groupedComments = groupComments(recruitmentPost,
-                commentVOS);
+                commentVOs);
 
         return groupedComments.entrySet().stream()
                 .sorted(Entry.comparingByKey())
@@ -35,11 +35,11 @@ public class RecruitmentCommentService {
     }
 
     private HashMap<Long, GetCommentResponseDto> groupComments(RecruitmentPost recruitmentPost,
-                                                               List<RecruitmentCommentVO> commentVOS) {
+                                                               List<RecruitmentCommentVO> commentVOs) {
         HashMap<Long, GetCommentResponseDto> CommentResponseDtos = new HashMap<>();
         Long writerId = recruitmentPost.getCreatedBy();
 
-        for (RecruitmentCommentVO comment : commentVOS) {
+        for (RecruitmentCommentVO comment : commentVOs) {
             if (comment.isDeleted()) {
                 continue;
             }
