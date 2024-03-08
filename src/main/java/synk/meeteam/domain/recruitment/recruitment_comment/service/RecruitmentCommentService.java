@@ -1,10 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_comment.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import synk.meeteam.domain.recruitment.recruitment_comment.repository.RecruitmentCommentRepository;
@@ -24,43 +21,25 @@ public class RecruitmentCommentService {
         List<RecruitmentCommentVO> commentVOs = recruitmentCommentRepository.findAllByRecruitmentId(
                 recruitmentPost.getId());
 
-        // 그룹 번호로 매핑(key:group id)
-        HashMap<Long, GetCommentResponseDto> groupedComments = groupComments(recruitmentPost,
-                commentVOs);
-
-        return groupedComments.entrySet().stream()
-                .sorted(Entry.comparingByKey())
-                .map(Entry::getValue)
-                .collect(Collectors.toList());
-    }
-
-    private HashMap<Long, GetCommentResponseDto> groupComments(RecruitmentPost recruitmentPost,
-                                                               List<RecruitmentCommentVO> commentVOs) {
-        HashMap<Long, GetCommentResponseDto> CommentResponseDtos = new HashMap<>();
+        List<GetCommentResponseDto> groupedComments = new ArrayList<>();
         Long writerId = recruitmentPost.getCreatedBy();
 
         for (RecruitmentCommentVO comment : commentVOs) {
-            if (comment.isDeleted()) {
-                continue;
-            }
-
             boolean isWriter = writerId.equals(comment.getUserId());
 
             if (comment.isParent()) {
                 List<GetReplyResponseDto> replies = new ArrayList<>();
-                CommentResponseDtos.put(comment.getGroupNumber(),
+                groupedComments.add(
                         new GetCommentResponseDto(comment.getId(), comment.getNickname(), comment.getProfileImg(),
                                 comment.getContent(), comment.getCreateAt(), isWriter, replies));
                 continue;
             }
 
-            CommentResponseDtos.get(comment.getGroupNumber()).replies().add(new GetReplyResponseDto(comment.getId(),
+            groupedComments.get(groupedComments.size() - 1).replies().add(new GetReplyResponseDto(comment.getId(),
                     comment.getNickname(), comment.getProfileImg(), comment.getContent(), comment.getCreateAt(),
                     isWriter));
         }
 
-        return CommentResponseDtos;
+        return groupedComments;
     }
-
-
 }

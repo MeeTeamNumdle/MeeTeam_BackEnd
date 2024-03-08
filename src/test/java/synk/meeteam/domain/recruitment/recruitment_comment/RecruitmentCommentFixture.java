@@ -20,7 +20,7 @@ public class RecruitmentCommentFixture {
                         .createAt(LocalDateTime.of(2024, 3, 5, 3, 12))
                         .isParent(true)
                         .groupNumber(1)
-                        .groupOrder(2)
+                        .groupOrder(1)
                         .build());
 
         recruitmentComments
@@ -32,7 +32,7 @@ public class RecruitmentCommentFixture {
                         .createAt(LocalDateTime.of(2024, 3, 5, 3, 15))
                         .isParent(false)
                         .groupNumber(1)
-                        .groupOrder(1)
+                        .groupOrder(2)
                         .build());
 
         recruitmentComments
@@ -42,9 +42,9 @@ public class RecruitmentCommentFixture {
                         .profileImg("wwww.img3")
                         .content("내용입니다3")
                         .createAt(LocalDateTime.of(2024, 3, 5, 3, 17))
-                        .isParent(true)
-                        .groupNumber(2)
-                        .groupOrder(1)
+                        .isParent(false)
+                        .groupNumber(1)
+                        .groupOrder(3)
                         .build());
 
         recruitmentComments
@@ -53,10 +53,10 @@ public class RecruitmentCommentFixture {
                         .userId(3L)
                         .profileImg("wwww.img3")
                         .content("내용입니다4")
-                        .createAt(LocalDateTime.of(2024, 3, 5, 3, 18))
-                        .isParent(false)
-                        .groupNumber(1)
-                        .groupOrder(3)
+                        .createAt(LocalDateTime.of(2024, 3, 5, 3, 15))
+                        .isParent(true)
+                        .groupNumber(2)
+                        .groupOrder(1)
                         .build());
 
         return recruitmentComments;

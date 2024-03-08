@@ -26,8 +26,8 @@ public class RecruitmentCommentRepositoryCustomImpl implements RecruitmentCommen
                 .from(recruitmentComment)
                 .leftJoin(user)
                 .on(recruitmentComment.createdBy.eq(user.id))
-                .where(recruitmentComment.recruitmentPost.id.eq(postId))
-                .orderBy(recruitmentComment.createdAt.asc())
+                .where(recruitmentComment.recruitmentPost.id.eq(postId), recruitmentComment.isDeleted.eq(false))
+                .orderBy(recruitmentComment.groupNumber.asc(), recruitmentComment.createdAt.asc())
                 .fetch();
     }
 }
