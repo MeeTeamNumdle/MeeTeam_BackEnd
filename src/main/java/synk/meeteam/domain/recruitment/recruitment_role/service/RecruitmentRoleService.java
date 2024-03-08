@@ -13,7 +13,7 @@ public class RecruitmentRoleService {
     private final RecruitmentRoleRepository recruitmentRoleRepository;
 
     @Transactional
-    public RecruitmentRole createRecruitmentRoleV2(RecruitmentRole recruitmentRole) {
+    public RecruitmentRole createRecruitmentRole(RecruitmentRole recruitmentRole) {
         return recruitmentRoleRepository.save(recruitmentRole);
     }
 

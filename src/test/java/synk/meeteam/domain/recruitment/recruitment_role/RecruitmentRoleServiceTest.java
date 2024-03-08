@@ -36,7 +36,7 @@ public class RecruitmentRoleServiceTest {
         doReturn(recruitmentRole).when(recruitmentRoleRepository).save(recruitmentRole);
 
         // when
-        RecruitmentRole savedRecruitmentRole = recruitmentRoleService.createRecruitmentRoleV2(recruitmentRole);
+        RecruitmentRole savedRecruitmentRole = recruitmentRoleService.createRecruitmentRole(recruitmentRole);
 
         // then
         Assertions.assertThat(savedRecruitmentRole)
