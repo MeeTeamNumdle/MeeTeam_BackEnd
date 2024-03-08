@@ -110,10 +110,8 @@ public class RecruitmentTagServiceTest {
     @DisplayName("해당 메서드는 페치 조인을 사용한다.")
     void 구인태그조회_구인태그및수업태그반환_수업관련구인글경우() {
         // given
-        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
         Tag tag = TagFixture.createTag("대학생", TagType.MEETEAM);
-        doReturn(RecruitmentTagFixture.createRecruitmentTags(recruitmentPost, tag)).when(recruitmentTagRepository)
-                .findByPostIdWithTag(1L);
+        doReturn(TagFixture.createRecruitmentTags(tag)).when(tagRepository).findAllByRecruitmentId(1L);
 
         // when
         RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(1L);
@@ -123,25 +121,23 @@ public class RecruitmentTagServiceTest {
                 .extracting("courseName", "courseProfessor")
                 .containsExactly("응소실", "김용혁");
         Assertions.assertThat(recruitmentTagVO.recruitmentTags().get(0))
-                .extracting("recruitmentPost", "tag")
-                .containsExactly(recruitmentPost, tag);
+                .extracting("name", "type")
+                .containsExactly(tag.getName(), tag.getType());
     }
 
     @Test
     void 구인태그조회_구인태그반환_수업관련구인글아닌경우() {
         // given
-        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
         Tag tag = TagFixture.createTag("대학생", TagType.MEETEAM);
-        doReturn(RecruitmentTagFixture.createRecruitmentTags(recruitmentPost, tag)).when(recruitmentTagRepository)
-                .findByPostIdWithTag(1L);
+        doReturn(TagFixture.createRecruitmentTags(tag)).when(tagRepository).findAllByRecruitmentId(1L);
 
         // when
         RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(1L);
 
         // then
         Assertions.assertThat(recruitmentTagVO.recruitmentTags().get(0))
-                .extracting("recruitmentPost", "tag")
-                .containsExactly(recruitmentPost, tag);
+                .extracting("name", "type")
+                .containsExactly(tag.getName(), tag.getType());
     }
 
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.common.tag.repository.TagRepository;
@@ -40,20 +41,20 @@ public class RecruitmentTagService {
     }
 
     public RecruitmentTagVO findByRecruitmentPostId(Long postId) {
-        List<RecruitmentTag> recruitmentTags = recruitmentTagRepository.findByPostIdWithTag(postId);
+        List<TagDto> recruitmentTags = tagRepository.findAllByRecruitmentId(postId);
 
         String courseName = null;
         String courseProfessor = null;
-        List<RecruitmentTag> removedTags = new ArrayList<>();
+        List<TagDto> removedTags = new ArrayList<>();
 
-        for (RecruitmentTag recruitmentTag : recruitmentTags) {
-            if (recruitmentTag.getTag().getType().equals(TagType.COURSE)) {
-                courseName = recruitmentTag.getTag().getName();
-                removedTags.add(recruitmentTag);
+        for (TagDto tag : recruitmentTags) {
+            if (tag.type().equals(TagType.COURSE)) {
+                courseName = tag.name();
+                removedTags.add(tag);
             }
-            if (recruitmentTag.getTag().getType().equals(TagType.PROFESSOR)) {
-                courseProfessor = recruitmentTag.getTag().getName();
-                removedTags.add(recruitmentTag);
+            if (tag.type().equals(TagType.PROFESSOR)) {
+                courseProfessor = tag.name();
+                removedTags.add(tag);
             }
         }
         recruitmentTags.removeAll(removedTags);

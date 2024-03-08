@@ -1,5 +1,8 @@
 package synk.meeteam.domain.common.tag;
 
+import java.util.ArrayList;
+import java.util.List;
+import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
 
@@ -25,5 +28,16 @@ public class TagFixture {
                 .name(name)
                 .type(TagType.PROFESSOR)
                 .build();
+    }
+
+    public static List<TagDto> createRecruitmentTags(Tag tag) {
+
+        List<TagDto> recruitmentTags = new ArrayList<>();
+
+        recruitmentTags.add(new TagDto(tag.getName(), tag.getType()));
+        recruitmentTags.add(new TagDto("김용혁", TagType.PROFESSOR));
+        recruitmentTags.add(new TagDto("응소실", TagType.COURSE));
+
+        return recruitmentTags;
     }
 }

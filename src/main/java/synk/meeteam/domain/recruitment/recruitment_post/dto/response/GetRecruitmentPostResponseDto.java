@@ -42,7 +42,7 @@ public record GetRecruitmentPostResponseDto(
         @Schema(description = "교수 이름", example = "최웅철")
         String courseProfessor,
         @Schema(description = "구인 태그", example = "")
-        List<TagDto> tags,
+        List<GetTagDto> tags,
         @Schema(description = "구인 역할", example = "")
         List<GetRecruitmentRoleResponseDto> recruitmentRoles,
         @Schema(description = "상세 내용", example = "안녕하세요. 저는 팀원을...")
@@ -60,7 +60,7 @@ public record GetRecruitmentPostResponseDto(
                 .map(GetRecruitmentRoleResponseDto::from)
                 .toList();
 
-        List<TagDto> tagDtos = recruitmentTagVO.recruitmentTags().stream().map(TagDto::from).toList();
+        List<GetTagDto> tagDtos = recruitmentTagVO.recruitmentTags().stream().map(GetTagDto::from).toList();
 
         return GetRecruitmentPostResponseDto.builder()
                 .isWriter(isWriter)

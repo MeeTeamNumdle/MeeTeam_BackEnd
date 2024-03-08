@@ -1,15 +1,15 @@
 package synk.meeteam.domain.recruitment.recruitment_tag.service.vo;
 
 import java.util.List;
-import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
+import synk.meeteam.domain.common.tag.dto.TagDto;
 
 public record RecruitmentTagVO(
-        List<RecruitmentTag> recruitmentTags,
+        List<TagDto> recruitmentTags,
         String courseName,
         String courseProfessor
 ) {
-    public static RecruitmentTagVO from(List<RecruitmentTag> recruitmentTag, String courseName,
+    public static RecruitmentTagVO from(List<TagDto> recruitmentTags, String courseName,
                                         String courseProfessor) {
-        return new RecruitmentTagVO(recruitmentTag, courseName, courseProfessor);
+        return new RecruitmentTagVO(recruitmentTags, courseName, courseProfessor);
     }
 }
