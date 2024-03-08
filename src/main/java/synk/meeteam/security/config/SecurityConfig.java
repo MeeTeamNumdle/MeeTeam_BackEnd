@@ -1,13 +1,9 @@
 package synk.meeteam.security.config;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.PATCH;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -66,10 +62,10 @@ public class SecurityConfig {
                         .allowedOriginPatterns("https://meeteam.co.kr", "http://localhost:5173",
                                 "http://localhost:8080")
                         .allowedMethods(
-                                GET.name(),
-                                POST.name(),
-                                PUT.name(),
-                                PATCH.name()
+                                HttpMethod.GET.name(),
+                                HttpMethod.POST.name(),
+                                HttpMethod.PUT.name(),
+                                HttpMethod.PATCH.name()
                         );
             }
         };
@@ -94,7 +90,7 @@ public class SecurityConfig {
         //== URL별 권한 관리 옵션 ==//
         http.authorizeHttpRequests(auth -> {
                     auth.requestMatchers(AUTH_WHITELIST).permitAll();
-                    auth.requestMatchers(GET, SEMI_AUTH_WHITELIST).permitAll();
+                    auth.requestMatchers(HttpMethod.GET, SEMI_AUTH_WHITELIST).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
