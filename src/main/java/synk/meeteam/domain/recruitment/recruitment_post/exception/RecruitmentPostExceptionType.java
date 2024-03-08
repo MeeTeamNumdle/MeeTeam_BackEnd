@@ -6,7 +6,7 @@ import synk.meeteam.global.common.exception.ExceptionType;
 
 @RequiredArgsConstructor
 public enum RecruitmentPostExceptionType implements ExceptionType {
-    INVALID_POST_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 게시글 id 입니다.");
+    NOT_FOUND_POST(HttpStatus.NOT_FOUND, "유효하지 않은 게시글 id 입니다.");
 
     private final HttpStatus status;
     private final String message;
