@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.service.FieldService;
@@ -45,7 +45,7 @@ import synk.meeteam.security.AuthUser;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/recruitment/post")
+@RequestMapping("/recruitment/postings")
 public class RecruitmentPostController implements RecruitmentPostApi {
 
     private final Long DEVELOP_ID = 1L;
@@ -83,10 +83,10 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                         recruitmentTags)));
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     @Override
     public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @Valid @RequestParam(value = "id") Long postId) {
+            @Valid @PathVariable("id") Long postId) {
         // 단일 트랜잭션으로 하지 않아도 될듯
         // 트랜잭션으로 하지 않아도 될듯?
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
@@ -105,9 +105,10 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                         recruitmentCommentDtos));
     }
 
-    @GetMapping("/apply")
+    @GetMapping("/{id}/apply-info")
     @Override
-    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@AuthUser User user) {
+    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@Valid @PathVariable("id") Long postId,
+                                                                @AuthUser User user) {
         List<GetApplyRecruitmentRoleResponseDto> recruitmentRoles = new ArrayList<>();
         recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(1L, "백엔드개발자"));
         recruitmentRoles.add(new GetApplyRecruitmentRoleResponseDto(2L, "프론트엔드개발자"));
