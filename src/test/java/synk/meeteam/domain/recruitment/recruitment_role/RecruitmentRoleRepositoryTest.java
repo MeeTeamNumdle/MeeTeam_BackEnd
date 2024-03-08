@@ -1,8 +1,11 @@
 package synk.meeteam.domain.recruitment.recruitment_role;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE;
 
+import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -101,5 +104,20 @@ public class RecruitmentRoleRepositoryTest {
         Assertions.assertThatThrownBy(() -> {
             recruitmentRoleRepository.saveAndFlush(recruitmentRole);
         }).isInstanceOf(InvalidDataAccessApiUsageException.class);
+    }
+
+    @Test
+    @DisplayName("해당 메서드는 페치 조인을 사용한다.")
+    void 구인역할조회_구인역할반환_구인글조회경우() {
+        // given
+
+        // when
+        List<RecruitmentRole> recruitmentRoles = recruitmentRoleRepository.findByPostIdWithSkills(1L);
+
+        // then
+        for (RecruitmentRole role : recruitmentRoles) {
+            assertThat(role.getRecruitmentPost().getId()).isEqualTo(1L);
+            assertThat(role.getRole()).isNotNull();
+        }
     }
 }
