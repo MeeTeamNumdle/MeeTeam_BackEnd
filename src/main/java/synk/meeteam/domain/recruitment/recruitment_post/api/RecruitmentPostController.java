@@ -86,8 +86,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @GetMapping
     @Override
     public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @Valid @RequestParam(value = "id") Long postId,
-            @AuthUser User user) {
+            @Valid @RequestParam(value = "id") Long postId) {
         // 단일 트랜잭션으로 하지 않아도 될듯
         // 트랜잭션으로 하지 않아도 될듯?
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
