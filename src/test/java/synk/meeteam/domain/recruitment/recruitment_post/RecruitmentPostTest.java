@@ -32,6 +32,8 @@ import synk.meeteam.global.common.exception.ExceptionResponse;
 @ActiveProfiles("test")
 public class RecruitmentPostTest {
 
+    private static final String RECRUITMENT_URL = "/recruitment/postings";
+
     @Value("${jwt.access.header}")
     private String accessHeader;
 
@@ -58,7 +60,7 @@ public class RecruitmentPostTest {
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<CreateRecruitmentPostResponseDto> responseEntity = restTemplate.postForEntity(
-                "/recruitment/post",
+                RECRUITMENT_URL,
                 requestEntity, CreateRecruitmentPostResponseDto.class);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
@@ -77,7 +79,7 @@ public class RecruitmentPostTest {
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<ExceptionResponse> responseEntity = restTemplate.postForEntity(
-                "/recruitment/post",
+                RECRUITMENT_URL,
                 requestEntity, ExceptionResponse.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -95,7 +97,7 @@ public class RecruitmentPostTest {
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<ExceptionResponse> responseEntity = restTemplate.postForEntity(
-                "/recruitment/post",
+                RECRUITMENT_URL,
                 requestEntity, ExceptionResponse.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -113,7 +115,7 @@ public class RecruitmentPostTest {
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<ExceptionResponse> responseEntity = restTemplate.postForEntity(
-                "/recruitment/post",
+                RECRUITMENT_URL,
                 requestEntity, ExceptionResponse.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
