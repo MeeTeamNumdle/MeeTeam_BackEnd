@@ -9,6 +9,7 @@ import static synk.meeteam.global.entity.exception.EnumExceptionType.INVALID_CAT
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CourseTagDto
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.RecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.global.common.exception.ExceptionResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -120,6 +123,39 @@ public class RecruitmentPostTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(INVALID_CATEGORY_NAME.name(), responseEntity.getBody().getName());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"qwd", " ", "2fd2"})
+    void 신청가능역할조회_예외발생_유효하지않은게시글id일경우(String date) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(accessHeader, TOKEN);
+
+        HttpEntity request = new HttpEntity(headers);
+
+        ResponseEntity<ExceptionResponse> responseEntity = restTemplate.exchange(
+                RECRUITMENT_URL + "/{id}/apply-info", HttpMethod.GET, request,
+                ExceptionResponse.class, date);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(INVALID_INPUT_VALUE.name(), responseEntity.getBody().getName());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"1000", "-1"})
+    void 신청가능역할조회_빈리스트반환_신청가능한역할없는경우(String date) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(accessHeader, TOKEN);
+
+        HttpEntity request = new HttpEntity(headers);
+
+        ResponseEntity<GetApplyInfoResponseDto> responseEntity = restTemplate.exchange(
+                RECRUITMENT_URL + "/{id}/apply-info", HttpMethod.GET, request,
+                GetApplyInfoResponseDto.class, date);
+
+        Assertions.assertThat(responseEntity.getBody().recruitmentRoles().size()).isEqualTo(0);
     }
 
 
