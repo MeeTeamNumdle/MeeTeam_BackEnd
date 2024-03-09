@@ -1,5 +1,6 @@
 package synk.meeteam.domain.user.user.entity;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
@@ -94,12 +95,12 @@ public class User extends BaseTimeEntity {
     private double evaluationScore;
 
     //학교
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "university_id", updatable = false)
     private University university;
 
     //학과
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "department_id")
     private Department department;
 
