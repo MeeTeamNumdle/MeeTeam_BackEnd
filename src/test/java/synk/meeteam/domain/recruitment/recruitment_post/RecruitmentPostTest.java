@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -48,18 +49,24 @@ public class RecruitmentPostTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    HttpHeaders headers;
+
     // @Notnull 체크 -> MethodArgumentNotValidException.class
     // uniqueContrants 체크 -> DataIntegrityViolationException.class
     // LocalDate 체크, Long 체크, List<Long> 체크 -> HttpMessageNotReadableException.class
     // List<String> 체크 -> 좀 애매하다..
 
+    @BeforeEach
+    void init() {
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(accessHeader, TOKEN);
+    }
+
+
     @Test
     void 구인글생성_생성된구인글Id반환_정상입력경우() {
         CreateRecruitmentPostRequestDto requestDto = createRequestDto();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(accessHeader, TOKEN);
-
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<CreateRecruitmentPostResponseDto> responseEntity = restTemplate.postForEntity(
@@ -75,10 +82,6 @@ public class RecruitmentPostTest {
     @ValueSource(strings = {TITLE_EXCEED_40, "  ㅈ"})
     void 구인글생성_예외발생_구인글제목이5자미만40자넘는경우(String title) {
         CreateRecruitmentPostRequestDto requestDto = createRequestDto_title(title);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(accessHeader, TOKEN);
-
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<ExceptionResponse> responseEntity = restTemplate.postForEntity(
@@ -93,10 +96,6 @@ public class RecruitmentPostTest {
     @ValueSource(strings = {"유형", " 프로젝트", "", " ", "프로젝트 ", "스터디;"})
     void 구인글생성_예외발생_올바르지않은유형일경우(String category) {
         CreateRecruitmentPostRequestDto requestDto = createRequestDto_category(category);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(accessHeader, TOKEN);
-
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<ExceptionResponse> responseEntity = restTemplate.postForEntity(
@@ -111,10 +110,6 @@ public class RecruitmentPostTest {
     @ValueSource(strings = {"유형", " 프로젝트", "", " ", "프로젝트 ", "스터디;"})
     void 구인글생성_예외발생_올바르지않은날짜일경우(String date) {
         CreateRecruitmentPostRequestDto requestDto = createRequestDto_category(date);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(accessHeader, TOKEN);
-
         HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         ResponseEntity<ExceptionResponse> responseEntity = restTemplate.postForEntity(
@@ -128,10 +123,6 @@ public class RecruitmentPostTest {
     @ParameterizedTest
     @ValueSource(strings = {"qwd", " ", "2fd2"})
     void 신청가능역할조회_예외발생_유효하지않은게시글id일경우(String date) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(accessHeader, TOKEN);
-
         HttpEntity request = new HttpEntity(headers);
 
         ResponseEntity<ExceptionResponse> responseEntity = restTemplate.exchange(
@@ -145,10 +136,6 @@ public class RecruitmentPostTest {
     @ParameterizedTest
     @ValueSource(strings = {"1000", "-1"})
     void 신청가능역할조회_빈리스트반환_신청가능한역할없는경우(String date) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(accessHeader, TOKEN);
-
         HttpEntity request = new HttpEntity(headers);
 
         ResponseEntity<GetApplyInfoResponseDto> responseEntity = restTemplate.exchange(
