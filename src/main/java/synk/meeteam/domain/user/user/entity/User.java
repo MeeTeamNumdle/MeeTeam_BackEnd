@@ -88,7 +88,7 @@ public class User extends BaseTimeEntity {
 
     //프로필 이미지 url
     @Column(length = 300)
-    private String pictureUrl;
+    private String profileImgFileName;
 
     //평가 점수
     @ColumnDefault("0")
@@ -140,14 +140,14 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String email, String name, String nickname, String password, String phoneNumber,
-                Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType,
+                Integer admissionYear, String profileImgFileName, Authority authority, PlatformType platformType,
                 String platformId,
                 University university, Department department) {
         this.email = email;
         this.university = university;
         this.department = department;
         this.name = name;
-        this.pictureUrl = pictureUrl;
+        this.profileImgFileName = profileImgFileName;
         this.nickname = nickname;
         this.password = password;
         this.phoneNumber = phoneNumber;

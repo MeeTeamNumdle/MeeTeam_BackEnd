@@ -15,7 +15,7 @@ public record AuthUserVo(Long userId, String email, String name, String pictureU
                 .userId(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .pictureUrl(user.getPictureUrl())
+                .pictureUrl(user.getProfileImgFileName())
                 .platformType(platformType)
                 .platformId(user.getPlatformId())
                 .authority(authority)
