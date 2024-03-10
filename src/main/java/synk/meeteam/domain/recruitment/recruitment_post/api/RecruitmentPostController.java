@@ -40,6 +40,8 @@ import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagSer
 import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.UserService;
+import synk.meeteam.infra.s3.S3FileName;
+import synk.meeteam.infra.s3.service.S3Service;
 import synk.meeteam.security.AuthUser;
 
 
@@ -60,6 +62,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private final FieldService fieldService;
     private final SkillService skillService;
     private final UserService userService;
+    private final S3Service s3Service;
 
     private final RecruitmentPostMapper recruitmentPostMapper;
 
@@ -92,6 +95,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
 
         User writer = userService.findById(recruitmentPost.getCreatedBy());
+        String writerImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, writer.getPictureUrl());
 
         List<RecruitmentRole> recruitmentRoles = recruitmentRoleService.findByRecruitmentPostId(postId);
 
@@ -101,7 +105,8 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 recruitmentPost);
 
         return ResponseEntity.ok()
-                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, recruitmentRoles, writer, recruitmentTagVO,
+                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, recruitmentRoles, writer, writerImgUrl,
+                        recruitmentTagVO,
                         recruitmentCommentDtos));
     }
 
