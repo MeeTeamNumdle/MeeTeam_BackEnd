@@ -71,5 +71,31 @@ public class RoleRepositoryTest {
         assertThat(roles.size()).isEqualTo(1);
     }
 
+    @Test
+    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이있는경우() {
+        // given
+        Long postId = 1L;
+
+        // when
+        List<RoleDto> availableRoleDtos = roleRepository.findAvailableRoleByRecruitmentId(postId);
+
+        // then
+        assertThat(availableRoleDtos.get(0).getName()).isEqualTo("소프트웨어 엔지니어");
+        assertThat(availableRoleDtos.get(1).getName()).isEqualTo("웹 개발자");
+
+    }
+
+    @Test
+    void 신청가능역할조회_빈역할Dto_신청가능한구인역할이없는경우() {
+        // given
+        Long postId = -1L;
+
+        // when
+        List<RoleDto> availableRoleDtos = roleRepository.findAvailableRoleByRecruitmentId(postId);
+
+        // then
+        assertThat(availableRoleDtos.size()).isEqualTo(0);
+
+    }
 
 }
