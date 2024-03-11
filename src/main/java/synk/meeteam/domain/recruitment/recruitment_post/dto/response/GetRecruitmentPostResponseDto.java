@@ -23,6 +23,8 @@ public record GetRecruitmentPostResponseDto(
         long bookmarkCount,
         @Schema(description = "작성자 닉네임", example = "song123")
         String writerNickname,
+        @Schema(description = "작성자 사진", example = "url 형태")
+        String writerProfileImg,
         @Schema(description = "응답률", example = "90")
         double responseRate,
         @Schema(description = "작성자 평점", example = "4.5")
@@ -53,6 +55,7 @@ public record GetRecruitmentPostResponseDto(
 ) {
     public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost,
                                                      List<RecruitmentRole> recruitmentRoles, User writer,
+                                                     String writerProfileImg,
                                                      RecruitmentTagVO recruitmentTagVO,
                                                      List<GetCommentResponseDto> recruitmentCommentDtos) {
         boolean isWriter = writer.getId().equals(recruitmentPost.getCreatedBy());
@@ -69,6 +72,7 @@ public record GetRecruitmentPostResponseDto(
                 .createdAt(recruitmentPost.getCreatedAt().toString())
                 .bookmarkCount(recruitmentPost.getBookmarkCount())
                 .writerNickname(writer.getNickname())
+                .writerProfileImg(writerProfileImg)
                 .responseRate(recruitmentPost.getResponseRate())
                 .writerScore(writer.getEvaluationScore())
                 .proceedingStart(recruitmentPost.getProceedingStart().toString())

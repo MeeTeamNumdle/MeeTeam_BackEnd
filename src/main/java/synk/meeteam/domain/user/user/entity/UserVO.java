@@ -31,20 +31,20 @@ public class UserVO {
 
     private int admissionYear;
 
-    private String pictureUrl;
+    private String profileImgFileName;
 
     @Indexed
     private String emailCode;
 
     @Builder
     public UserVO(String platformId, String email, String name, String phoneNumber, PlatformType platformType,
-                  String pictureUrl) {
+                  String profileImgFileName) {
         this.platformId = platformId;
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.platformType = platformType;
-        this.pictureUrl = pictureUrl;
+        this.profileImgFileName = profileImgFileName;
     }
 
     public void updateUniversityInfo(Long universityId, Long departmentId, int admissionYear, String email){
