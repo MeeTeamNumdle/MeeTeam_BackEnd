@@ -67,4 +67,20 @@ public class RecruitmentRoleServiceTest {
                 .containsExactly(recruitmentPost, 1L);
 
     }
+
+    @Test
+    void 전체신청자수더하기1_전체신청자수1증가() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
+        Role role = RoleFixture.createRole("백엔드개발자");
+        RecruitmentRole recruitmentRole = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost,
+                role, 2L);
+        long cur = recruitmentRole.getApplicantCount();
+
+        // when
+        recruitmentRoleService.addApplicantCount(recruitmentRole);
+
+        // then
+        Assertions.assertThat(recruitmentRole.getApplicantCount()).isEqualTo(cur + 1);
+    }
 }

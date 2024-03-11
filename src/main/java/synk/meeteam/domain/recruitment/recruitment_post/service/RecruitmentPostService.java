@@ -21,4 +21,9 @@ public class RecruitmentPostService {
     public RecruitmentPost getRecruitmentPost(final Long postId) {
         return recruitmentPostRepository.findByIdOrElseThrow(postId);
     }
+
+    @Transactional
+    public void addApplicantCount(RecruitmentPost recruitmentPost) {
+        recruitmentPost.addApplicantCount();
+    }
 }

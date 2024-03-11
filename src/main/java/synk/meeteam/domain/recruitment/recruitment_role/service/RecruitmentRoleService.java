@@ -20,4 +20,13 @@ public class RecruitmentRoleService {
     public List<RecruitmentRole> findByRecruitmentPostId(Long recruitmentPostId) {
         return recruitmentRoleRepository.findByPostIdWithSkills(recruitmentPostId);
     }
+
+    public RecruitmentRole findById(Long recruitmentRoleId) {
+        return recruitmentRoleRepository.findByIdOrElseThrow(recruitmentRoleId);
+    }
+
+    @Transactional
+    public void addApplicantCount(RecruitmentRole recruitmentRole) {
+        recruitmentRole.addApplicantCount();
+    }
 }

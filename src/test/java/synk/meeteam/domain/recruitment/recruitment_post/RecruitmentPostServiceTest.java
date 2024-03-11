@@ -54,4 +54,17 @@ public class RecruitmentPostServiceTest {
             recruitmentPostService.writeRecruitmentPost(recruitmentPost);
         }).isInstanceOf(ConstraintViolationException.class);
     }
+
+    @Test
+    void 전체신청자수더하기1_전체신청자수1증가() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상입력");
+        long cur = recruitmentPost.getApplicantCount();
+
+        // when
+        recruitmentPostService.addApplicantCount(recruitmentPost);
+
+        // then
+        Assertions.assertThat(recruitmentPost.getApplicantCount()).isEqualTo(cur + 1);
+    }
 }
