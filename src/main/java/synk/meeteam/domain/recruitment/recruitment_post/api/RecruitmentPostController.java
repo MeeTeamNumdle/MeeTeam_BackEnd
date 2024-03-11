@@ -21,10 +21,11 @@ import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.service.SkillService;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
@@ -119,9 +120,17 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     }
 
 
-    @PostMapping("/apply")
+    @PostMapping("/{id}/apply")
     @Override
-    public ResponseEntity<Void> applyRecruitment(applyRecruitmentRequestDto requestDto, User user) {
+    public ResponseEntity<Void> applyRecruitment(@Valid @PathVariable("id") Long postId,
+                                                 @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
+                                                 @AuthUser User user) {
+        RecruitmentRole recruitmentRole = recruitmentRoleService.findById(requestDto.applyRoleId());
+
+        RecruitmentApplicant recruitmentApplicant = recruitmentPostMapper.toRecruitmentApplicantEntity(
+                recruitmentRole.getRecruitmentPost(), recruitmentRole.getRole(), user, requestDto.message());
+
+        recruitmentPostFacade.applyRecruitment(recruitmentRole, recruitmentApplicant);
 
         return ResponseEntity.ok().build();
     }
