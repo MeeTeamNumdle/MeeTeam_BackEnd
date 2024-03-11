@@ -20,7 +20,7 @@ public class RecruitmentCommentRepositoryCustomImpl implements RecruitmentCommen
         return queryFactory
                 .select(new QRecruitmentCommentVO(recruitmentComment.id, user.id,
                         user.nickname,
-                        user.pictureUrl, recruitmentComment.content, recruitmentComment.createdAt,
+                        user.profileImgFileName, recruitmentComment.content, recruitmentComment.createdAt,
                         recruitmentComment.isParent, recruitmentComment.groupNumber, recruitmentComment.groupOrder,
                         recruitmentComment.isDeleted))
                 .from(recruitmentComment)
