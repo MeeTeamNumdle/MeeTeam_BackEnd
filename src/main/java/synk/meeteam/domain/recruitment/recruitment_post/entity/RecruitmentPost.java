@@ -132,4 +132,8 @@ public class RecruitmentPost extends BaseEntity {
         }
         return ((double) responseCount / applicantCount) * 100;
     }
+
+    public void addApplicantCount() {
+        this.applicantCount += 1;
+    }
 }

@@ -58,4 +58,8 @@ public class RecruitmentRole {
         this.role = role;
         this.count = count;
     }
+
+    public void addApplicantCount() {
+        this.applicantCount += 1;
+    }
 }
