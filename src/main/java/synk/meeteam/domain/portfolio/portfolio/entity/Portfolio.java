@@ -75,4 +75,19 @@ public class Portfolio extends BaseTimeEntity {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "output_id")
     private Output output;
+
+    //핀인지 여부
+    private Boolean isPin;
+
+    //핀 순서
+    private int pinOrder;
+
+    public void putPin(int order) {
+        isPin = true;
+        pinOrder = order;
+    }
+
+    public void pullOutPin() {
+        isPin = false;
+    }
 }
