@@ -13,8 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
@@ -65,6 +65,7 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "구인 신청 API")
-    ResponseEntity<Void> applyRecruitment(
-            @Valid applyRecruitmentRequestDto requestDto, @AuthUser User user);
+    ResponseEntity<Void> applyRecruitment(@Valid @PathVariable("id") Long postId,
+                                          @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
+                                          @AuthUser User user);
 }
