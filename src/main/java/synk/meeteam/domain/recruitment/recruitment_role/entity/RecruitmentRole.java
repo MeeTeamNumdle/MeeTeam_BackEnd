@@ -29,7 +29,7 @@ import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.Recruitment
 public class RecruitmentRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recruitment_member_id")
+    @Column(name = "recruitment_role_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)
