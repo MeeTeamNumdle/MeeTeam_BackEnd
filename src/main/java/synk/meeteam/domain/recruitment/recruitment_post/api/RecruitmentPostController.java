@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -130,6 +131,15 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/{id}/close")
+    @Override
+    public ResponseEntity<Void> closeRecruitment(@Valid @PathVariable("id") Long postId, User user) {
+        // biz logic
+
+        return ResponseEntity.ok().build();
+    }
+
 
     ////////////////  변환 로직들  ////////////////
     private List<RecruitmentRole> getRecruitmentRoles(CreateRecruitmentPostRequestDto requestDto,
