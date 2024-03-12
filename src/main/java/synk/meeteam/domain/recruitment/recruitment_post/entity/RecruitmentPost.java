@@ -37,7 +37,7 @@ import synk.meeteam.global.entity.Scope;
 public class RecruitmentPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recruitment_id")
+    @Column(name = "recruitment_post_id")
     private Long id;
 
     //제목
