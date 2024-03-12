@@ -11,6 +11,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.DataSource;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,19 +21,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.ActiveProfiles;
+import synk.meeteam.domain.DatabaseCleanUp;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CourseTagDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.RecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentRoleResponseDto;
 import synk.meeteam.global.common.exception.ExceptionResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -52,6 +58,12 @@ public class RecruitmentPostTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private DatabaseCleanUp databaseCleanUp;
+
+    @Autowired
+    private DataSource dataSource;
+
     HttpHeaders headers;
 
     // @Notnull 체크 -> MethodArgumentNotValidException.class
@@ -64,6 +76,10 @@ public class RecruitmentPostTest {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set(accessHeader, TOKEN);
+        databaseCleanUp.clear();
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(new ClassPathResource("data.sql"));
+        populator.execute(dataSource);
     }
 
 
@@ -150,37 +166,37 @@ public class RecruitmentPostTest {
 
     @Test
     void 구인신청_성공_정상경우() {
-//        HttpEntity request = new HttpEntity(headers);
-//        Long applyRoleId = 1L;
-//
-//        ResponseEntity<GetRecruitmentPostResponseDto> prevResponseEntity = restTemplate.exchange(
-//                RECRUITMENT_URL + "/{id}", HttpMethod.GET, request,
-//                GetRecruitmentPostResponseDto.class, 1);
-//
-//        GetRecruitmentRoleResponseDto prevRole = prevResponseEntity.getBody().recruitmentRoles().stream()
-//                .filter(role -> role.roleName().equals("소프트웨어 엔지니어"))
-//                .findAny().orElse(null);
-//
-//        ///// 실행 /////
-//        ApplyRecruitmentRequestDto requestDto = new ApplyRecruitmentRequestDto(applyRoleId, "저 하고 싶어용");
-//        HttpEntity<ApplyRecruitmentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
-//
-//        ResponseEntity<ApplyRecruitmentRequestDto> responseEntity = restTemplate.postForEntity(
-//                URI.create(RECRUITMENT_URL + "/1/apply"),
-//                requestEntity, ApplyRecruitmentRequestDto.class);
-//
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        ///// 실행 /////
-//
-//        ResponseEntity<GetRecruitmentPostResponseDto> curResponseEntity = restTemplate.exchange(
-//                RECRUITMENT_URL + "/{id}", HttpMethod.GET, request,
-//                GetRecruitmentPostResponseDto.class, 1);
-//
-//        GetRecruitmentRoleResponseDto curRole = curResponseEntity.getBody().recruitmentRoles().stream()
-//                .filter(role -> role.roleName().equals("소프트웨어 엔지니어"))
-//                .findAny().orElse(null);
-//
-//        Assertions.assertThat(curRole.applicantCount()).isEqualTo(prevRole.applicantCount() + 1);
+        HttpEntity request = new HttpEntity(headers);
+        Long applyRoleId = 1L;
+
+        ResponseEntity<GetRecruitmentPostResponseDto> prevResponseEntity = restTemplate.exchange(
+                RECRUITMENT_URL + "/{id}", HttpMethod.GET, request,
+                GetRecruitmentPostResponseDto.class, 1);
+
+        GetRecruitmentRoleResponseDto prevRole = prevResponseEntity.getBody().recruitmentRoles().stream()
+                .filter(role -> role.roleName().equals("소프트웨어 엔지니어"))
+                .findAny().orElse(null);
+
+        ///// 실행 /////
+        ApplyRecruitmentRequestDto requestDto = new ApplyRecruitmentRequestDto(applyRoleId, "저 하고 싶어용");
+        HttpEntity<ApplyRecruitmentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        ResponseEntity<ApplyRecruitmentRequestDto> responseEntity = restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/apply"),
+                requestEntity, ApplyRecruitmentRequestDto.class);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ///// 실행 /////
+
+        ResponseEntity<GetRecruitmentPostResponseDto> curResponseEntity = restTemplate.exchange(
+                RECRUITMENT_URL + "/{id}", HttpMethod.GET, request,
+                GetRecruitmentPostResponseDto.class, 1);
+
+        GetRecruitmentRoleResponseDto curRole = curResponseEntity.getBody().recruitmentRoles().stream()
+                .filter(role -> role.roleName().equals("소프트웨어 엔지니어"))
+                .findAny().orElse(null);
+
+        Assertions.assertThat(curRole.applicantCount()).isEqualTo(prevRole.applicantCount() + 1);
     }
 
     @Test
