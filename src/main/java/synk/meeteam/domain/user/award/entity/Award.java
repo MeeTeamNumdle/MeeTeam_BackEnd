@@ -12,11 +12,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Award extends BaseTimeEntity {
     @Id
@@ -38,6 +40,6 @@ public class Award extends BaseTimeEntity {
     private LocalDate proceedingStart;
 
     @NotNull
-    private LocalDate ProceedingEnd;
+    private LocalDate proceedingEnd;
 
 }
