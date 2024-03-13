@@ -42,4 +42,9 @@ public class UserSkill extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "skill_id")
     private Skill skill;
+
+    public UserSkill(User user, Skill skill) {
+        this.user = user;
+        this.skill = skill;
+    }
 }
