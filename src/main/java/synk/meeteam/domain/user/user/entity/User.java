@@ -44,7 +44,18 @@ public class User extends BaseTimeEntity {
     @NotNull
     @Size(max = 100)
     @Column(length = 100, updatable = false)
-    private String email;
+    private String schoolEmail;
+
+    @ColumnDefault("1")
+    private boolean isPublicSchoolEmail = true;
+
+    private String subEmail = "";
+
+    @ColumnDefault("0")
+    private boolean isPublicSubEmail = false;
+
+    @ColumnDefault("1")
+    private boolean isSchoolMain = true;
 
     //이름
     @NotNull
@@ -63,15 +74,12 @@ public class User extends BaseTimeEntity {
     @Column(length = 16)
     private String password;
 
-    @ColumnDefault("1")
-    private boolean isEmailPublic = true;
-
     //전화번호
     @Column(length = 15)
     private String phoneNumber;
 
     @ColumnDefault("0")
-    private boolean isPhonePublic = false;
+    private boolean isPublicPhone = false;
 
     //한줄 소개
     @Column(length = 20)
@@ -144,11 +152,11 @@ public class User extends BaseTimeEntity {
     private long scoreProfessionalism = 0;
 
     @Builder
-    public User(String email, String name, String nickname, String password, String phoneNumber,
+    public User(String schoolEmail, String name, String nickname, String password, String phoneNumber,
                 Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType,
                 String platformId,
                 University university, Department department) {
-        this.email = email;
+        this.schoolEmail = schoolEmail;
         this.university = university;
         this.department = department;
         this.name = name;
@@ -162,28 +170,17 @@ public class User extends BaseTimeEntity {
         this.platformId = platformId;
     }
 
-    public String encryptUserId() {
+    public String getEncryptUserId() {
         return Encryption.encryptLong(this.id);
-    }
-
-    public void updateEmail(String email) {
-        this.email = email;
-    }
-
-    public void updateAdmissionYear(int admissionYear) {
-        this.admissionYear = admissionYear;
     }
 
     public Long decryptUserId(String encryptedUserId) {
         return Encryption.decryptLong(encryptedUserId);
     }
 
-    public void updateUniversity(University university) {
-        this.university = university;
-    }
-
-    public void updateAuthority(Authority authority) {
-        this.authority = authority;
+    // 유저 권한 설정 메소드
+    public void authorizeUser() {
+        this.authority = Authority.USER;
     }
 
     // 비밀번호 암호화 메소드
@@ -191,8 +188,43 @@ public class User extends BaseTimeEntity {
         this.password = passwordEncoder.encode(this.password);
     }
 
-    // 유저 권한 설정 메소드
-    public void authorizeUser() {
-        this.authority = Authority.USER;
+    //프로필 정보 업데이트
+    public void updateProfile(
+            String name,
+            String pictureUrl,
+            String subEmail,
+            boolean isPublicSubEmail,
+            boolean isPublicSchoolEmail,
+            boolean isSchoolMain,
+            String phoneNumber,
+            boolean isPublicPhone,
+            String oneLineIntroduction,
+            String mainIntroduction,
+            double gpa,
+            double maxGpa,
+            Role role
+    ) {
+        this.name = name;
+        this.pictureUrl = pictureUrl;
+        this.subEmail = subEmail;
+        this.isPublicSubEmail = isPublicSubEmail;
+        this.isPublicSchoolEmail = isPublicSchoolEmail;
+        this.isSchoolMain = isSchoolMain;
+        this.phoneNumber = phoneNumber;
+        this.isPublicPhone = isPublicPhone;
+        this.oneLineIntroduction = oneLineIntroduction;
+        this.mainIntroduction = mainIntroduction;
+        this.gpa = gpa;
+        this.maxGpa = maxGpa;
+        this.interestRole = role;
+    }
+
+    //닉네임 변경
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public boolean isNotEqualNickname(String nickname) {
+        return !this.nickname.equals(nickname);
     }
 }
