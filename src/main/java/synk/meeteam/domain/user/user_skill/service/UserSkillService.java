@@ -21,6 +21,7 @@ public class UserSkillService {
     public void updateUserSkillsByIds(User user, List<Long> skillIds) {
         //기존 유저 스킬 모두 삭제
         userSkillRepository.deleteAllByUser(user);
+        userSkillRepository.flush();
         //유저 스킬 목록 조회
         List<Skill> skills = skillRepository.findAllById(skillIds);
         //유저 스킬로 변환
