@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.output.entity.Output;
 import synk.meeteam.domain.common.role.entity.Role;
@@ -77,6 +78,7 @@ public class Portfolio extends BaseTimeEntity {
     private Output output;
 
     //핀인지 여부
+    @ColumnDefault("0")
     private Boolean isPin;
 
     //핀 순서
