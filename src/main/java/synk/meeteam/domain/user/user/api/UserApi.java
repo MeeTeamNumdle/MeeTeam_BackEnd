@@ -3,6 +3,7 @@ package synk.meeteam.domain.user.user.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public interface UserApi {
             }
     )
     @Operation(summary = "유저 프로필 저장 API")
-    @SecurityRequirements
-    ResponseEntity<Void> saveProfile(@AuthUser User user, @RequestBody UpdateProfileRequestDto requestDto);
+    @SecurityRequirement(name = "Authorization")
+    ResponseEntity<String> saveProfile(@AuthUser User user, @RequestBody UpdateProfileRequestDto requestDto);
 
     @ApiResponses(
             value = {
