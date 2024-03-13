@@ -42,7 +42,7 @@ public class UserControllerTest {
     public void 실패_닉네임중복() throws Exception {
         // given
         final String url = "/user/search/check-duplicate";
-        doReturn(false).when(userService).checkDuplicateNickname(NICKNAME);
+        doReturn(false).when(userService).checkAvailableNickname(NICKNAME);
 
         // when
         final ResultActions resultActions = mockMvc.perform(

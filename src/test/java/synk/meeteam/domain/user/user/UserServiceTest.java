@@ -45,7 +45,7 @@ public class UserServiceTest {
         userRepository.saveAndFlush(prevSavedUser);
 
         // when
-        boolean available = userService.checkDuplicateNickname(NICKNAME);
+        boolean available = userService.checkAvailableNickname(NICKNAME);
 
         // then
         org.assertj.core.api.Assertions.assertThat(available)
