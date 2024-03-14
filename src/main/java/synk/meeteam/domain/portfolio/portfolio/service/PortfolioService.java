@@ -16,7 +16,7 @@ public class PortfolioService {
         //포트폴리오 핀 설정
         List<Portfolio> oldPinPortfolios = portfolioRepository.findAllByIsPinTrueAndUserOrderByPinOrderAsc(user);
         //기존 핀 해제
-        oldPinPortfolios.forEach(Portfolio::pullOutPin);
+        oldPinPortfolios.forEach(Portfolio::unpin);
         //포트폴리오 조회
         List<Portfolio> newPinPortfolios = portfolioRepository.findAllById(portfolioIds);
         //핀 설정

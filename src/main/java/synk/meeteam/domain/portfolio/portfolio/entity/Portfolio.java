@@ -89,7 +89,7 @@ public class Portfolio extends BaseTimeEntity {
         pinOrder = order;
     }
 
-    public void pullOutPin() {
+    public void unpin() {
         isPin = false;
     }
 }
