@@ -3,6 +3,7 @@ package synk.meeteam.domain.portfolio.portfolio.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
 import synk.meeteam.domain.user.user.entity.User;
@@ -12,6 +13,7 @@ import synk.meeteam.domain.user.user.entity.User;
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
 
+    @Transactional
     public void updatePinPortfoliosByIds(User user, List<Long> portfolioIds) {
         //포트폴리오 핀 설정
         List<Portfolio> oldPinPortfolios = portfolioRepository.findAllByIsPinTrueAndUserOrderByPinOrderAsc(user);
