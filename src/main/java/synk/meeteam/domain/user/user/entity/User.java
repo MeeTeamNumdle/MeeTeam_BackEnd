@@ -44,10 +44,10 @@ public class User extends BaseTimeEntity {
     @NotNull
     @Size(max = 100)
     @Column(length = 100, updatable = false)
-    private String schoolEmail;
+    private String universityEmail;
 
     @ColumnDefault("1")
-    private boolean isPublicSchoolEmail = true;
+    private boolean isPublicUniversityEmail = true;
 
     private String subEmail = "";
 
@@ -55,7 +55,7 @@ public class User extends BaseTimeEntity {
     private boolean isPublicSubEmail = false;
 
     @ColumnDefault("1")
-    private boolean isSchoolMain = true;
+    private boolean isUniversityMainEmail = true;
 
     //이름
     @NotNull
@@ -152,11 +152,11 @@ public class User extends BaseTimeEntity {
     private long scoreProfessionalism = 0;
 
     @Builder
-    public User(String schoolEmail, String name, String nickname, String password, String phoneNumber,
+    public User(String universityEmail, String name, String nickname, String password, String phoneNumber,
                 Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType,
                 String platformId,
                 University university, Department department) {
-        this.schoolEmail = schoolEmail;
+        this.universityEmail = universityEmail;
         this.university = university;
         this.department = department;
         this.name = name;
@@ -208,8 +208,8 @@ public class User extends BaseTimeEntity {
         this.pictureUrl = pictureUrl;
         this.subEmail = subEmail;
         this.isPublicSubEmail = isPublicSubEmail;
-        this.isPublicSchoolEmail = isPublicSchoolEmail;
-        this.isSchoolMain = isSchoolMain;
+        this.isPublicUniversityEmail = isPublicSchoolEmail;
+        this.isUniversityMainEmail = isSchoolMain;
         this.phoneNumber = phoneNumber;
         this.isPublicPhone = isPublicPhone;
         this.oneLineIntroduction = oneLineIntroduction;
