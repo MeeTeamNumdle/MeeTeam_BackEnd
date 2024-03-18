@@ -1,5 +1,7 @@
 package synk.meeteam.domain.user.award;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
@@ -33,6 +35,7 @@ public class AwardServiceTest {
     @Test
     void 수상목록변경_수상목록변경성공() {
         //given
+        doNothing().when(awardRepository).deleteAllByCreatedBy(anyLong());
         doReturn(AwardFixture.createAwardFixture()).when(awardRepository).saveAll(Mockito.<Award>anyList());
         //when
         List<Award> awards = awardService.changeAward(1L, AwardFixture.createAwardDtoFixture());
