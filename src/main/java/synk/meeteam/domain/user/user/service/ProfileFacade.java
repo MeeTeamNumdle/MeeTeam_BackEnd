@@ -42,6 +42,6 @@ public class ProfileFacade {
         awardService.changeAward(user.getId(), profileDto.awards());
 
         //핀 설정
-        portfolioService.changePinPortfoliosByIds(user, profileDto.portfolios());
+        portfolioService.changePinPortfoliosByIds(user.getId(), profileDto.portfolios());
     }
 }

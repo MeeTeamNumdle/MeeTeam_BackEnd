@@ -1,6 +1,6 @@
 package synk.meeteam.domain.portfolio.portfolio;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_FOUND_PORTFOLIO;
@@ -30,12 +30,12 @@ public class PortfolioServiceTest {
     void 포트폴리오핀설정_핀설정성공_정상핀아이디목록() {
         //given
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByIsPinTrueAndUserOrderByPinOrderAsc(any());
+                .findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(anyLong());
         List<Long> pins = List.of(2L, 1L);
         doReturn(PortfolioFixture.createPortfolioFixtures_2_1()).when(portfolioRepository)
-                .findAllByIdInAndUser(eq(pins), any());
+                .findAllByIdInAndCreatedBy(eq(pins), anyLong());
         //when
-        List<Portfolio> portfolios = portfolioService.changePinPortfoliosByIds(any(), pins);
+        List<Portfolio> portfolios = portfolioService.changePinPortfoliosByIds(1L, pins);
         //then
         Assertions.assertThat(portfolios).extracting("isPin").containsExactly(true, true);
         Assertions.assertThat(portfolios).extracting("pinOrder").containsExactly(1, 2);
@@ -46,14 +46,14 @@ public class PortfolioServiceTest {
     void 포트폴리오핀설정_핀설정실패_조회되지않는아이디() {
         //given
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByIsPinTrueAndUserOrderByPinOrderAsc(any());
+                .findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(anyLong());
         List<Long> pins = List.of(2L, 1L, 3L);
 
         //유저가 소유주가 아닌 경우 or
         doReturn(PortfolioFixture.createPortfolioFixtures_2_1()).when(portfolioRepository)
-                .findAllByIdInAndUser(eq(pins), any());
+                .findAllByIdInAndCreatedBy(eq(pins), anyLong());
         //when then
-        Assertions.assertThatThrownBy(() -> portfolioService.changePinPortfoliosByIds(any(), pins))
+        Assertions.assertThatThrownBy(() -> portfolioService.changePinPortfoliosByIds(1L, pins))
                 .isExactlyInstanceOf(PortfolioException.class)
                 .hasMessage(NOT_FOUND_PORTFOLIO.message());
     }

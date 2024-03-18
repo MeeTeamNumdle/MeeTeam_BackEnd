@@ -27,7 +27,7 @@ public class PortfolioRepositoryTest {
         //given
         User user = userRepository.findById(1L).get();
         //when
-        List<Portfolio> portfolios = portfolioRepository.findAllByIsPinTrueAndUserOrderByPinOrderAsc(user);
+        List<Portfolio> portfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(1L);
         //then
         assertThat(portfolios).extracting("title").containsExactly("타이틀1", "타이틀2");
     }

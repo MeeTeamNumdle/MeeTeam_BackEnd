@@ -22,23 +22,17 @@ import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.output.entity.Output;
 import synk.meeteam.domain.common.role.entity.Role;
-import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Portfolio extends BaseTimeEntity {
+public class Portfolio extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "portfolio_id")
     private Long id;
-
-    //유저
-    @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     //제목
     @NotNull
