@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
-import synk.meeteam.domain.user.user.dto.command.UpdateProfileCommand;
+import synk.meeteam.domain.user.user.dto.command.UpdateInfoCommand;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.exception.UserException;
 import synk.meeteam.domain.user.user.repository.UserRepository;
@@ -26,7 +26,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateNickname(User user, String newNickname) {
+    public void changeOrKeepNickname(User user, String newNickname) {
         if (user.isNotEqualNickname(newNickname)) {
             if (checkAvailableNickname(newNickname)) {
                 user.updateNickname(newNickname);
@@ -37,7 +37,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateProfile(User user, UpdateProfileCommand command) {
+    public void changeUserInfo(User user, UpdateInfoCommand command) {
 
         Role interestRole = roleRepository.findByIdOrElseThrowException(command.interest_id());
         user.updateProfile(

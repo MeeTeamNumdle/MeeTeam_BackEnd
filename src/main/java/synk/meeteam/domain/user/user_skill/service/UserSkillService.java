@@ -18,7 +18,7 @@ public class UserSkillService {
     private final SkillRepository skillRepository;
 
     @Transactional
-    public void updateUserSkillsByIds(User user, List<Long> skillIds) {
+    public void changeUserSkillsByIds(User user, List<Long> skillIds) {
         //기존 유저 스킬 모두 삭제
         userSkillRepository.deleteAllByUser(user);
         userSkillRepository.flush();

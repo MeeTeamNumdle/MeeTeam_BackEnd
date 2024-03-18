@@ -19,7 +19,7 @@ public class UserLinkService {
     private final UserLinkMapper userLinkMapper;
 
     @Transactional
-    public void updateUserLinks(User user, List<UpdateUserLinkDto> userLinkDtos) {
+    public void changeUserLinks(User user, List<UpdateUserLinkDto> userLinkDtos) {
         //유저 링크 리스트 모두 삭제
         userLinkRepository.deleteAllByUser(user);
         //유저 링크 리스트로 변환

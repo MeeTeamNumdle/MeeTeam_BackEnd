@@ -19,7 +19,7 @@ public class AwardService {
     private final AwardMapper awardMapper;
 
     @Transactional
-    public void updateAward(User user, List<UpdateAwardDto> awardDtos) {
+    public void changeAward(User user, List<UpdateAwardDto> awardDtos) {
         //기존 수상내역 삭제
         awardRepository.deleteAllByUser(user);
         //수상내역 생성
