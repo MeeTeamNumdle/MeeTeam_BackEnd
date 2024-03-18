@@ -25,7 +25,7 @@ public interface UserApi {
     )
     @Operation(summary = "유저 프로필 저장 API")
     @SecurityRequirement(name = "Authorization")
-    ResponseEntity<String> saveProfile(@AuthUser User user, @RequestBody UpdateProfileRequestDto requestDto);
+    ResponseEntity<String> editProfile(@AuthUser User user, @RequestBody UpdateProfileRequestDto requestDto);
 
     @ApiResponses(
             value = {

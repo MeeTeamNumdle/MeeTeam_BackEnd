@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -89,7 +90,17 @@ public class Portfolio extends BaseTimeEntity {
         pinOrder = order;
     }
 
+    @Builder
+    public Portfolio(Long id, String title, String description, Boolean isPin, int pinOrder) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.isPin = isPin;
+        this.pinOrder = pinOrder;
+    }
+
     public void unpin() {
         isPin = false;
+        pinOrder = 0;
     }
 }
