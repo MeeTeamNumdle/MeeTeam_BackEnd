@@ -7,4 +7,6 @@ import synk.meeteam.domain.user.user.entity.User;
 
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     List<Portfolio> findAllByIsPinTrueAndUserOrderByPinOrderAsc(User user);
+
+    List<Portfolio> findAllByIdInAndUser(List<Long> ids, User user);
 }
