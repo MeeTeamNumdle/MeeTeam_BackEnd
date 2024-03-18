@@ -33,7 +33,7 @@ public class ProfileFacade {
         userService.changeUserInfo(user, updateProfileCommandMapper.toUpdateProfileCommand(profileDto));
 
         //유저 링크 덮어쓰기
-        userLinkService.changeUserLinks(user, profileDto.links());
+        userLinkService.changeUserLinks(user.getId(), profileDto.links());
 
         //유저 스킬 덮어쓰기
         userSkillService.changeUserSkillsByIds(user, profileDto.skills());
