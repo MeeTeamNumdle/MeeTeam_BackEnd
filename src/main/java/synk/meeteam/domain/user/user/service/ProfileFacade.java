@@ -39,7 +39,7 @@ public class ProfileFacade {
         userSkillService.changeUserSkillsByIds(user, profileDto.skills());
 
         //수상 활동 내역 덮어쓰기
-        awardService.changeAward(user, profileDto.awards());
+        awardService.changeAward(user.getId(), profileDto.awards());
 
         //핀 설정
         portfolioService.changePinPortfoliosByIds(user, profileDto.portfolios());

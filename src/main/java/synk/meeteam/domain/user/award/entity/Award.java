@@ -1,34 +1,27 @@
 package synk.meeteam.domain.user.award.entity;
 
-import static jakarta.persistence.FetchType.LAZY;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.BaseEntity;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Award extends BaseTimeEntity {
+@AllArgsConstructor(access = AccessLevel.MODULE)
+@Builder
+public class Award extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "award_id")
     private Long id;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @NotNull
     private String title;
@@ -42,4 +35,8 @@ public class Award extends BaseTimeEntity {
     @NotNull
     private LocalDate proceedingEnd;
 
+    public Award(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }
