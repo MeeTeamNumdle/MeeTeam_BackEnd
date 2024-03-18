@@ -36,7 +36,7 @@ public class ProfileFacade {
         userLinkService.changeUserLinks(user.getId(), profileDto.links());
 
         //유저 스킬 덮어쓰기
-        userSkillService.changeUserSkillsByIds(user, profileDto.skills());
+        userSkillService.changeUserSkillsByIds(user.getId(), profileDto.skills());
 
         //수상 활동 내역 덮어쓰기
         awardService.changeAward(user.getId(), profileDto.awards());
