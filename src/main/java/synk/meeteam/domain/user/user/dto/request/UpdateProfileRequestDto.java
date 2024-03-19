@@ -42,7 +42,7 @@ public record UpdateProfileRequestDto(
         boolean isPublicSubEmail,
 
         @Schema(description = "학교이메일 공개여부")
-        boolean isPublicSchoolEmail,
+        boolean isPublicUniversityEmail,
 
         @Schema(description = "한줄소개", example = "고통을 즐기는 개발자")
         String introduction,

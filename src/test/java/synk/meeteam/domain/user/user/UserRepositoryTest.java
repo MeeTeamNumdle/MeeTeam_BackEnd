@@ -1,8 +1,8 @@
 package synk.meeteam.domain.user.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static synk.meeteam.domain.user.user.UserFixtures.NICKNAME;
-import static synk.meeteam.domain.user.user.UserFixtures.NORMAL_NICKNAME;
+import static synk.meeteam.domain.user.user.UserFixture.NICKNAME;
+import static synk.meeteam.domain.user.user.UserFixture.NORMAL_NICKNAME;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

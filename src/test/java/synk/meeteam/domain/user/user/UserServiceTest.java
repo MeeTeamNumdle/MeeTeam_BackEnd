@@ -2,7 +2,7 @@ package synk.meeteam.domain.user.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
-import static synk.meeteam.domain.user.user.UserFixtures.NICKNAME;
+import static synk.meeteam.domain.user.user.UserFixture.NICKNAME;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
