@@ -2,6 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post.entity;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
+import static synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostExceptionType.INVALID_USER_ID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
+import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 import synk.meeteam.global.entity.BaseEntity;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.ProceedType;
@@ -131,5 +133,16 @@ public class RecruitmentPost extends BaseEntity {
             return 0;
         }
         return ((double) responseCount / applicantCount) * 100;
+    }
+
+    public void validateWriter(Long userId) {
+        if (!this.getCreatedBy().equals(userId)) {
+            throw new RecruitmentPostException(INVALID_USER_ID);
+        }
+    }
+
+    public RecruitmentPost closeRecruitmentPost() {
+        this.isClosed = true;
+        return this;
     }
 }
