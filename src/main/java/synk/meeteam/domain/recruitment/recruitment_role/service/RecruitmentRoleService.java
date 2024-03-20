@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.repository.RecruitmentRoleRepository;
 
@@ -28,5 +29,11 @@ public class RecruitmentRoleService {
     @Transactional
     public void addApplicantCount(RecruitmentRole recruitmentRole) {
         recruitmentRole.addApplicantCount();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AvailableRecruitmentRoleDto> findAvailableRecruitmentRole(Long postId) {
+        return recruitmentRoleRepository.findAvailableRecruitmentRoleByRecruitmentId(
+                postId);
     }
 }

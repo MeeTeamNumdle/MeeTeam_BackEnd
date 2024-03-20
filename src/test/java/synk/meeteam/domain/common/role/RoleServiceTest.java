@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -66,34 +65,4 @@ public class RoleServiceTest {
         assertThat(roleDtos).extracting("name").containsExactly("웹 개발자");
     }
 
-    @Test
-    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이있는경우() {
-        // given
-        Long postId = 1L;
-        doReturn(RoleFixture.createRoleDtos())
-                .when(roleRepository).findAvailableRoleByRecruitmentId(postId);
-
-        // when
-        List<RoleDto> availableRecruitmentRoleDtos = roleService.findAvailableRecruitmentRole(postId);
-
-        // then
-        assertThat(availableRecruitmentRoleDtos).extracting("name").containsExactly("웹 개발자");
-
-    }
-
-    @Test
-    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이없는경우() {
-        // given
-        Long postId = 1L;
-        List<RoleDto> roleDtos = new ArrayList<>();
-        doReturn(roleDtos)
-                .when(roleRepository).findAvailableRoleByRecruitmentId(postId);
-
-        // when
-        List<RoleDto> availableRecruitmentRoleDtos = roleService.findAvailableRecruitmentRole(postId);
-
-        // then
-        assertThat(availableRecruitmentRoleDtos.size()).isEqualTo(0);
-
-    }
 }

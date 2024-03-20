@@ -1,8 +1,10 @@
 package synk.meeteam.domain.recruitment.recruitment_role;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,9 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import synk.meeteam.domain.common.role.RoleFixture;
+import synk.meeteam.domain.common.role.dto.RoleDto;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.repository.RecruitmentRoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
@@ -82,5 +86,38 @@ public class RecruitmentRoleServiceTest {
 
         // then
         Assertions.assertThat(recruitmentRole.getApplicantCount()).isEqualTo(cur + 1);
+    }
+
+    @Test
+    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이있는경우() {
+        // given
+        Long postId = 1L;
+        doReturn(RoleFixture.createRoleDtos())
+                .when(recruitmentRoleRepository).findAvailableRecruitmentRoleByRecruitmentId(postId);
+
+        // when
+        List<AvailableRecruitmentRoleDto> availableRecruitmentRoleDtos = recruitmentRoleService.findAvailableRecruitmentRole(
+                postId);
+
+        // then
+        assertThat(availableRecruitmentRoleDtos).extracting("name").containsExactly("웹 개발자");
+
+    }
+
+    @Test
+    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이없는경우() {
+        // given
+        Long postId = 1L;
+        List<RoleDto> roleDtos = new ArrayList<>();
+        doReturn(roleDtos)
+                .when(recruitmentRoleRepository).findAvailableRecruitmentRoleByRecruitmentId(postId);
+
+        // when
+        List<AvailableRecruitmentRoleDto> availableRecruitmentRoleDtos = recruitmentRoleService.findAvailableRecruitmentRole(
+                postId);
+
+        // then
+        assertThat(availableRecruitmentRoleDtos.size()).isEqualTo(0);
+
     }
 }

@@ -10,7 +10,8 @@ import org.springframework.data.repository.query.Param;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.exception.RecruitmentRoleException;
 
-public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole, Long> {
+public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole, Long>,
+        RecruitmentRoleRepositoryCustom {
     @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentRoleSkills s JOIN FETCH s.skill WHERE r.recruitmentPost.id = :postId")
     List<RecruitmentRole> findByPostIdWithSkills(@Param("postId") Long postId);
 
