@@ -1,8 +1,11 @@
 package synk.meeteam.domain.recruitment.recruitment_role;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE;
 
+import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,6 +17,7 @@ import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
+import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.repository.RecruitmentRoleRepository;
 
@@ -101,5 +105,50 @@ public class RecruitmentRoleRepositoryTest {
         Assertions.assertThatThrownBy(() -> {
             recruitmentRoleRepository.saveAndFlush(recruitmentRole);
         }).isInstanceOf(InvalidDataAccessApiUsageException.class);
+    }
+
+    @Test
+    @DisplayName("해당 메서드는 페치 조인을 사용한다.")
+    void 구인역할조회_구인역할반환_구인글조회경우() {
+        // given
+
+        // when
+        List<RecruitmentRole> recruitmentRoles = recruitmentRoleRepository.findByPostIdWithSkills(1L);
+
+        // then
+        for (RecruitmentRole role : recruitmentRoles) {
+            assertThat(role.getRecruitmentPost().getId()).isEqualTo(1L);
+            assertThat(role.getRole()).isNotNull();
+        }
+    }
+
+    @Test
+    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이있는경우() {
+        // given
+
+        Long postId = 1L;
+
+        // when
+        List<AvailableRecruitmentRoleDto> availableRoleDtos = recruitmentRoleRepository.findAvailableRecruitmentRoleByRecruitmentId(
+                postId);
+
+        // then
+        assertThat(availableRoleDtos.get(0).getName()).isEqualTo("소프트웨어 엔지니어");
+        assertThat(availableRoleDtos.get(1).getName()).isEqualTo("웹 개발자");
+
+    }
+
+    @Test
+    void 신청가능역할조회_빈역할Dto_신청가능한구인역할이없는경우() {
+        // given
+        Long postId = -1L;
+
+        // when
+        List<AvailableRecruitmentRoleDto> availableRoleDtos = recruitmentRoleRepository.findAvailableRecruitmentRoleByRecruitmentId(
+                postId);
+
+        // then
+        assertThat(availableRoleDtos.size()).isEqualTo(0);
+
     }
 }

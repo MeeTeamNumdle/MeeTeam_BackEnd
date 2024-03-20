@@ -33,9 +33,22 @@ public abstract class AuthService {
                 .orElse(null);
     }
 
+    private static UserVO createTempSocialUser(String email, String name, PlatformType platformType, String id,
+                                               String phoneNumber, String profileImgFileName) {
+        return UserVO.builder()
+                .email(email)
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .platformType(platformType)
+                .platformId(id)
+                .profileImgFileName(profileImgFileName)
+                .build();
+    }
+
     protected User saveTempUser(AuthUserRequestDto request, String email, String name, String id,
-                                String phoneNumber, String pictureUrl) {
-        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber, pictureUrl);
+                                String phoneNumber, String profileImgFileName) {
+        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber,
+                profileImgFileName);
         redisUserRepository.save(tempSocialUser);
 
         return User.builder()
@@ -45,19 +58,7 @@ public abstract class AuthService {
                 .platformType(request.platformType())
                 .platformId(id)
                 .authority(Authority.GUEST)
-                .pictureUrl(pictureUrl)
-                .build();
-    }
-
-    private static UserVO createTempSocialUser(String email, String name, PlatformType platformType, String id,
-                                               String phoneNumber, String pictureUrl) {
-        return UserVO.builder()
-                .email(email)
-                .name(name)
-                .phoneNumber(phoneNumber)
-                .platformType(platformType)
-                .platformId(id)
-                .pictureUrl(pictureUrl)
+                .profileImgFileName(profileImgFileName)
                 .build();
     }
 

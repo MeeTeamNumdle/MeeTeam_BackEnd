@@ -64,4 +64,5 @@ public class RoleServiceTest {
         //then
         assertThat(roleDtos).extracting("name").containsExactly("웹 개발자");
     }
+
 }

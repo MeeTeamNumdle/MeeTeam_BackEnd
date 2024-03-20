@@ -57,4 +57,9 @@ public class UserService {
         );
         userRepository.save(user);
     }
+
+    @Transactional(readOnly = true)
+    public User findById(Long userId) {
+        return userRepository.findByIdOrElseThrow(userId);
+    }
 }

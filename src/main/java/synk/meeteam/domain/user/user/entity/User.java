@@ -1,5 +1,6 @@
 package synk.meeteam.domain.user.user.entity;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
@@ -101,19 +102,19 @@ public class User extends BaseTimeEntity {
 
     //프로필 이미지 url
     @Column(length = 300)
-    private String pictureUrl;
+    private String profileImgFileName;
 
     //평가 점수
     @ColumnDefault("0")
     private double evaluationScore;
 
     //학교
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "university_id", updatable = false)
     private University university;
 
     //학과
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "department_id")
     private Department department;
 
@@ -157,14 +158,14 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String universityEmail, String name, String nickname, String password, String phoneNumber,
-                Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType,
+                Integer admissionYear, String profileImgFileName, Authority authority, PlatformType platformType,
                 String platformId,
                 University university, Department department) {
         this.universityEmail = universityEmail;
         this.university = university;
         this.department = department;
         this.name = name;
-        this.pictureUrl = pictureUrl;
+        this.profileImgFileName = profileImgFileName;
         this.nickname = nickname;
         this.password = password;
         this.phoneNumber = phoneNumber;
@@ -172,6 +173,37 @@ public class User extends BaseTimeEntity {
         this.authority = authority;
         this.platformType = platformType;
         this.platformId = platformId;
+    }
+
+    //프로필 정보 업데이트
+    public void updateProfile(
+            String name,
+            String profileImgFileName,
+            String subEmail,
+            boolean isPublicSubEmail,
+            boolean isPublicSchoolEmail,
+            boolean isSchoolMain,
+            String phoneNumber,
+            boolean isPublicPhone,
+            String oneLineIntroduction,
+            String mainIntroduction,
+            double gpa,
+            double maxGpa,
+            Role role
+    ) {
+        this.name = name;
+        this.profileImgFileName = profileImgFileName;
+        this.subEmail = subEmail;
+        this.isPublicSubEmail = isPublicSubEmail;
+        this.isPublicUniversityEmail = isPublicSchoolEmail;
+        this.isUniversityMainEmail = isSchoolMain;
+        this.phoneNumber = phoneNumber;
+        this.isPublicPhone = isPublicPhone;
+        this.oneLineIntroduction = oneLineIntroduction;
+        this.mainIntroduction = mainIntroduction;
+        this.gpa = gpa;
+        this.maxGpa = maxGpa;
+        this.interestRole = role;
     }
 
     public String getEncryptUserId() {
@@ -192,36 +224,7 @@ public class User extends BaseTimeEntity {
         this.password = passwordEncoder.encode(this.password);
     }
 
-    //프로필 정보 업데이트
-    public void updateProfile(
-            String name,
-            String pictureUrl,
-            String subEmail,
-            boolean isPublicSubEmail,
-            boolean isPublicSchoolEmail,
-            boolean isSchoolMain,
-            String phoneNumber,
-            boolean isPublicPhone,
-            String oneLineIntroduction,
-            String mainIntroduction,
-            double gpa,
-            double maxGpa,
-            Role role
-    ) {
-        this.name = name;
-        this.pictureUrl = pictureUrl;
-        this.subEmail = subEmail;
-        this.isPublicSubEmail = isPublicSubEmail;
-        this.isPublicUniversityEmail = isPublicSchoolEmail;
-        this.isUniversityMainEmail = isSchoolMain;
-        this.phoneNumber = phoneNumber;
-        this.isPublicPhone = isPublicPhone;
-        this.oneLineIntroduction = oneLineIntroduction;
-        this.mainIntroduction = mainIntroduction;
-        this.gpa = gpa;
-        this.maxGpa = maxGpa;
-        this.interestRole = role;
-    }
+
 
     //닉네임 변경
     public void updateNickname(String nickname) {

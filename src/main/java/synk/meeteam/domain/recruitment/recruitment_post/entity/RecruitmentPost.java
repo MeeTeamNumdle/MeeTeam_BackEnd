@@ -37,7 +37,7 @@ import synk.meeteam.global.entity.Scope;
 public class RecruitmentPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recruitment_id")
+    @Column(name = "recruitment_post_id")
     private Long id;
 
     //제목
@@ -99,6 +99,13 @@ public class RecruitmentPost extends BaseEntity {
     @JoinColumn(name = "meeteam_id")
     private Meeteam meeteam;
 
+    // 전체 지원 수
+    private long applicantCount = 0L;
+
+    // 응답 횟수
+    private long responseCount = 0L;
+
+
     @Builder
     public RecruitmentPost(String title, String content, Scope scope, Category category, Field field,
                            ProceedType proceedType, LocalDate proceedingStart, LocalDate proceedingEnd,
@@ -117,5 +124,16 @@ public class RecruitmentPost extends BaseEntity {
         this.kakaoLink = kakaoLink;
         this.isClosed = isClosed;
         this.meeteam = meeteam;
+    }
+
+    public double getResponseRate() {
+        if (applicantCount == 0) {
+            return 0;
+        }
+        return ((double) responseCount / applicantCount) * 100;
+    }
+
+    public void addApplicantCount() {
+        this.applicantCount += 1;
     }
 }

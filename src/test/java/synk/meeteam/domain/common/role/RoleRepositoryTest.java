@@ -71,5 +71,4 @@ public class RoleRepositoryTest {
         assertThat(roles.size()).isEqualTo(1);
     }
 
-
 }

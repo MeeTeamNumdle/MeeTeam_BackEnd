@@ -10,11 +10,13 @@ import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
+import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.entity.Scope;
@@ -47,6 +49,10 @@ public interface RecruitmentPostMapper {
     RecruitmentRoleSkill toRecruitmentSkillEntity(RecruitmentRole recruitmentRole, Skill skill);
 
     RecruitmentTag toRecruitmentTagEntity(RecruitmentPost recruitmentPost, Tag tag);
+
+    @Mapping(source = "user", target = "applicant")
+    RecruitmentApplicant toRecruitmentApplicantEntity(RecruitmentPost recruitmentPost, Role role, User user,
+                                                      String comment);
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "type", target = "type")
