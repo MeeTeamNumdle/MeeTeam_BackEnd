@@ -80,6 +80,10 @@ dependencies {
     // validate
     implementation 'org.hibernate.validator:hibernate-validator'
 
+    //gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

@@ -13,7 +13,7 @@ public record AuthUserVo(Long userId, String email, String name, String pictureU
     public static AuthUserVo of(User user, PlatformType platformType, Authority authority, AuthType authType) {
         return AuthUserVo.builder()
                 .userId(user.getId())
-                .email(user.getEmail())
+                .email(user.getUniversityEmail())
                 .name(user.getName())
                 .pictureUrl(user.getProfileImgFileName())
                 .platformType(platformType)

@@ -123,7 +123,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 .body(new GetApplyInfoResponseDto(user.getName(), user.getEvaluationScore(),
                         user.getUniversity().getName(), user.getDepartment().getName(),
                         user.getAdmissionYear(),
-                        user.getEmail(), availableRecruitmentRoleDtos));
+                        user.getUniversityEmail(), availableRecruitmentRoleDtos));
     }
 
 

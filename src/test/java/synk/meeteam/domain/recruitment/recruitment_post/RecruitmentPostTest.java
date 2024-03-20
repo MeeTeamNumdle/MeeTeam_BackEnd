@@ -57,14 +57,11 @@ public class RecruitmentPostTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
+    HttpHeaders headers;
     @Autowired
     private DatabaseCleanUp databaseCleanUp;
-
     @Autowired
     private DataSource dataSource;
-
-    HttpHeaders headers;
 
     // @Notnull 체크 -> MethodArgumentNotValidException.class
     // uniqueContrants 체크 -> DataIntegrityViolationException.class

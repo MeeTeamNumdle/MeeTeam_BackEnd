@@ -52,7 +52,7 @@ public abstract class AuthService {
         redisUserRepository.save(tempSocialUser);
 
         return User.builder()
-                .email(email)
+                .universityEmail(email)
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .platformType(request.platformType())
@@ -79,7 +79,7 @@ public abstract class AuthService {
                 userVO.getDepartmentId());
 
         User newUser = User.builder()
-                .email(userVO.getEmail())
+                .universityEmail(userVO.getEmail())
                 .name(userVO.getName())
                 .nickname(nickName)
                 .phoneNumber(userVO.getPhoneNumber())

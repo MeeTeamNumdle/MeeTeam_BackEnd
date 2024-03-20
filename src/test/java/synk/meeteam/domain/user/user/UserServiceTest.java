@@ -1,7 +1,8 @@
 package synk.meeteam.domain.user.user;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
-import static synk.meeteam.domain.user.user.UserFixtures.NICKNAME;
+import static synk.meeteam.domain.user.user.UserFixture.NICKNAME;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -10,9 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import synk.meeteam.domain.common.department.entity.Department;
-import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.entity.University;
-import synk.meeteam.domain.common.university.repository.UniversityRepository;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
@@ -26,10 +25,6 @@ public class UserServiceTest {
     private UserService userService;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private UniversityRepository universityRepository;
-    @Mock
-    private DepartmentRepository departmentRepository;
 
     @Test
     public void 실패_닉네임이미존재함() {
@@ -45,10 +40,9 @@ public class UserServiceTest {
         userRepository.saveAndFlush(prevSavedUser);
 
         // when
-        boolean available = userService.checkDuplicateNickname(NICKNAME);
+        boolean available = userService.checkAvailableNickname(NICKNAME);
 
         // then
-        org.assertj.core.api.Assertions.assertThat(available)
-                .isEqualTo(false);
+        assertThat(available).isEqualTo(false);
     }
 }
