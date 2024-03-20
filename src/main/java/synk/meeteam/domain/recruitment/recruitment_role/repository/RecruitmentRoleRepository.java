@@ -18,7 +18,7 @@ public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole
     @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentPost p JOIN FETCH r.role WHERE r.id = :recruitmentRoleId")
     Optional<RecruitmentRole> findByIdWithRecruitmentRoleAndRole(@Param("recruitmentRoleId") Long recruitmentRoleId);
 
-    default RecruitmentRole findByIdOrElseThrow(Long recruitmentRoleId) {
+    default RecruitmentRole findByIdWithRecruitmentRoleAndRoleOrElseThrow(Long recruitmentRoleId) {
         return findByIdWithRecruitmentRoleAndRole(recruitmentRoleId).orElseThrow(
                 () -> new RecruitmentRoleException(INVALID_RECRUITMENT_ROLE_ID));
     }

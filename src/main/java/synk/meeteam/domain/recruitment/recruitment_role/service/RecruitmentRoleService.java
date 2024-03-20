@@ -22,8 +22,9 @@ public class RecruitmentRoleService {
         return recruitmentRoleRepository.findByPostIdWithSkills(recruitmentPostId);
     }
 
-    public RecruitmentRole findByRoleId(Long recruitmentRoleId) {
-        return recruitmentRoleRepository.findByIdOrElseThrow(recruitmentRoleId);
+    @Transactional(readOnly = true)
+    public RecruitmentRole findAppliableRecruitmentRole(Long recruitmentRoleId) {
+        return recruitmentRoleRepository.findByIdWithRecruitmentRoleAndRoleOrElseThrow(recruitmentRoleId);
     }
 
     @Transactional
