@@ -46,7 +46,7 @@ public class RecruitmentPostFacade {
     public void applyRecruitment(RecruitmentRole recruitmentRole, RecruitmentApplicant recruitmentApplicant) {
         recruitmentApplicantService.registerRecruitmentApplicant(recruitmentApplicant);
 
-        recruitmentPostService.addApplicantCount(recruitmentApplicant.getRecruitmentPost());
+        recruitmentPostService.incrementApplicantCount(recruitmentApplicant.getRecruitmentPost());
 
         recruitmentRoleService.addApplicantCount(recruitmentRole);
     }

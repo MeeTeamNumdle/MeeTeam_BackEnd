@@ -23,7 +23,7 @@ public class RecruitmentPostService {
     }
 
     @Transactional
-    public void addApplicantCount(RecruitmentPost recruitmentPost) {
+    public void incrementApplicantCount(RecruitmentPost recruitmentPost) {
         recruitmentPost.addApplicantCount();
     }
 }

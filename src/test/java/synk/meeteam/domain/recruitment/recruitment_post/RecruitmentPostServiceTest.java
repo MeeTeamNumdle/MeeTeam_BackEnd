@@ -62,7 +62,7 @@ public class RecruitmentPostServiceTest {
         long cur = recruitmentPost.getApplicantCount();
 
         // when
-        recruitmentPostService.addApplicantCount(recruitmentPost);
+        recruitmentPostService.incrementApplicantCount(recruitmentPost);
 
         // then
         Assertions.assertThat(recruitmentPost.getApplicantCount()).isEqualTo(cur + 1);
