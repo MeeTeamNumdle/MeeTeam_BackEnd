@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_post.api;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -122,7 +123,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @PostMapping("/{id}/apply")
     @Override
-    public ResponseEntity<Void> applyRecruitment(@Valid @PathVariable("id") Long postId,
+    public ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
                                                  @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
                                                  @AuthUser User user) {
         RecruitmentRole recruitmentRole = recruitmentRoleService.findById(requestDto.applyRoleId());
