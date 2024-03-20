@@ -12,14 +12,14 @@ public record GetTagDto(
         @Schema(description = "구인 태그 이름", example = "대학생")
         String name
 ) {
-        @Builder
-        @QueryProjection
-        public GetTagDto(Long id, String name) {
-                this.id = id;
-                this.name = name;
-        }
+    @Builder
+    @QueryProjection
+    public GetTagDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-        public static GetTagDto from(TagDto tag) {
-                return new GetTagDto(tag.id(), tag.name());
-        }
+    public static GetTagDto from(TagDto tag) {
+        return new GetTagDto(tag.id(), tag.name());
+    }
 }

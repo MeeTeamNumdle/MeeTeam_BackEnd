@@ -15,7 +15,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.repository.Recruitm
 import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
-import synk.meeteam.domain.user.user.UserFixtures;
+import synk.meeteam.domain.user.user.UserFixture;
 import synk.meeteam.domain.user.user.entity.User;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +31,7 @@ public class RecruitmentApplicantServiceTest {
     void 신청자저장_신청자정보반환_정상경우() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
-        User user = UserFixtures.createUser();
+        User user = UserFixture.createUser();
         Role role = RoleFixture.createRole("백엔드개발자");
         RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user, role);
