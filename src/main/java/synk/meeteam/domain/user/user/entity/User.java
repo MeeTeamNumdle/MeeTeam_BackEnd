@@ -151,6 +151,10 @@ public class User extends BaseTimeEntity {
     @ColumnDefault("0")
     private long scoreProfessionalism = 0;
 
+    public User(String platformId) {
+        this.platformId = platformId;
+    }
+
     @Builder
     public User(String universityEmail, String name, String nickname, String password, String phoneNumber,
                 Integer admissionYear, String pictureUrl, Authority authority, PlatformType platformType,

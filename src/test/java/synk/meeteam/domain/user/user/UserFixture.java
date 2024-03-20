@@ -5,11 +5,19 @@ import java.time.LocalDate;
 import java.util.List;
 import synk.meeteam.domain.user.award.dto.UpdateAwardDto;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
+import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user_link.dto.UpdateUserLinkDto;
 
 public class UserFixture {
     public static String NICKNAME = "song123";
     public static String NORMAL_NICKNAME = "goder0";
+
+    public static User createUserFixture() {
+        return User.builder()
+                .universityEmail("test@kw.ac.kr")
+                .name("test")
+                .build();
+    }
 
     public static UpdateProfileRequestDto createEditProfileDto() {
         return new UpdateProfileRequestDto(
