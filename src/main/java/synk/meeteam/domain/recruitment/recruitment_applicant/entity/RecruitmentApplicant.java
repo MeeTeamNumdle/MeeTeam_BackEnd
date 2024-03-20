@@ -9,7 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +24,13 @@ import synk.meeteam.global.entity.BaseTimeEntity;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                name = "RecruitmentApplicant_uk",
+                columnNames = {"recruitment_id", "applicant_id"}
+        )
+})
 public class RecruitmentApplicant extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +52,12 @@ public class RecruitmentApplicant extends BaseTimeEntity {
     //전할 말
     @Column(length = 300)
     private String comment;
+
+    @Builder
+    public RecruitmentApplicant(RecruitmentPost recruitmentPost, User applicant, Role role, String comment) {
+        this.recruitmentPost = recruitmentPost;
+        this.applicant = applicant;
+        this.role = role;
+        this.comment = comment;
+    }
 }

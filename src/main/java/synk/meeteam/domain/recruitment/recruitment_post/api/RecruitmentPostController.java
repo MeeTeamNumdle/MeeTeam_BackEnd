@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_post.api;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.service.FieldService;
-import synk.meeteam.domain.common.role.dto.RoleDto;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.service.RoleService;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.service.SkillService;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
@@ -32,6 +33,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitm
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.facade.RecruitmentPostFacade;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
+import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
@@ -114,7 +116,8 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @Override
     public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@Valid @PathVariable("id") Long postId,
                                                                 @AuthUser User user) {
-        List<RoleDto> availableRecruitmentRoleDtos = roleService.findAvailableRecruitmentRole(postId);
+        List<AvailableRecruitmentRoleDto> availableRecruitmentRoleDtos = recruitmentRoleService.findAvailableRecruitmentRole(
+                postId);
 
         return ResponseEntity.ok()
                 .body(new GetApplyInfoResponseDto(user.getName(), user.getEvaluationScore(),
@@ -124,9 +127,17 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     }
 
 
-    @PostMapping("/apply")
+    @PostMapping("/{id}/apply")
     @Override
-    public ResponseEntity<Void> applyRecruitment(applyRecruitmentRequestDto requestDto, User user) {
+    public ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
+                                                 @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
+                                                 @AuthUser User user) {
+        RecruitmentRole recruitmentRole = recruitmentRoleService.findAppliableRecruitmentRole(requestDto.applyRoleId());
+
+        RecruitmentApplicant recruitmentApplicant = recruitmentPostMapper.toRecruitmentApplicantEntity(
+                recruitmentRole.getRecruitmentPost(), recruitmentRole.getRole(), user, requestDto.message());
+
+        recruitmentPostFacade.applyRecruitment(recruitmentRole, recruitmentApplicant);
 
         return ResponseEntity.ok().build();
     }

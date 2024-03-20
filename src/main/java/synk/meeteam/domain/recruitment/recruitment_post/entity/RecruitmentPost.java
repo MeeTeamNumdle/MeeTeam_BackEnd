@@ -37,7 +37,7 @@ import synk.meeteam.global.entity.Scope;
 public class RecruitmentPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recruitment_id")
+    @Column(name = "recruitment_post_id")
     private Long id;
 
     //제목
@@ -131,5 +131,9 @@ public class RecruitmentPost extends BaseEntity {
             return 0;
         }
         return ((double) responseCount / applicantCount) * 100;
+    }
+
+    public void addApplicantCount() {
+        this.applicantCount += 1;
     }
 }
