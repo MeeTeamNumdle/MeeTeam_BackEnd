@@ -127,7 +127,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
                                                  @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
                                                  @AuthUser User user) {
-        RecruitmentRole recruitmentRole = recruitmentRoleService.findById(requestDto.applyRoleId());
+        RecruitmentRole recruitmentRole = recruitmentRoleService.findByRoleId(requestDto.applyRoleId());
 
         RecruitmentApplicant recruitmentApplicant = recruitmentPostMapper.toRecruitmentApplicantEntity(
                 recruitmentRole.getRecruitmentPost(), recruitmentRole.getRole(), user, requestDto.message());

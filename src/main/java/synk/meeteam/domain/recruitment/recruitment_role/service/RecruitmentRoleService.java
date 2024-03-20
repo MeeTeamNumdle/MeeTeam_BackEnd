@@ -22,7 +22,7 @@ public class RecruitmentRoleService {
         return recruitmentRoleRepository.findByPostIdWithSkills(recruitmentPostId);
     }
 
-    public RecruitmentRole findById(Long recruitmentRoleId) {
+    public RecruitmentRole findByRoleId(Long recruitmentRoleId) {
         return recruitmentRoleRepository.findByIdOrElseThrow(recruitmentRoleId);
     }
 
