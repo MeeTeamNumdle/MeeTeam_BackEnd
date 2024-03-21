@@ -134,9 +134,8 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @PatchMapping("/{id}/close")
     @Override
-    public ResponseEntity<Void> closeRecruitment(@Valid @PathVariable("id") Long postId, User user) {
-        // biz logic
-
+    public ResponseEntity<Void> closeRecruitment(@Valid @PathVariable("id") Long postId, @AuthUser User user) {
+        recruitmentPostService.closeRecruitment(postId, user.getId());
         return ResponseEntity.ok().build();
     }
 
