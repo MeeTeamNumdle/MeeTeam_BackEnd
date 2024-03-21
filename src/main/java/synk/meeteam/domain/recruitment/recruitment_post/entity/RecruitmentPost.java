@@ -135,13 +135,16 @@ public class RecruitmentPost extends BaseEntity {
         return ((double) responseCount / applicantCount) * 100;
     }
 
-    public void validateWriter(Long userId) {
+    private void validateWriter(Long userId) {
         if (!this.getCreatedBy().equals(userId)) {
             throw new RecruitmentPostException(INVALID_USER_ID);
         }
     }
 
-    public RecruitmentPost closeRecruitmentPost() {
+    public RecruitmentPost closeRecruitmentPost(Long userId) {
+        // 작성자인지 확인
+        validateWriter(userId);
+
         this.isClosed = true;
         return this;
     }

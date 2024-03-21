@@ -25,12 +25,7 @@ public class RecruitmentPostService {
     @Transactional
     public RecruitmentPost closeRecruitment(Long postId, Long userId) {
         RecruitmentPost recruitmentPost = getRecruitmentPost(postId);
-
-        // 작성자인지 확인
-        recruitmentPost.validateWriter(userId);
-
-        // 구인 마감 설정
-        recruitmentPost.closeRecruitmentPost();
+        recruitmentPost.closeRecruitmentPost(userId);
 
         return recruitmentPost;
 

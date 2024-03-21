@@ -9,18 +9,18 @@ import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPos
 public class RecruitmentPostEntityTest {
 
     @Test
-    void 구인글작성자검증_성공() {
+    void 구인글마감_성공() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
         Long requestUserId = 2L;
         recruitmentPost.setCreatedBy(requestUserId);
 
         // when, then
-        recruitmentPost.validateWriter(requestUserId);
+        recruitmentPost.closeRecruitmentPost(requestUserId);
     }
 
     @Test
-    void 구인글작성자검증_예외발생_구인글작성자가아닌경우() {
+    void 구인글마감_예외발생_구인글작성자가아닌경우() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
         Long requestUserId = -1L;
@@ -28,7 +28,7 @@ public class RecruitmentPostEntityTest {
 
         // when, then
         Assertions.assertThatThrownBy(
-                        () -> recruitmentPost.validateWriter(requestUserId))
+                        () -> recruitmentPost.closeRecruitmentPost(requestUserId))
                 .isInstanceOf(RecruitmentPostException.class);
     }
 
