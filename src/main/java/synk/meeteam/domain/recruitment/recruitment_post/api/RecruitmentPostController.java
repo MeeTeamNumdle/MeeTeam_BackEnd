@@ -151,7 +151,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Override
     public ResponseEntity<Void> modifyRecruitmentPost(CreateRecruitmentPostRequestDto requestDto) {
 
