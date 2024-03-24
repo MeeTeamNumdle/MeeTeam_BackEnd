@@ -2,7 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import synk.meeteam.domain.common.role.dto.RoleDto;
+import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 
 @Schema(name = "GetRecruitmentPostApplyInfoResponseDto", description = "신청 정보 조회 Dto")
 public record GetApplyInfoResponseDto(
@@ -19,7 +19,7 @@ public record GetApplyInfoResponseDto(
         @Schema(description = "학사 이메일", example = "thdalsrb123@kw.ac.kr")
         String email,
         @Schema(description = "지원 가능한 구인 역할", example = "")
-        List<RoleDto> recruitmentRoles
+        List<AvailableRecruitmentRoleDto> recruitmentRoles
 
 ) {
 }

@@ -59,6 +59,19 @@ public class RecruitmentPostServiceTest {
     }
 
     @Test
+    void 전체신청자수더하기1_전체신청자수1증가() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상입력");
+        long cur = recruitmentPost.getApplicantCount();
+
+        // when
+        recruitmentPostService.incrementApplicantCount(recruitmentPost);
+
+        // then
+        Assertions.assertThat(recruitmentPost.getApplicantCount()).isEqualTo(cur + 1);
+    }
+
+    @Test
     void 구인마감_성공() {
         // given
         Long postId = 1L;

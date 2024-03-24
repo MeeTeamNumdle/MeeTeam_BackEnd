@@ -23,6 +23,11 @@ public class RecruitmentPostService {
     }
 
     @Transactional
+    public void incrementApplicantCount(RecruitmentPost recruitmentPost) {
+        recruitmentPost.addApplicantCount();
+    }
+
+    @Transactional
     public RecruitmentPost closeRecruitment(Long postId, Long userId) {
         RecruitmentPost recruitmentPost = getRecruitmentPost(postId);
         recruitmentPost.closeRecruitmentPost(userId);

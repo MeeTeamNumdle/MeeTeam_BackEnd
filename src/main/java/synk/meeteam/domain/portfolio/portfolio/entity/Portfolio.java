@@ -14,29 +14,25 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.output.entity.Output;
 import synk.meeteam.domain.common.role.entity.Role;
-import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Portfolio extends BaseTimeEntity {
+public class Portfolio extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "portfolio_id")
     private Long id;
-
-    //유저
-    @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     //제목
     @NotNull
@@ -75,4 +71,30 @@ public class Portfolio extends BaseTimeEntity {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "output_id")
     private Output output;
+
+    //핀인지 여부
+    @ColumnDefault("0")
+    private Boolean isPin;
+
+    //핀 순서
+    private int pinOrder;
+
+    @Builder
+    public Portfolio(Long id, String title, String description, Boolean isPin, int pinOrder) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.isPin = isPin;
+        this.pinOrder = pinOrder;
+    }
+
+    public void putPin(int order) {
+        isPin = true;
+        pinOrder = order;
+    }
+
+    public void unpin() {
+        isPin = false;
+        pinOrder = 0;
+    }
 }

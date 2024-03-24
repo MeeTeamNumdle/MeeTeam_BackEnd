@@ -10,11 +10,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.applyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
@@ -65,8 +66,9 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "구인 신청 API")
-    ResponseEntity<Void> applyRecruitment(
-            @Valid applyRecruitmentRequestDto requestDto, @AuthUser User user);
+    ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
+                                          @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
+                                          @AuthUser User user);
 
     @ApiResponses(
             value = {

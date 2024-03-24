@@ -1,8 +1,10 @@
 package synk.meeteam.domain.recruitment.recruitment_role;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,9 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import synk.meeteam.domain.common.role.RoleFixture;
+import synk.meeteam.domain.common.role.dto.RoleDto;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.repository.RecruitmentRoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
@@ -65,6 +69,55 @@ public class RecruitmentRoleServiceTest {
         Assertions.assertThat(recruitmentRoles.get(2))
                 .extracting("recruitmentPost", "count")
                 .containsExactly(recruitmentPost, 1L);
+
+    }
+
+    @Test
+    void 전체신청자수더하기1_전체신청자수1증가() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
+        Role role = RoleFixture.createRole("백엔드개발자");
+        RecruitmentRole recruitmentRole = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost,
+                role, 2L);
+        long cur = recruitmentRole.getApplicantCount();
+
+        // when
+        recruitmentRoleService.addApplicantCount(recruitmentRole);
+
+        // then
+        Assertions.assertThat(recruitmentRole.getApplicantCount()).isEqualTo(cur + 1);
+    }
+
+    @Test
+    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이있는경우() {
+        // given
+        Long postId = 1L;
+        doReturn(RoleFixture.createRoleDtos())
+                .when(recruitmentRoleRepository).findAvailableRecruitmentRoleByRecruitmentId(postId);
+
+        // when
+        List<AvailableRecruitmentRoleDto> availableRecruitmentRoleDtos = recruitmentRoleService.findAvailableRecruitmentRole(
+                postId);
+
+        // then
+        assertThat(availableRecruitmentRoleDtos).extracting("name").containsExactly("웹 개발자");
+
+    }
+
+    @Test
+    void 신청가능역할조회_역할Dto반환_신청가능한구인역할이없는경우() {
+        // given
+        Long postId = 1L;
+        List<RoleDto> roleDtos = new ArrayList<>();
+        doReturn(roleDtos)
+                .when(recruitmentRoleRepository).findAvailableRecruitmentRoleByRecruitmentId(postId);
+
+        // when
+        List<AvailableRecruitmentRoleDto> availableRecruitmentRoleDtos = recruitmentRoleService.findAvailableRecruitmentRole(
+                postId);
+
+        // then
+        assertThat(availableRecruitmentRoleDtos.size()).isEqualTo(0);
 
     }
 }
