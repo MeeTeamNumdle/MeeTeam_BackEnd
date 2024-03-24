@@ -1,7 +1,5 @@
 package synk.meeteam.domain.recruitment.recruitment_post.dto;
 
-import java.time.LocalDate;
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -23,19 +21,6 @@ import synk.meeteam.global.entity.Scope;
 
 @Mapper(componentModel = "spring")
 public interface RecruitmentPostMapper {
-
-    int START = 0;
-    int END = 1;
-
-    @Named("proceedingPeriodToProceedingStart")
-    static LocalDate proceedingPeriodToProceedingStart(List<LocalDate> proceedingPeriod) {
-        return proceedingPeriod.get(START);
-    }
-
-//    @Named("proceedingPeriodToProceedingEnd")
-//    static LocalDate proceedingPeriodToProceedingEnd(List<LocalDate> proceedingPeriod) {
-//        return proceedingPeriod.get(END);
-//    }
 
     @Mapping(source = "requestDto.scope", target = "scope", qualifiedByName = "scopeToEnum")
     @Mapping(source = "requestDto.category", target = "category", qualifiedByName = "categoryToEnum")
