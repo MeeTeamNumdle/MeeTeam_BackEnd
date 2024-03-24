@@ -233,56 +233,6 @@ public class RecruitmentPostTest {
     ///////// Dto 생성 로직 /////////
 
     private CreateRecruitmentPostRequestDto createRequestDto() {
-        List<LocalDate> localDates = new ArrayList<>();
-        localDates.add(LocalDate.of(2024, 3, 15));
-        localDates.add(LocalDate.of(2024, 5, 15));
-
-        CourseTagDto courseTagDto = new CourseTagDto(true, "응소실", "김용혁");
-        List<RecruitmentRoleDto> recruitmentRoleDtos = new ArrayList<>();
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(1L, 1, List.of(1L, 2L, 3L)));
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(2L, 3, List.of(1L, 2L, 3L)));
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(3L, 1, List.of(4L, 5L, 6L)));
-
-        return new CreateRecruitmentPostRequestDto("교내", "프로젝트", LocalDate.of(2024, 2, 22), localDates, 1L, "온라인",
-                courseTagDto, List.of("웹개발", "AI", "대학생", "구인"), recruitmentRoleDtos, "정상적인 제목", "사람구합니당!!");
-    }
-
-    private CreateRecruitmentPostRequestDto createRequestDto_title(String title) {
-        List<LocalDate> localDates = new ArrayList<>();
-        localDates.add(LocalDate.of(2024, 3, 15));
-        localDates.add(LocalDate.of(2024, 5, 15));
-
-        CourseTagDto courseTagDto = new CourseTagDto(true, "응소실", "김용혁");
-        List<RecruitmentRoleDto> recruitmentRoleDtos = new ArrayList<>();
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(1L, 1, List.of(1L, 2L, 3L)));
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(2L, 3, List.of(1L, 2L, 3L)));
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(3L, 1, List.of(4L, 5L, 6L)));
-
-        return new CreateRecruitmentPostRequestDto("교내", "프로젝트", LocalDate.of(2024, 2, 22), localDates, 1L, "온라인",
-                courseTagDto, List.of("웹개발", "AI", "대학생", "구인"), recruitmentRoleDtos, title, "사람구합니당!!");
-    }
-
-    private CreateRecruitmentPostRequestDto createRequestDto_category(String category) {
-        List<LocalDate> localDates = new ArrayList<>();
-        localDates.add(LocalDate.of(2024, 3, 15));
-        localDates.add(LocalDate.of(2024, 5, 15));
-
-        CourseTagDto courseTagDto = new CourseTagDto(true, "응소실", "김용혁");
-        List<RecruitmentRoleDto> recruitmentRoleDtos = new ArrayList<>();
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(1L, 1, List.of(1L, 2L, 3L)));
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(2L, 3, List.of(1L, 2L, 3L)));
-        recruitmentRoleDtos.add(new RecruitmentRoleDto(3L, 1, List.of(4L, 5L, 6L)));
-
-        return new CreateRecruitmentPostRequestDto("교내", category, LocalDate.of(2024, 2, 22),
-                localDates, 1L, "온라인", courseTagDto, List.of("웹개발", "AI", "대학생", "구인"),
-                recruitmentRoleDtos, "정상제목입니다.", "사람구합니당!!");
-    }
-
-    private CreateRecruitmentPostRequestDto createRequestDto_date(String date) {
-        List<LocalDate> localDates = new ArrayList<>();
-        localDates.add(LocalDate.of(2024, 3, 15));
-        localDates.add(LocalDate.of(2024, 5, 15));
-
         CourseTagDto courseTagDto = new CourseTagDto(true, "응소실", "김용혁");
         List<RecruitmentRoleDto> recruitmentRoleDtos = new ArrayList<>();
         recruitmentRoleDtos.add(new RecruitmentRoleDto(1L, 1, List.of(1L, 2L, 3L)));
@@ -290,7 +240,45 @@ public class RecruitmentPostTest {
         recruitmentRoleDtos.add(new RecruitmentRoleDto(3L, 1, List.of(4L, 5L, 6L)));
 
         return new CreateRecruitmentPostRequestDto("교내", "프로젝트", LocalDate.of(2024, 2, 22),
-                localDates, 1L, "온라인", courseTagDto, List.of("웹개발", "AI", "대학생", "구인"),
+                LocalDate.of(2024, 3, 15), LocalDate.of(2024, 5, 15), 1L, "온라인",
+                courseTagDto, List.of("웹개발", "AI", "대학생", "구인"), recruitmentRoleDtos, "정상적인 제목", "사람구합니당!!");
+    }
+
+    private CreateRecruitmentPostRequestDto createRequestDto_title(String title) {
+        CourseTagDto courseTagDto = new CourseTagDto(true, "응소실", "김용혁");
+        List<RecruitmentRoleDto> recruitmentRoleDtos = new ArrayList<>();
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(1L, 1, List.of(1L, 2L, 3L)));
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(2L, 3, List.of(1L, 2L, 3L)));
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(3L, 1, List.of(4L, 5L, 6L)));
+
+        return new CreateRecruitmentPostRequestDto("교내", "프로젝트", LocalDate.of(2024, 2, 22), LocalDate.of(2024, 3, 15),
+                LocalDate.of(2024, 5, 15), 1L, "온라인",
+                courseTagDto, List.of("웹개발", "AI", "대학생", "구인"), recruitmentRoleDtos, title, "사람구합니당!!");
+    }
+
+    private CreateRecruitmentPostRequestDto createRequestDto_category(String category) {
+        CourseTagDto courseTagDto = new CourseTagDto(true, "응소실", "김용혁");
+        List<RecruitmentRoleDto> recruitmentRoleDtos = new ArrayList<>();
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(1L, 1, List.of(1L, 2L, 3L)));
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(2L, 3, List.of(1L, 2L, 3L)));
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(3L, 1, List.of(4L, 5L, 6L)));
+
+        return new CreateRecruitmentPostRequestDto("교내", category, LocalDate.of(2024, 2, 22),
+                LocalDate.of(2024, 3, 15), LocalDate.of(2024, 5, 15), 1L, "온라인", courseTagDto,
+                List.of("웹개발", "AI", "대학생", "구인"),
+                recruitmentRoleDtos, "정상제목입니다.", "사람구합니당!!");
+    }
+
+    private CreateRecruitmentPostRequestDto createRequestDto_date(String date) {
+        CourseTagDto courseTagDto = new CourseTagDto(true, "응소실", "김용혁");
+        List<RecruitmentRoleDto> recruitmentRoleDtos = new ArrayList<>();
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(1L, 1, List.of(1L, 2L, 3L)));
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(2L, 3, List.of(1L, 2L, 3L)));
+        recruitmentRoleDtos.add(new RecruitmentRoleDto(3L, 1, List.of(4L, 5L, 6L)));
+
+        return new CreateRecruitmentPostRequestDto("교내", "프로젝트", LocalDate.of(2024, 2, 22),
+                LocalDate.of(2024, 3, 15), LocalDate.of(2024, 5, 15), 1L, "온라인", courseTagDto,
+                List.of("웹개발", "AI", "대학생", "구인"),
                 recruitmentRoleDtos, "정상제목입니다.", "사람구합니당!!");
     }
 }

@@ -32,16 +32,14 @@ public interface RecruitmentPostMapper {
         return proceedingPeriod.get(START);
     }
 
-    @Named("proceedingPeriodToProceedingEnd")
-    static LocalDate proceedingPeriodToProceedingEnd(List<LocalDate> proceedingPeriod) {
-        return proceedingPeriod.get(END);
-    }
+//    @Named("proceedingPeriodToProceedingEnd")
+//    static LocalDate proceedingPeriodToProceedingEnd(List<LocalDate> proceedingPeriod) {
+//        return proceedingPeriod.get(END);
+//    }
 
     @Mapping(source = "requestDto.scope", target = "scope", qualifiedByName = "scopeToEnum")
     @Mapping(source = "requestDto.category", target = "category", qualifiedByName = "categoryToEnum")
     @Mapping(source = "requestDto.proceedType", target = "proceedType", qualifiedByName = "proceedTypeToEnum")
-    @Mapping(source = "requestDto.proceedingPeriod", target = "proceedingStart", qualifiedByName = "proceedingPeriodToProceedingStart")
-    @Mapping(source = "requestDto.proceedingPeriod", target = "proceedingEnd", qualifiedByName = "proceedingPeriodToProceedingEnd")
     RecruitmentPost toRecruitmentEntity(CreateRecruitmentPostRequestDto requestDto, Field field);
 
     RecruitmentRole toRecruitmentRoleEntity(RecruitmentPost recruitmentPost, Role role, int count);

@@ -87,7 +87,7 @@ public class AuthController implements AuthApi {
 
         UserVO userVO = mailService.verify(requestDto.emailCode());
         User user = authServiceProvider.getAuthService(userVO.getPlatformType())
-                .createSocialUser(userVO, requestDto.nickName());
+                .createSocialUser(userVO, requestDto.nickname());
 
         AuthUserVo vo = AuthUserVo.of(user, user.getPlatformType(), user.getAuthority(), AuthType.SIGN_UP);
         AuthUserResponseDto.login responseDTO = jwtService.issueToken(vo);

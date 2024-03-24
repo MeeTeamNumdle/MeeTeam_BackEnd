@@ -15,7 +15,7 @@ public record SignUpUserRequestDto(
         @Size(min = 4, max = 16, message = "닉네임은 4-16자로 제한됩니다.")
         @Pattern(regexp = "^[a-zA-Z0-9가-힣._]*$", message = "닉네임은 영어, 숫자, 한글, '_', '.' 문자만 가능합니다.")
         @Schema(description = "닉네임", example = "송민규짱짱맨")
-        String nickName
+        String nickname
 
         ) {
 }
