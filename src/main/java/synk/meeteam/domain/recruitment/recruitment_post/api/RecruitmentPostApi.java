@@ -69,4 +69,15 @@ public interface RecruitmentPostApi {
     ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
                                           @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
                                           @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "구인 마감 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "구인 마감 API")
+    ResponseEntity<Void> closeRecruitment(@Valid @PathVariable("id") Long postId, @AuthUser User user);
 }

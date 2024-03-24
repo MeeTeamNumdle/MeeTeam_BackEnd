@@ -1,5 +1,6 @@
 package synk.meeteam.domain.recruitment.recruitment_post;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE_EXCEED_40;
@@ -12,8 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
+
 
 @ExtendWith(MockitoExtension.class)
 public class RecruitmentPostServiceTest {
@@ -66,5 +69,36 @@ public class RecruitmentPostServiceTest {
 
         // then
         Assertions.assertThat(recruitmentPost.getApplicantCount()).isEqualTo(cur + 1);
+    }
+
+    @Test
+    void 구인마감_성공() {
+        // given
+        Long postId = 1L;
+        Long userId = 2L;
+        RecruitmentPost foundRecruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        foundRecruitmentPost.setCreatedBy(userId);
+        doReturn(foundRecruitmentPost).when(recruitmentPostRepository).findByIdOrElseThrow(any(Long.class));
+
+        // when
+        RecruitmentPost recruitmentPost = recruitmentPostService.closeRecruitment(postId, userId);
+
+        // then
+        Assertions.assertThat(recruitmentPost.isClosed()).isEqualTo(true);
+    }
+
+    @Test
+    void 구인마감_예외발생_구인글작성자가아닌경우() {
+        // given
+        Long postId = 1L;
+        Long userId = -1L;
+        RecruitmentPost foundRecruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        foundRecruitmentPost.setCreatedBy(2L);
+        doReturn(foundRecruitmentPost).when(recruitmentPostRepository).findByIdOrElseThrow(any(Long.class));
+
+        // when, then
+        Assertions.assertThatThrownBy(
+                        () -> recruitmentPostService.closeRecruitment(postId, userId))
+                .isInstanceOf(RecruitmentPostException.class);
     }
 }
