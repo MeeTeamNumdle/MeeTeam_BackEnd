@@ -8,7 +8,7 @@ import synk.meeteam.infra.oauth.service.vo.enums.AuthType;
 public interface AuthUserResponseMapper {
     AuthUserResponseDto.create ofCreate(AuthType authType, Authority authority, String platformId);
 
-    AuthUserResponseDto.login ofLogin(AuthType authType, Authority authority, String userId, String userName,
+    AuthUserResponseDto.login ofLogin(AuthType authType, Authority authority, String userId, String nickname,
                                       String pictureUrl, String accessToken,
                                       String refreshToken);
 

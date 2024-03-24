@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.AuthUserResponseMapper;
-import synk.meeteam.domain.auth.dto.response.LogoutUserResponseDto;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
@@ -78,7 +77,7 @@ public class JwtService {
         updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
 
         return authUserResponseMapper.ofLogin(vo.authType(), vo.authority(), Encryption.encryptLong(vo.userId()),
-                vo.name(), vo.pictureUrl(), accessToken, refreshToken);
+                vo.nickname(), vo.pictureUrl(), accessToken, refreshToken);
     }
 
     @Transactional
