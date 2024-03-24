@@ -26,21 +26,21 @@ public class AuthUserResponseDto {
     public static class login extends InnerParent {
         @Schema(description = "user Id", example = "4OaVE421DSwR63xfKf6vxA==")
         private String userId;
-        @Schema(description = "유저 이름", example = "송민규")
-        private String userName;
+        @Schema(description = "유저 닉네임", example = "송민규짱짱맨")
+        private String nickname;
         @Schema(description = "유저 프로필 사진", example = "url 형태")
-        private String pictureUrl;
+        private String imageUrl;
         @Schema(description = "액세스 토큰", example = "eyJhbGciOiJIUzI1N...(액세스 토큰)")
         private String accessToken;
         @Schema(description = "리프레시 토큰", example = "eyJhbGciOiJIUzI1N...(리프레시 토큰)")
         private String refreshToken;
 
-        public login(AuthType authType, Authority authority, String userId, String userName, String pictureUrl,
+        public login(AuthType authType, Authority authority, String userId, String nickname, String imageUrl,
                      String accessToken, String refreshToken) {
             super(authType, authority);
             this.userId = userId;
-            this.userName = userName;
-            this.pictureUrl = pictureUrl;
+            this.nickname = nickname;
+            this.imageUrl = imageUrl;
             this.accessToken = accessToken;
             this.refreshToken = refreshToken;
         }

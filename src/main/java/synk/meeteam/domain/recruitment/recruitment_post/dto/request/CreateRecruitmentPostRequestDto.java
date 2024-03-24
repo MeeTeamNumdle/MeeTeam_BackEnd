@@ -20,8 +20,11 @@ public record CreateRecruitmentPostRequestDto(
         @Schema(description = "구인 마감일", example = "2023-02-05")
         LocalDate deadline,
         @NotNull
-        @Schema(description = "[시작 기간, 종료기간]", example = "[\"2023-02-01\",\"2023-07-01\"]")
-        List<LocalDate> proceedingPeriod,
+        @Schema(description = "[시작 기간, 종료기간]", example = "[\"2023-02-01\"]")
+        LocalDate proceedingStart,
+        @NotNull
+        @Schema(description = "[시작 기간, 종료기간]", example = "[\"2023-07-01\"]")
+        LocalDate proceedingEnd,
         @NotNull
         @Schema(description = "분야 (개발 == 1)", example = "1")
         Long fieldId,
