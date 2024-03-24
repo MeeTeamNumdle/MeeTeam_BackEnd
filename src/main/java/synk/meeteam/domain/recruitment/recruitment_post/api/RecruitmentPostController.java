@@ -171,7 +171,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private List<RecruitmentTag> getRecruitmentTags(CreateRecruitmentPostRequestDto requestDto,
                                                     RecruitmentPost recruitmentPost) {
         List<RecruitmentTag> recruitmentTags = new ArrayList<>();
-        recruitmentTags.addAll(requestDto.Tags().stream()
+        recruitmentTags.addAll(requestDto.tags().stream()
                 .map(tagName -> recruitmentPostMapper.toTagEntity(tagName, TagType.MEETEAM))
                 .map(tag -> recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost, tag))
                 .toList());
