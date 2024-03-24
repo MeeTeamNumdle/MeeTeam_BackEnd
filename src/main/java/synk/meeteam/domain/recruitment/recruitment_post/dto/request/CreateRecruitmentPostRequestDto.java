@@ -36,7 +36,7 @@ public record CreateRecruitmentPostRequestDto(
         CourseTagDto courseTag,
         @NotNull
         @Schema(description = "태그", example = "[\"웹개발\", \"AI\", \"졸업작품\"]")
-        List<String> Tags,
+        List<String> tags,
         @NotNull
         @Schema(description = "필요한 역할들(List 형태로)", example = "")
         List<RecruitmentRoleDto> recruitmentRoles,
