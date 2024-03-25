@@ -7,6 +7,7 @@ import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExcepti
 
 import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,15 +17,23 @@ import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
+import synk.meeteam.domain.portfolio.portfolio.service.PortfolioServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class PortfolioServiceTest {
+    @Mock
+    private PortfolioService portfolioService;
 
     @InjectMocks
-    private PortfolioService portfolioService;
+    private PortfolioServiceImpl portfolioServiceImpl;
 
     @Mock
     private PortfolioRepository portfolioRepository;
+
+    @BeforeEach
+    void setup() {
+        portfolioService = portfolioServiceImpl;
+    }
 
     @Test
     void 포트폴리오핀설정_핀설정성공_정상핀아이디목록() {
