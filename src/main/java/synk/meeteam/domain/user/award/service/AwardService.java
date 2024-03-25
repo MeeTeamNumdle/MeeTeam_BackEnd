@@ -6,4 +6,6 @@ import synk.meeteam.domain.user.award.entity.Award;
 
 public interface AwardService {
     List<Award> changeAward(Long id, List<UpdateAwardDto> awardDtos);
+
+    List<Award> getAward(Long userId);
 }
