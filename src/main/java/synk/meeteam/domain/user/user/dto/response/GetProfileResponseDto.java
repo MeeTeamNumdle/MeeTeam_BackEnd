@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
 
 public record GetProfileResponseDto(
         @Schema(description = "프로필 이미지 url", example = "https://image.png")
