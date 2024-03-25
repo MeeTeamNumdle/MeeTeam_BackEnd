@@ -22,4 +22,6 @@ public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole
         return findByIdWithRecruitmentRoleAndRole(recruitmentRoleId).orElseThrow(
                 () -> new RecruitmentRoleException(INVALID_RECRUITMENT_ROLE_ID));
     }
+
+    void deleteAllByRecruitmentPostId(Long postId);
 }
