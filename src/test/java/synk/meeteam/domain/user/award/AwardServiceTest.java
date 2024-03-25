@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -18,22 +19,31 @@ import synk.meeteam.domain.user.award.entity.Award;
 import synk.meeteam.domain.user.award.entity.AwardMapper;
 import synk.meeteam.domain.user.award.repository.AwardRepository;
 import synk.meeteam.domain.user.award.service.AwardService;
+import synk.meeteam.domain.user.award.service.AwardServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class AwardServiceTest {
 
-    @InjectMocks
+    @Mock
     AwardService awardService;
+
+    @InjectMocks
+    AwardServiceImpl awardServiceImpl;
 
     @Mock
     AwardRepository awardRepository;
 
     @Spy
     AwardMapper awardMapper = Mappers.getMapper(AwardMapper.class);
-    ;
+
+    @BeforeEach
+    void setup() {
+        awardService = awardServiceImpl;
+    }
 
     @Test
     void 수상목록변경_수상목록변경성공() {
+
         //given
         doNothing().when(awardRepository).deleteAllByCreatedBy(anyLong());
         doReturn(AwardFixture.createAwardFixture()).when(awardRepository).saveAll(Mockito.<Award>anyList());
