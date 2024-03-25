@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,18 +17,26 @@ import synk.meeteam.domain.common.skill.repository.SkillRepository;
 import synk.meeteam.domain.user.user_skill.entity.UserSkill;
 import synk.meeteam.domain.user.user_skill.repository.UserSkillRepository;
 import synk.meeteam.domain.user.user_skill.service.UserSkillService;
+import synk.meeteam.domain.user.user_skill.service.UserSkillServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class UserSkillServiceTest {
+    @Mock
+    UserSkillService userSkillService;
 
     @InjectMocks
-    UserSkillService userSkillService;
+    UserSkillServiceImpl userSkillServiceImpl;
 
     @Mock
     UserSkillRepository userSkillRepository;
 
     @Mock
     SkillRepository skillRepository;
+
+    @BeforeEach
+    void setup() {
+        userSkillService = userSkillServiceImpl;
+    }
 
     @Test
     void 유저스킬변경_유저스킬변경성공() {
