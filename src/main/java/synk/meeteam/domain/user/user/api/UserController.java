@@ -19,12 +19,12 @@ import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileEmailDto;
-import synk.meeteam.domain.user.user.dto.response.GetProfileLinkDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfilePhoneDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.ProfileFacade;
 import synk.meeteam.domain.user.user.service.UserService;
+import synk.meeteam.domain.user.user_link.dto.GetProfileUserLinkDto;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -70,8 +70,8 @@ public class UserController implements UserApi {
                                 List.of(new SkillDto(1L, "스프링"), new SkillDto(2L, "깃")))
                 ),
                 List.of(
-                        new GetProfileLinkDto("https://~~", "Link"),
-                        new GetProfileLinkDto("https://~~", "Github")
+                        new GetProfileUserLinkDto("https://~~", "Link"),
+                        new GetProfileUserLinkDto("https://~~", "Github")
                 ),
                 List.of(new GetProfileAwardDto(
                         "공공데이터 공모전", "2024-03-24", "2024-03-25", "장려상 수상"
