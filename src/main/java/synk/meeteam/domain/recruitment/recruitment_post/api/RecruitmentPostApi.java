@@ -93,4 +93,15 @@ public interface RecruitmentPostApi {
     ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto,
                                                @AuthUser User user);
 
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "북마크 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "구인글 북마크 API")
+    ResponseEntity<Void> bookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user);
+
 }
