@@ -45,7 +45,8 @@ public class SecurityConfig {
     private static final String[] SEMI_AUTH_WHITELIST = {
             // 꼭 GET만 가능해야 하는 리스트
 
-            "/recruitment/post"
+            "/recruitment/post",
+            "/user/profile/**"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

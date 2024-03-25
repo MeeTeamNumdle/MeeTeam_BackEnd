@@ -1,6 +1,7 @@
 package synk.meeteam.domain.user.user.api;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class UserController implements UserApi {
 
     @Override
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<GetProfileResponseDto> getProfile(@PathVariable String userId) {
+    public ResponseEntity<GetProfileResponseDto> getProfile(@PathVariable("userId") @NotBlank String userId) {
         GetProfileResponseDto responseDto = new GetProfileResponseDto(
                 "https://~~",
                 "민지",

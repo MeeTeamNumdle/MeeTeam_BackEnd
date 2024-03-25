@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
@@ -40,7 +41,8 @@ public interface UserApi {
             }
     )
     @Operation(summary = "유저 프로필 조회 API")
-    ResponseEntity<GetProfileResponseDto> getProfile(String userId);
+    @SecurityRequirements
+    ResponseEntity<GetProfileResponseDto> getProfile(@PathVariable("userId") String userId);
 
 
     @ApiResponses(
