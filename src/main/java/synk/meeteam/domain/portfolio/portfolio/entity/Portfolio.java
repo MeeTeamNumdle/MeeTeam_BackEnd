@@ -79,11 +79,6 @@ public class Portfolio extends BaseEntity {
     //핀 순서
     private int pinOrder;
 
-    public void putPin(int order) {
-        isPin = true;
-        pinOrder = order;
-    }
-
     @Builder
     public Portfolio(Long id, String title, String description, Boolean isPin, int pinOrder) {
         this.id = id;
@@ -91,6 +86,11 @@ public class Portfolio extends BaseEntity {
         this.description = description;
         this.isPin = isPin;
         this.pinOrder = pinOrder;
+    }
+
+    public void putPin(int order) {
+        isPin = true;
+        pinOrder = order;
     }
 
     public void unpin() {

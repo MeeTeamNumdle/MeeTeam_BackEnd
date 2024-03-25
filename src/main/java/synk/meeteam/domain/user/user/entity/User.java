@@ -225,7 +225,6 @@ public class User extends BaseTimeEntity {
     }
 
 
-
     //닉네임 변경
     public void updateNickname(String nickname) {
         this.nickname = nickname;
