@@ -51,4 +51,14 @@ public class UserLinkServiceTest {
         //then
         assertThat(userLinks).extracting("url").containsExactly("링크1", "링크2");
     }
+
+    @Test
+    void 유저링크조회_유저링크조회성공() {
+        //given
+        doReturn(UserLinkFixture.createUserLinkDtoFixture()).when(userLinkRepository).findAllByCreatedBy(anyLong());
+        //when
+        List<UserLink> userLinks = userLinkService.getUserLink(1L);
+        //then
+        assertThat(userLinks).extracting("url").containsExactly("링크1", "링크2");
+    }
 }

@@ -27,5 +27,10 @@ public class UserLinkServiceImpl implements UserLinkService {
         return userLinkRepository.saveAll(userLinks);
     }
 
+    @Override
+    public List<UserLink> getUserLink(Long userId) {
+        return userLinkRepository.findAllByCreatedBy(userId);
+    }
+
 
 }
