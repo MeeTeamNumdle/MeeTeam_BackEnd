@@ -74,7 +74,7 @@ public class UserController implements UserApi {
                         new GetProfileLinkDto("https://~~", "Github")
                 ),
                 List.of(new GetProfileAwardDto(
-                        "공공데이터 공모전", LocalDate.of(2023, 6, 11), LocalDate.of(2024, 3, 25), "장려상 수상"
+                        "공공데이터 공모전", "2024-03-24", "2024-03-25", "장려상 수상"
                 )),
                 List.of(new SkillDto(1L, "스프링"), new SkillDto(2L, "깃"))
         );
