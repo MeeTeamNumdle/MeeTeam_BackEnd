@@ -1,17 +1,22 @@
 package synk.meeteam.domain.user.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
+import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.common.exception.ExceptionResponse;
 import synk.meeteam.security.AuthUser;
 
 @Tag(name = "user", description = "유저 관련 API")
@@ -26,6 +31,19 @@ public interface UserApi {
     @Operation(summary = "유저 프로필 저장 API")
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<String> editProfile(@AuthUser User user, @RequestBody UpdateProfileRequestDto requestDto);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "프로필 조회에 성공하였습니다.",
+                            content = @Content(schema = @Schema(implementation = GetProfileResponseDto.class))),
+                    @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다.",
+                            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            }
+    )
+    @Operation(summary = "유저 프로필 조회 API")
+    @SecurityRequirements
+    ResponseEntity<GetProfileResponseDto> getProfile(@PathVariable("userId") String userId);
+
 
     @ApiResponses(
             value = {
