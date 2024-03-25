@@ -83,13 +83,14 @@ public interface RecruitmentPostApi {
 
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "구인 마감 성공"
+                    @ApiResponse(responseCode = "200", description = "구인 수정 성공"
                             , content = {
                             @Content(mediaType = APPLICATION_JSON_VALUE)
                     })
             }
     )
     @Operation(summary = "구인글 수정 API")
-    ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto);
+    ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto,
+                                               @AuthUser User user);
 
 }
