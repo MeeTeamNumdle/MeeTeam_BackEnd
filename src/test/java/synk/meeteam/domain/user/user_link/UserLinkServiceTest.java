@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,18 +18,26 @@ import synk.meeteam.domain.user.user_link.entity.UserLink;
 import synk.meeteam.domain.user.user_link.entity.UserLinkMapper;
 import synk.meeteam.domain.user.user_link.repository.UserLinkRepository;
 import synk.meeteam.domain.user.user_link.service.UserLinkService;
+import synk.meeteam.domain.user.user_link.service.UserLinkServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class UserLinkServiceTest {
+    @Mock
+    UserLinkService userLinkService;
 
     @InjectMocks
-    UserLinkService userLinkService;
+    UserLinkServiceImpl userLinkServiceImpl;
 
     @Mock
     UserLinkRepository userLinkRepository;
 
     @Spy
     UserLinkMapper userLinkMapper;
+
+    @BeforeEach
+    void setup() {
+        userLinkService = userLinkServiceImpl;
+    }
 
     @Test
     void 유저링크변경_유저링크변경성공() {
