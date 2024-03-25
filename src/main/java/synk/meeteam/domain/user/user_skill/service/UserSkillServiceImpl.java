@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.repository.SkillRepository;
 import synk.meeteam.domain.user.user_skill.entity.UserSkill;
@@ -27,5 +28,10 @@ public class UserSkillServiceImpl implements UserSkillService {
         List<UserSkill> userSkills = skills.stream().map(UserSkill::new).toList();
         //유저 스킬 목록 저장
         return userSkillRepository.saveAll(userSkills);
+    }
+
+    @Override
+    public List<SkillDto> getUserSKill(Long userId) {
+        return userSkillRepository.findSkillDtoByCreatedBy(userId);
     }
 }
