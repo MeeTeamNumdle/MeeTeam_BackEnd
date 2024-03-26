@@ -1,5 +1,6 @@
 package synk.meeteam.domain.recruitment.recruitment_role_skill.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,7 @@ public class RecruitmentRoleSkillService {
     private final RecruitmentRoleSkillRepository recruitmentRoleSkillRepository;
 
     @Transactional
-    public RecruitmentRoleSkill createRecruitmentRoleSkill(RecruitmentRoleSkill recruitmentRoleSkill) {
-        return recruitmentRoleSkillRepository.save(recruitmentRoleSkill);
+    public List<RecruitmentRoleSkill> createRecruitmentRoleSkills(List<RecruitmentRoleSkill> recruitmentRoleSkills) {
+        return recruitmentRoleSkillRepository.saveAll(recruitmentRoleSkills);
     }
 }

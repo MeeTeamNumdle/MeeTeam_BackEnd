@@ -101,4 +101,20 @@ public class RecruitmentPostServiceTest {
                         () -> recruitmentPostService.closeRecruitment(postId, userId))
                 .isInstanceOf(RecruitmentPostException.class);
     }
+
+    @Test
+    void 구인글수정_성공() {
+        // given
+        RecruitmentPost srcRecruitmentPost = RecruitmentPostFixture.createRecruitmentPost("수정하려는제목입니다");
+        RecruitmentPost dstRecruitmentPost = RecruitmentPostFixture.createRecruitmentPost("그냥제목입니다");
+
+        doReturn(dstRecruitmentPost).when(recruitmentPostRepository).save(any());
+
+        // when
+        RecruitmentPost newRecruitmentPost = recruitmentPostService.modifyRecruitmentPost(dstRecruitmentPost,
+                srcRecruitmentPost);
+
+        // then
+        Assertions.assertThat(newRecruitmentPost.getTitle()).isEqualTo("수정하려는제목입니다");
+    }
 }

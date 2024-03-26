@@ -30,16 +30,27 @@ public class RecruitmentPostFacade {
     public Long createRecruitmentPost(RecruitmentPost recruitmentPost, List<RecruitmentRole> recruitmentRoles,
                                       List<RecruitmentRoleSkill> recruitmentRoleSkills,
                                       List<RecruitmentTag> recruitmentTags) {
-
         RecruitmentPost newRecruitmentPost = recruitmentPostService.writeRecruitmentPost(recruitmentPost);
-
-        recruitmentRoles.forEach(recruitmentRoleService::createRecruitmentRole);
-
-        recruitmentRoleSkills.forEach(recruitmentRoleSkillService::createRecruitmentRoleSkill);
-
-        recruitmentTags.forEach(recruitmentTagService::createRecruitmentTag);
+        recruitmentRoleService.createRecruitmentRoles(recruitmentRoles);
+        recruitmentRoleSkillService.createRecruitmentRoleSkills(recruitmentRoleSkills);
+        recruitmentTagService.createRecruitmentTags(recruitmentTags);
 
         return newRecruitmentPost.getId();
+    }
+
+    @Transactional
+    public void modifyRecruitmentPost(RecruitmentPost dstRecruitmentPost, RecruitmentPost srcRecruitmentPost,
+                                      List<RecruitmentRole> recruitmentRoles,
+                                      List<RecruitmentRoleSkill> recruitmentRoleSkills,
+                                      List<RecruitmentTag> recruitmentTags) {
+
+        recruitmentPostService.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost);
+
+        // cascade 설정을 하여 recruitmentRoleService에서 Role과 Skills를 한 번에 삭제한다.
+        recruitmentRoleService.modifyRecruitmentRoleAndSkills(recruitmentRoles, recruitmentRoleSkills,
+                dstRecruitmentPost.getId());
+
+        recruitmentTagService.modifyRecruitmentTag(recruitmentTags, dstRecruitmentPost.getId());
     }
 
     @Transactional
@@ -50,5 +61,4 @@ public class RecruitmentPostFacade {
 
         recruitmentRoleService.addApplicantCount(recruitmentRole);
     }
-
 }
