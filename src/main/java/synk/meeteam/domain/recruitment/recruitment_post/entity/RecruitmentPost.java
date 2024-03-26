@@ -152,4 +152,9 @@ public class RecruitmentPost extends BaseEntity {
         this.isClosed = true;
         return this;
     }
+
+    public RecruitmentPost incrementBookmarkCount() {
+        this.bookmarkCount += 1;
+        return this;
+    }
 }
