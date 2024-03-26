@@ -68,8 +68,11 @@ public class Portfolio extends BaseEntity {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    //포트폴리오 커버 이미지
+    @NotNull
     private String mainImageFileName;
 
+    //포트폴리오 모든슬라이드
     private String slideZipFileName;
 
     //핀인지 여부
