@@ -61,7 +61,7 @@ public class UserServiceTest {
             //given
             String encryptedId = "QLALFQJSGH";
             utilities.when(() -> Encryption.decryptLong(encryptedId)).thenReturn(1L);
-            doReturn(User.builder().nickname("테스트").build()).when(userRepository).findByIdOrElseThrow(any());
+            doReturn(User.builder().nickname("테스트").build()).when(userRepository).findByIdFetchRole(any());
 
             //when
             User user = userService.findByEncryptedId(encryptedId);
@@ -91,7 +91,7 @@ public class UserServiceTest {
             //given
             String encryptedId = "QLALFQJSGH";
             utilities.when(() -> Encryption.decryptLong(encryptedId)).thenReturn(0L);
-            when(userRepository.findByIdOrElseThrow(any())).thenThrow(
+            when(userRepository.findByIdFetchRole(any())).thenThrow(
                     new UserException(NOT_FOUND_USER));
             //when then
             Assertions.assertThatThrownBy(

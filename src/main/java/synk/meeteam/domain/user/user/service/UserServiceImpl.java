@@ -71,6 +71,6 @@ public class UserServiceImpl implements UserService {
         if (userId == null) {
             throw new UserException(NOT_FOUND_USER);
         }
-        return userRepository.findByIdOrElseThrow(userId);
+        return userRepository.findByIdFetchRole(userId);
     }
 }
