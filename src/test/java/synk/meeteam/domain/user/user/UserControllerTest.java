@@ -85,7 +85,6 @@ public class UserControllerTest {
                             .header("Authorization", "aaaaa")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(gson.toJson(UserFixture.createEditProfileDto()))
-
             );
             //then
             resultActions
@@ -93,6 +92,21 @@ public class UserControllerTest {
                     .andExpect(jsonPath("$").exists())
                     .andExpect(jsonPath("$").value("1234"));
         }
+    }
+
+    @Test
+    void 유저프로필조회_조회성공() throws Exception {
+        //given
+        String encryptedId = "123asdcsd";
+        final String url = "/user/profile/" + encryptedId;
+//        doReturn().when(profileFacade).readProfile(encryptedId);
+        //when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url));
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists());
     }
 
 }

@@ -40,6 +40,7 @@ public class SecurityConfig {
             "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health",
 
             "/skill/**", "/tag/**", "/role/**",
+            "/user/encrypt/**"
     };
 
     private static final String[] SEMI_AUTH_WHITELIST = {
