@@ -158,6 +158,13 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/bookmark")
+    @Override
+    public ResponseEntity<Void> bookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user) {
+
+        return ResponseEntity.ok().build();
+    }
+
 
     ////////////////  변환 로직들  ////////////////
     private List<RecruitmentRole> getRecruitmentRoles(CreateRecruitmentPostRequestDto requestDto,
