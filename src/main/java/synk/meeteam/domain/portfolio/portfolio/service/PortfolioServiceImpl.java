@@ -22,7 +22,9 @@ public class PortfolioServiceImpl implements PortfolioService {
         //기존 핀 해제
         oldPinPortfolios.forEach(Portfolio::unpin);
         //포트폴리오 조회
-        List<Portfolio> newPinPortfolios = portfolioRepository.findAllByIdInAndCreatedBy(portfolioIds, id);
+        List<Portfolio> newPinPortfolios = portfolioRepository.findAllByIdInAndCreatedByOrderByProceedStartAsc(
+                portfolioIds,
+                id);
 
         //조회한 결과와 요청한 id의 갯수가 상이할 경우
         if (newPinPortfolios.size() != portfolioIds.size()) {
