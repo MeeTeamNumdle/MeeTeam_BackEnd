@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         user.updateProfile(
                 command.name(),
                 command.isPublicName(),
-                command.pictureUrl(),
+                command.pictureFileName(),
                 command.subEmail(),
                 command.isPublicSubEmail(),
                 command.isPublicSchoolEmail(),
