@@ -35,4 +35,9 @@ public class RecruitmentPostService {
         return recruitmentPost;
 
     }
+
+    @Transactional
+    public RecruitmentPost incrementBookmarkCount(RecruitmentPost recruitmentPost) {
+        return recruitmentPost.incrementBookmarkCount();
+    }
 }

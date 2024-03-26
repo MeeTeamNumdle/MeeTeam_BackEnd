@@ -101,4 +101,16 @@ public class RecruitmentPostServiceTest {
                         () -> recruitmentPostService.closeRecruitment(postId, userId))
                 .isInstanceOf(RecruitmentPostException.class);
     }
+
+    @Test
+    void 북마크수증가_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        Long curBookmarkCnt = recruitmentPost.getBookmarkCount();
+        // when
+        RecruitmentPost newRecruitmentPost = recruitmentPostService.incrementBookmarkCount(recruitmentPost);
+
+        // then
+        Assertions.assertThat(newRecruitmentPost.getBookmarkCount()).isEqualTo(curBookmarkCnt + 1);
+    }
 }
