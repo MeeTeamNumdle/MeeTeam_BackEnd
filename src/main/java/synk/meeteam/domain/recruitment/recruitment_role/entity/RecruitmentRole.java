@@ -33,7 +33,7 @@ public class RecruitmentRole {
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "recruitment_id")
+    @JoinColumn(name = "recruitment_post_id")
     private RecruitmentPost recruitmentPost;
 
     @ManyToOne(fetch = LAZY, optional = false)
