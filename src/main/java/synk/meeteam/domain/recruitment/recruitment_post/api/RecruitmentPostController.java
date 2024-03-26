@@ -168,8 +168,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         List<RecruitmentTag> recruitmentTags = getRecruitmentTags(requestDto, dstRecruitmentPost);
 
         recruitmentPostFacade.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost, recruitmentRoles,
-                recruitmentRoleSkills,
-                recruitmentTags);
+                recruitmentRoleSkills, recruitmentTags);
 
         return ResponseEntity.ok().build();
     }
