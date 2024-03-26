@@ -73,8 +73,8 @@ public class ProfileFacade {
         List<GetProfileAwardDto> awards = getProfileAwards(user.getId());
         List<GetProfilePortfolioDto> portfolios = getProfilePortfolios(user.getId(), encryptedId);
         List<SkillDto> skills = userSkillService.getUserSKill(user.getId());
-
-        return profileMapper.toGetProfileResponseDto(user, profileImgUrl, links, awards, portfolios, skills);
+        return profileMapper.toGetProfileResponseDto(user, profileImgUrl, links, awards,
+                portfolios, skills);
     }
 
     private List<GetProfileUserLinkDto> getProfileLinks(Long userId) {
