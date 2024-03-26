@@ -72,41 +72,4 @@ public class RecruitmentRoleSkillServiceTest {
                 .extracting("recruitmentRole", "skill")
                 .containsExactly(recruitmentRoleSkill_1.getRecruitmentRole(), recruitmentRoleSkill_1.getSkill());
     }
-
-//    @Test
-//    void 구인역할수정_성공(){
-//        // given
-//        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
-//        Role role_1 = RoleFixture.createRole("시스템개발자");
-//        Skill skill_1 = SkillFixture.crateSkill("C");
-//        RecruitmentRole recruitmentRole_1 = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost, role_1,
-//                3L);
-//        Role role_2 = RoleFixture.createRole("기획자");
-//        Skill skill_2 = SkillFixture.crateSkill("figma");
-//        RecruitmentRole recruitmentRole_2 = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost, role_2,
-//                3L);
-//        RecruitmentRoleSkill tmp_recruitmentRoleSkill_1 = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
-//                recruitmentRole_1, skill_1);
-//        RecruitmentRoleSkill tmp_recruitmentRoleSkill_2 = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
-//                recruitmentRole_2, skill_2);
-//        List<RecruitmentRoleSkill> tmp_recruitmentRoleSkills = new ArrayList<>();
-//        tmp_recruitmentRoleSkills.add(tmp_recruitmentRoleSkill_1);
-//        tmp_recruitmentRoleSkills.add(tmp_recruitmentRoleSkill_2);
-//
-//        doNothing().when(recruitmentRoleSkillRepository).deleteAllByRecruitmentRoleIdInQuery(anyList());
-//        doReturn(tmp_recruitmentRoleSkills).when(recruitmentRoleSkillRepository).saveAll(anyList());
-//
-//        // when
-//        List<RecruitmentRoleSkill> newRecruitmentRoleSkills = recruitmentRoleSkillService.modifyRecruitmentRoleSkills(
-//                anyList());
-//
-//        // then
-//        Assertions.assertThat(newRecruitmentRoleSkills.size()).isEqualTo(2);
-//
-//        Assertions.assertThat(newRecruitmentRoleSkills.get(0).getRecruitmentRole().getRole().getName()).isEqualTo("시스템개발자");
-//        Assertions.assertThat(newRecruitmentRoleSkills.get(0).getSkill().getName()).isEqualTo("C");
-//        Assertions.assertThat(newRecruitmentRoleSkills.get(1).getRecruitmentRole().getRole().getName()).isEqualTo("기획자");
-//        Assertions.assertThat(newRecruitmentRoleSkills.get(1).getSkill().getName()).isEqualTo("figma");
-//
-//    }
 }
