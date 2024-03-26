@@ -230,6 +230,25 @@ public class RecruitmentPostTest {
         assertEquals(INVALID_RECRUITMENT_ROLE_ID.name(), twiceResponseEntity.getBody().getName());
     }
 
+    @Test
+    void 구인글수정_성공() {
+        Long postId = 1L;
+        CreateRecruitmentPostRequestDto requestDto = createRequestDto_title("수정된 제목입니다.");
+        HttpEntity<CreateRecruitmentPostRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        restTemplate.put(RECRUITMENT_URL + "/1", requestEntity);
+
+        HttpEntity<CreateRecruitmentPostRequestDto> checkRequestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<GetRecruitmentPostResponseDto> responseEntity = restTemplate.exchange(RECRUITMENT_URL + "/1",
+                HttpMethod.GET, checkRequestEntity, GetRecruitmentPostResponseDto.class);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        GetRecruitmentPostResponseDto body = responseEntity.getBody();
+        assertEquals(body.title(), "수정된 제목입니다.");
+    }
+
     ///////// Dto 생성 로직 /////////
 
     private CreateRecruitmentPostRequestDto createRequestDto() {
