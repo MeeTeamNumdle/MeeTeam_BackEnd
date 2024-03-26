@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_role;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE;
 
@@ -37,13 +38,15 @@ public class RecruitmentRoleServiceTest {
         Role role = RoleFixture.createRole("백엔드개발자");
         RecruitmentRole recruitmentRole = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost,
                 role, 2L);
-        doReturn(recruitmentRole).when(recruitmentRoleRepository).save(recruitmentRole);
+        List<RecruitmentRole> recruitmentRoles = new ArrayList<>();
+        recruitmentRoles.add(recruitmentRole);
+        doReturn(recruitmentRoles).when(recruitmentRoleRepository).saveAll(any());
 
         // when
-        RecruitmentRole savedRecruitmentRole = recruitmentRoleService.createRecruitmentRole(recruitmentRole);
+        List<RecruitmentRole> savedRecruitmentRoles = recruitmentRoleService.createRecruitmentRoles(recruitmentRoles);
 
         // then
-        Assertions.assertThat(savedRecruitmentRole)
+        Assertions.assertThat(savedRecruitmentRoles.get(0))
                 .extracting("recruitmentPost", "role", "count")
                 .containsExactly(recruitmentPost, role, 2L);
     }

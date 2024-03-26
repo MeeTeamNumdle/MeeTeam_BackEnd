@@ -7,15 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.repository.RecruitmentRoleRepository;
+import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
+import synk.meeteam.domain.recruitment.recruitment_role_skill.repository.RecruitmentRoleSkillRepository;
 
 @Service
 @RequiredArgsConstructor
 public class RecruitmentRoleService {
     private final RecruitmentRoleRepository recruitmentRoleRepository;
+    private final RecruitmentRoleSkillRepository recruitmentRoleSkillRepository;
 
     @Transactional
-    public RecruitmentRole createRecruitmentRole(RecruitmentRole recruitmentRole) {
-        return recruitmentRoleRepository.save(recruitmentRole);
+    public List<RecruitmentRole> createRecruitmentRoles(List<RecruitmentRole> recruitmentRoles) {
+        return recruitmentRoleRepository.saveAll(recruitmentRoles);
     }
 
     public List<RecruitmentRole> findByRecruitmentPostId(Long recruitmentPostId) {
@@ -36,5 +39,14 @@ public class RecruitmentRoleService {
     public List<AvailableRecruitmentRoleDto> findAvailableRecruitmentRole(Long postId) {
         return recruitmentRoleRepository.findAvailableRecruitmentRoleByRecruitmentId(
                 postId);
+    }
+
+    @Transactional
+    public void modifyRecruitmentRoleAndSkills(List<RecruitmentRole> recruitmentRoles,
+                                               List<RecruitmentRoleSkill> recruitmentRoleSkills, Long postId) {
+        recruitmentRoleRepository.deleteAllByRecruitmentPostId(postId);
+
+        recruitmentRoleRepository.saveAll(recruitmentRoles);
+        recruitmentRoleSkillRepository.saveAll(recruitmentRoleSkills);
     }
 }

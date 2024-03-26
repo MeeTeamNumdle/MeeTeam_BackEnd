@@ -25,6 +25,12 @@ public class RecruitmentTagService {
     private final TagRepository tagRepository;
 
     @Transactional
+    public List<RecruitmentTag> createRecruitmentTags(List<RecruitmentTag> recruitmentTags) {
+        return recruitmentTags.stream().map(recruitmentTag -> createRecruitmentTag(recruitmentTag))
+                .toList();
+    }
+
+    @Transactional
     public RecruitmentTag createRecruitmentTag(RecruitmentTag recruitmentTag) {
         Tag foundTag = tagRepository.findByName(recruitmentTag.getTag().getName()).orElse(null);
         if (foundTag == null) {
@@ -62,4 +68,9 @@ public class RecruitmentTagService {
         return RecruitmentTagVO.from(recruitmentTags, courseName, courseProfessor);
     }
 
+    @Transactional
+    public void modifyRecruitmentTag(List<RecruitmentTag> recruitmentTags, Long postId) {
+        recruitmentTagRepository.deleteAllByRecruitmentPostId(postId);
+        createRecruitmentTags(recruitmentTags);
+    }
 }

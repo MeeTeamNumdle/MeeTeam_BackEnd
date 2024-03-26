@@ -91,7 +91,7 @@ public interface RecruitmentPostApi {
     )
     @Operation(summary = "구인글 수정 API")
     ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto,
-                                               @AuthUser User user);
+                                               @Valid @PathVariable("id") Long postId, @AuthUser User user);
 
     @ApiResponses(
             value = {
