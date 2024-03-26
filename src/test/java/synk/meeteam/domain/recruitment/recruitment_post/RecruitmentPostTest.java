@@ -230,6 +230,23 @@ public class RecruitmentPostTest {
         assertEquals(INVALID_RECRUITMENT_ROLE_ID.name(), twiceResponseEntity.getBody().getName());
     }
 
+    @Test
+    void 구인글북마크_예외발생_이미북마크한경우() {
+        Long postId = 1L;
+        HttpEntity<ApplyRecruitmentRequestDto> requestEntity = new HttpEntity<>(headers);
+
+        restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/bookmark"),
+                requestEntity, ExceptionResponse.class);
+
+        ResponseEntity<ExceptionResponse> twiceResponseEntity = restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/bookmark"),
+                requestEntity, ExceptionResponse.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, twiceResponseEntity.getStatusCode());
+
+    }
+
     ///////// Dto 생성 로직 /////////
 
     private CreateRecruitmentPostRequestDto createRequestDto() {
