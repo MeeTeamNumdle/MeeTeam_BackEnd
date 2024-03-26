@@ -3,7 +3,10 @@ package synk.meeteam.domain.recruitment.recruitment_role_skill;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,25 +32,81 @@ public class RecruitmentRoleSkillServiceTest {
     @Mock
     private RecruitmentRoleSkillRepository recruitmentRoleSkillRepository;
 
+    private List<RecruitmentRoleSkill> recruitmentRoleSkills;
+
+    private RecruitmentRoleSkill recruitmentRoleSkill_1;
+
+    private RecruitmentRoleSkill recruitmentRoleSkill_2;
+
+    @BeforeEach
+    void init() {
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
+        Role role_1 = RoleFixture.createRole("백엔드개발자");
+        Skill skill_1 = SkillFixture.crateSkill("spring");
+        RecruitmentRole recruitmentRole_1 = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost, role_1,
+                3L);
+        Role role_2 = RoleFixture.createRole("프론트엔드개발자");
+        Skill skill_2 = SkillFixture.crateSkill("자바스크립트");
+        RecruitmentRole recruitmentRole_2 = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost, role_2,
+                3L);
+        recruitmentRoleSkill_1 = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
+                recruitmentRole_1, skill_1);
+        recruitmentRoleSkill_2 = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
+                recruitmentRole_2, skill_2);
+        recruitmentRoleSkills = new ArrayList<>();
+        recruitmentRoleSkills.add(recruitmentRoleSkill_1);
+        recruitmentRoleSkills.add(recruitmentRoleSkill_2);
+    }
+
     @Test
     void 구인역할스킬저장_구인역할스킬저장성공_정상입력경우() {
         // given
-        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
-        Role role = RoleFixture.createRole("백엔드개발자");
-        RecruitmentRole recruitmentRole = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost, role,
-                3L);
-        Skill skill = SkillFixture.crateSkill("spring");
-        RecruitmentRoleSkill recruitmentRoleSkill = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
-                recruitmentRole, skill);
-        doReturn(recruitmentRoleSkill).when(recruitmentRoleSkillRepository).save(recruitmentRoleSkill);
+        doReturn(recruitmentRoleSkills).when(recruitmentRoleSkillRepository).saveAll(recruitmentRoleSkills);
 
         // when
-        RecruitmentRoleSkill savedRecruitmentRoleSkill = recruitmentRoleSkillService.createRecruitmentRoleSkill(
-                recruitmentRoleSkill);
+        List<RecruitmentRoleSkill> savedRecruitmentRoleSkills = recruitmentRoleSkillService.createRecruitmentRoleSkills(
+                recruitmentRoleSkills);
 
         // then
-        Assertions.assertThat(savedRecruitmentRoleSkill)
+        Assertions.assertThat(savedRecruitmentRoleSkills.get(0))
                 .extracting("recruitmentRole", "skill")
-                .containsExactly(recruitmentRoleSkill.getRecruitmentRole(), recruitmentRoleSkill.getSkill());
+                .containsExactly(recruitmentRoleSkill_1.getRecruitmentRole(), recruitmentRoleSkill_1.getSkill());
     }
+
+//    @Test
+//    void 구인역할수정_성공(){
+//        // given
+//        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
+//        Role role_1 = RoleFixture.createRole("시스템개발자");
+//        Skill skill_1 = SkillFixture.crateSkill("C");
+//        RecruitmentRole recruitmentRole_1 = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost, role_1,
+//                3L);
+//        Role role_2 = RoleFixture.createRole("기획자");
+//        Skill skill_2 = SkillFixture.crateSkill("figma");
+//        RecruitmentRole recruitmentRole_2 = RecruitmentRoleFixture.createRecruitmentRoleFixture(recruitmentPost, role_2,
+//                3L);
+//        RecruitmentRoleSkill tmp_recruitmentRoleSkill_1 = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
+//                recruitmentRole_1, skill_1);
+//        RecruitmentRoleSkill tmp_recruitmentRoleSkill_2 = RecruitmentRoleSkillFixture.createRecruitmentRoleSkill(
+//                recruitmentRole_2, skill_2);
+//        List<RecruitmentRoleSkill> tmp_recruitmentRoleSkills = new ArrayList<>();
+//        tmp_recruitmentRoleSkills.add(tmp_recruitmentRoleSkill_1);
+//        tmp_recruitmentRoleSkills.add(tmp_recruitmentRoleSkill_2);
+//
+//        doNothing().when(recruitmentRoleSkillRepository).deleteAllByRecruitmentRoleIdInQuery(anyList());
+//        doReturn(tmp_recruitmentRoleSkills).when(recruitmentRoleSkillRepository).saveAll(anyList());
+//
+//        // when
+//        List<RecruitmentRoleSkill> newRecruitmentRoleSkills = recruitmentRoleSkillService.modifyRecruitmentRoleSkills(
+//                anyList());
+//
+//        // then
+//        Assertions.assertThat(newRecruitmentRoleSkills.size()).isEqualTo(2);
+//
+//        Assertions.assertThat(newRecruitmentRoleSkills.get(0).getRecruitmentRole().getRole().getName()).isEqualTo("시스템개발자");
+//        Assertions.assertThat(newRecruitmentRoleSkills.get(0).getSkill().getName()).isEqualTo("C");
+//        Assertions.assertThat(newRecruitmentRoleSkills.get(1).getRecruitmentRole().getRole().getName()).isEqualTo("기획자");
+//        Assertions.assertThat(newRecruitmentRoleSkills.get(1).getSkill().getName()).isEqualTo("figma");
+//
+//    }
 }
