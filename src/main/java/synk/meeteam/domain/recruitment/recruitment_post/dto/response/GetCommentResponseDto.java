@@ -7,6 +7,8 @@ import java.util.List;
 public record GetCommentResponseDto(
         @Schema(description = "댓글 id", example = "1")
         Long id,
+        @Schema(description = "암호화된 댓글 작성자 id", example = "40aVE421DSwR63xfKf6vxA==")
+        String userId,
         @Schema(description = "댓글 작성자 닉네임", example = "song123")
         String nickname,
         @Schema(description = "댓글 작성자 프로필 사진", example = "url형태")
@@ -17,6 +19,10 @@ public record GetCommentResponseDto(
         String createAt,
         @Schema(description = "구인글 작성자 여부", example = "true")
         boolean isWriter,
+        @Schema(description = "댓글 그룹 번호", example = "2")
+        long groupNumber,
+        @Schema(description = "댓글 그룹 순서", example = "3")
+        long groupOrder,
         @Schema(description = "대댓글", example = "")
         List<GetReplyResponseDto> replies
 ) {
