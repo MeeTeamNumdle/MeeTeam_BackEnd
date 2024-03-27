@@ -29,6 +29,7 @@ import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCo
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
@@ -188,6 +189,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<Void> cancelBookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId,
                                                               @AuthUser User user) {
 
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @PutMapping("/{id}/openTalk")
+    public ResponseEntity<Void> setOpenKaKaoLink(@AuthUser User user, @PathVariable("id") Long postId,
+                                                 @Valid @RequestBody
+                                                 SetOpenKakaoLinkRequestDto requestDto) {
         return ResponseEntity.ok().build();
     }
 
