@@ -15,7 +15,6 @@ import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
-import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.repository.UserRepository;
 
 @DataJpaTest
@@ -49,8 +48,6 @@ public class PortfolioRepositoryTest {
 
     @Test
     void 특정유저의핀포트폴리오목록조회_특정유저의핀포트폴리오목록반환() {
-        //given
-        User user = userRepository.findById(1L).get();
         //when
         List<Portfolio> portfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(1L);
         //then
@@ -59,9 +56,6 @@ public class PortfolioRepositoryTest {
 
     @Test
     void 유저포트폴리오조회_조회성공() {
-        //given
-        User user = userRepository.findById(1L).get();
-
         //when
         List<Portfolio> userPortfolios = portfolioRepository.findAllByCreatedByOrderByProceedStartAsc(1L);
         //then
