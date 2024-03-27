@@ -1,7 +1,5 @@
 package synk.meeteam.domain.user.award.service;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,7 @@ public class AwardServiceImpl implements AwardService {
     }
 
     @Override
-    public List<Award> getAward(@Valid @NotNull Long userId) {
+    public List<Award> getAward(Long userId) {
         return awardRepository.findAllByCreatedBy(userId);
     }
 }
