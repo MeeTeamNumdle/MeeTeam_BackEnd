@@ -24,6 +24,22 @@ public class RecruitmentPostFixture {
                 .proceedingStart(LocalDate.of(2024, 2, 28))
                 .proceedingEnd(LocalDate.of(2024, 7, 28))
                 .deadline(LocalDate.of(2024, 3, 2))
+                .bookmarkCount(5L)
+                .build();
+    }
+
+    public static RecruitmentPost createRecruitmentPost_bookmark(Long bookmarkCount) {
+        return RecruitmentPost.builder()
+                .title("정상 제목입니다.")
+                .content("정상적인 내용")
+                .scope(Scope.ON_CAMPUS)
+                .category(Category.PROJECT)
+                .field(field)
+                .proceedType(ProceedType.ON_LINE)
+                .proceedingStart(LocalDate.of(2024, 2, 28))
+                .proceedingEnd(LocalDate.of(2024, 7, 28))
+                .deadline(LocalDate.of(2024, 3, 2))
+                .bookmarkCount(bookmarkCount)
                 .build();
     }
 }

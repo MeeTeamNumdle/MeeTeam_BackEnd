@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.bookmark;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.recruitment.bookmark.exception.BookmarkExceptionType.INVALID_BOOKMARK;
 
@@ -68,6 +69,30 @@ public class BookmarkServiceTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> bookmarkService.bookmarkRecruitmentPost(recruitmentPost, user))
+                .isInstanceOf(BookmarkException.class)
+                .hasMessageContaining(INVALID_BOOKMARK.message());
+    }
+
+    @Test
+    void 구인글북마크취소_성공() {
+        // given
+        doNothing().when(bookmarkRepository).deleteByRecruitmentPostAndUser(any(), any());
+        doReturn(Optional.ofNullable(bookmark)).when(bookmarkRepository)
+                .findByRecruitmentPostAndUser(recruitmentPost, user);
+
+        // when, then
+        // 예외발생 x -> 성공판단
+        bookmarkService.cancelBookmarkRecruitmentPost(recruitmentPost, user);
+    }
+
+    @Test
+    void 구인글북마크취소_예외발생_북마크한기록이없는경우() {
+        // given
+        doReturn(Optional.ofNullable(null)).when(bookmarkRepository)
+                .findByRecruitmentPostAndUser(recruitmentPost, user);
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> bookmarkService.cancelBookmarkRecruitmentPost(recruitmentPost, user))
                 .isInstanceOf(BookmarkException.class)
                 .hasMessageContaining(INVALID_BOOKMARK.message());
     }

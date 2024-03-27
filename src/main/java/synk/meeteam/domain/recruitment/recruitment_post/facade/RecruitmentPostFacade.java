@@ -66,9 +66,19 @@ public class RecruitmentPostFacade {
     }
 
     @Transactional
-    public void bookmarkRecruitmentPost(RecruitmentPost recruitmentPost, User user) {
+    public void bookmarkRecruitmentPost(Long postId, User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+
         bookmarkService.bookmarkRecruitmentPost(recruitmentPost, user);
         recruitmentPostService.incrementBookmarkCount(recruitmentPost);
+    }
+
+    @Transactional
+    public void cancelBookmarkRecruitmentPost(Long postId, User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+
+        bookmarkService.cancelBookmarkRecruitmentPost(recruitmentPost, user);
+        recruitmentPostService.decrementBookmarkCount(recruitmentPost);
     }
 
 }
