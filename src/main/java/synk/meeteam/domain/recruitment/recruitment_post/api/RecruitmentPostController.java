@@ -27,6 +27,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentA
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -187,6 +188,15 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                                                               @AuthUser User user) {
         recruitmentPostFacade.cancelBookmarkRecruitmentPost(postId, user);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/comment")
+    @Override
+    public ResponseEntity<Void> registerComment(@PathVariable("id") Long postId,
+                                                @Valid @RequestBody CreateCommentRequestDto requestDto,
+                                                @AuthUser User user) {
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
