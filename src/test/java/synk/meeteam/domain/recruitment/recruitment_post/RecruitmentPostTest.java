@@ -266,6 +266,18 @@ public class RecruitmentPostTest {
 
     }
 
+    @Test
+    void 구인글북마크취소_예외발생_북마크한기록이없는경우() {
+        HttpEntity<ApplyRecruitmentRequestDto> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<Void> responseEntity = restTemplate.exchange(URI.create(RECRUITMENT_URL + "/1/bookmark"),
+                HttpMethod.DELETE, requestEntity,
+                Void.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+    }
+
     ///////// Dto 생성 로직 /////////
 
     private CreateRecruitmentPostRequestDto createRequestDto() {
