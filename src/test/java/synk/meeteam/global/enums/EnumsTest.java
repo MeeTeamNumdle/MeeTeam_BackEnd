@@ -19,7 +19,7 @@ public class EnumsTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"온라인", "오프라인", "온/오프라인"})
+    @ValueSource(strings = {"온라인", "오프라인", "상관없음"})
     public void 입력에맞는ProceedType찾기_입력에맞는Enum반환_여러입력(String proceedTypeName) {
         ProceedType proceedType = ProceedType.findByName(proceedTypeName);
         Assertions.assertThat(proceedType.getName()).isEqualTo(proceedTypeName);
