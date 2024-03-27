@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import synk.meeteam.domain.common.field.entity.Field;
+import synk.meeteam.domain.recruitment.bookmark.exception.BookmarkException;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 import synk.meeteam.global.entity.Category;
@@ -66,6 +67,29 @@ public class RecruitmentPostEntityTest {
 
         // then
         Assertions.assertThat(newRecruitmentPost.getBookmarkCount()).isEqualTo(curBookmarkCnt + 1);
+    }
+
+    @Test
+    void 북마크수감소_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        long curBookmarkCnt = recruitmentPost.getBookmarkCount();
+
+        // when
+        RecruitmentPost newRecruitmentPost = recruitmentPost.decrementBookmarkCount();
+
+        // then
+        Assertions.assertThat(newRecruitmentPost.getBookmarkCount()).isEqualTo(curBookmarkCnt - 1);
+    }
+
+    @Test
+    void 북마크수감소_예외발생_북마크수가0이하일경우() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost_bookmark(0L);
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> recruitmentPost.decrementBookmarkCount())
+                .isInstanceOf(BookmarkException.class);
     }
 
 }

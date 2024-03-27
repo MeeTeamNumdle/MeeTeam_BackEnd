@@ -2,6 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post.entity;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
+import static synk.meeteam.domain.recruitment.bookmark.exception.BookmarkExceptionType.INVALID_BOOKMARK;
 import static synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostExceptionType.INVALID_USER_ID;
 
 import jakarta.persistence.Column;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
+import synk.meeteam.domain.recruitment.bookmark.exception.BookmarkException;
 import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 import synk.meeteam.global.entity.BaseEntity;
 import synk.meeteam.global.entity.Category;
@@ -180,6 +182,14 @@ public class RecruitmentPost extends BaseEntity {
 
     public RecruitmentPost incrementBookmarkCount() {
         this.bookmarkCount += 1;
+        return this;
+    }
+
+    public RecruitmentPost decrementBookmarkCount() {
+        if (this.bookmarkCount <= 0) {
+            throw new BookmarkException(INVALID_BOOKMARK);
+        }
+        this.bookmarkCount -= 1;
         return this;
     }
 }
