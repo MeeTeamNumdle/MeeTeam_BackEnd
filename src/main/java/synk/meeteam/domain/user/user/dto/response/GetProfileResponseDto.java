@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
+import synk.meeteam.domain.user.user_link.dto.GetProfileUserLinkDto;
 
 public record GetProfileResponseDto(
         @Schema(description = "프로필 이미지 url", example = "https://image.png")
@@ -34,7 +36,7 @@ public record GetProfileResponseDto(
         @Schema(description = "입학년도", example = "2019")
         int year,
         List<GetProfilePortfolioDto> portfolios,
-        List<GetProfileLinkDto> links,
+        List<GetProfileUserLinkDto> links,
         List<GetProfileAwardDto> awards,
         List<SkillDto> skills
 

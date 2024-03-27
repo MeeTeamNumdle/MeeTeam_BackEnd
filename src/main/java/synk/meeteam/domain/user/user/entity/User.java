@@ -64,6 +64,10 @@ public class User extends BaseTimeEntity {
     @Column(length = 20)
     private String name;
 
+    //이름 공개여부
+    @ColumnDefault("0")
+    private boolean isPublicName = false;
+
     //닉네임
     @NotNull
     @NotBlank
@@ -178,6 +182,7 @@ public class User extends BaseTimeEntity {
     //프로필 정보 업데이트
     public void updateProfile(
             String name,
+            boolean isPublicName,
             String profileImgFileName,
             String subEmail,
             boolean isPublicSubEmail,
@@ -192,6 +197,7 @@ public class User extends BaseTimeEntity {
             Role role
     ) {
         this.name = name;
+        this.isPublicName = isPublicName;
         this.profileImgFileName = profileImgFileName;
         this.subEmail = subEmail;
         this.isPublicSubEmail = isPublicSubEmail;
