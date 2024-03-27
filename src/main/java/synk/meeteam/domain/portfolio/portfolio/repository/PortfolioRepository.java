@@ -7,5 +7,7 @@ import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     List<Portfolio> findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(Long id);
 
-    List<Portfolio> findAllByIdInAndCreatedBy(List<Long> ids, Long id);
+    List<Portfolio> findAllByIdInAndCreatedByOrderByProceedStartAsc(List<Long> ids, Long id);
+
+    List<Portfolio> findAllByCreatedByOrderByProceedStartAsc(Long id);
 }

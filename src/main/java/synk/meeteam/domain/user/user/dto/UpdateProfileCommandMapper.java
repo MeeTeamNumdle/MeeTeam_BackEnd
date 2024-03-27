@@ -8,7 +8,7 @@ import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 @Mapper(componentModel = "spring")
 public interface UpdateProfileCommandMapper {
 
-    @Mapping(source = "imageUrl", target = "pictureUrl")
+    @Mapping(source = "imageFileName", target = "pictureFileName")
     @Mapping(source = "introduction", target = "oneLineIntroduction")
     @Mapping(source = "aboutMe", target = "mainIntroduction")
     UpdateInfoCommand toUpdateProfileCommand(UpdateProfileRequestDto updateProfileRequestDto);

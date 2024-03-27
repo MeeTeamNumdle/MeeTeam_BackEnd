@@ -40,4 +40,19 @@ public class RecruitmentPostService {
     public RecruitmentPost incrementBookmarkCount(RecruitmentPost recruitmentPost) {
         return recruitmentPost.incrementBookmarkCount();
     }
+
+    @Transactional
+    public RecruitmentPost modifyRecruitmentPost(RecruitmentPost dstRecruitmentPost,
+                                                 RecruitmentPost srcRecruitmentPost) {
+
+        dstRecruitmentPost.updateRecruitmentPost(srcRecruitmentPost.getTitle(), srcRecruitmentPost.getContent(),
+                srcRecruitmentPost.getScope(), srcRecruitmentPost.getCategory(), srcRecruitmentPost.getField(),
+                srcRecruitmentPost.getProceedType(), srcRecruitmentPost.getProceedingStart(),
+                srcRecruitmentPost.getProceedingEnd(), srcRecruitmentPost.getDeadline(),
+                srcRecruitmentPost.getBookmarkCount(),
+                srcRecruitmentPost.getKakaoLink(), srcRecruitmentPost.isClosed(), srcRecruitmentPost.getMeeteam(),
+                srcRecruitmentPost.getApplicantCount(), srcRecruitmentPost.getResponseCount());
+
+        return recruitmentPostRepository.save(dstRecruitmentPost);
+    }
 }

@@ -27,6 +27,9 @@ public class S3Service {
     private String bucketName;
 
     public String createPreSignedGetUrl(final String path, final String fileName) {
+        if (fileName == null) {
+            return null;
+        }
         String key = path + fileName;
 
         S3Presigner preSigner = s3Config.getS3Presigner();

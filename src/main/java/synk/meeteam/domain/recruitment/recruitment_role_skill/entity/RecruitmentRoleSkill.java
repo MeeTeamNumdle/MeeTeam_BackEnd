@@ -16,6 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 
@@ -37,6 +39,7 @@ public class RecruitmentRoleSkill {
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "recruitment_role_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private RecruitmentRole recruitmentRole;
 
     @ManyToOne(fetch = LAZY, optional = false)

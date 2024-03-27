@@ -153,7 +153,22 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @PutMapping("/{id}")
     @Override
-    public ResponseEntity<Void> modifyRecruitmentPost(CreateRecruitmentPostRequestDto requestDto, @AuthUser User user) {
+    public ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto,
+                                                      @Valid @PathVariable("id") Long postId, @AuthUser User user) {
+
+        Field field = fieldService.findById(DEVELOP_ID);
+
+        RecruitmentPost srcRecruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field);
+        RecruitmentPost dstRecruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+
+        List<RecruitmentRoleSkill> recruitmentRoleSkills = new ArrayList<>();
+        List<RecruitmentRole> recruitmentRoles = getRecruitmentRoles(requestDto, dstRecruitmentPost,
+                recruitmentRoleSkills);
+
+        List<RecruitmentTag> recruitmentTags = getRecruitmentTags(requestDto, dstRecruitmentPost);
+
+        recruitmentPostFacade.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost, recruitmentRoles,
+                recruitmentRoleSkills, recruitmentTags);
 
         return ResponseEntity.ok().build();
     }
@@ -199,7 +214,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                     tagEntity);
             recruitmentTags.add(recruitmentTagEntity);
             recruitmentTags.add(recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost,
-                    recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseTagName(), TagType.PROFESSOR)));
+                    recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseProfessor(), TagType.PROFESSOR)));
         }
         return recruitmentTags;
     }

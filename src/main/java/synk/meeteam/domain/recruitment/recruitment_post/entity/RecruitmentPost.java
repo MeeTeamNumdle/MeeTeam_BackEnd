@@ -153,6 +153,31 @@ public class RecruitmentPost extends BaseEntity {
         return this;
     }
 
+    public void updateRecruitmentPost(String title, String content, Scope scope, Category category,
+                                      Field field,
+                                      ProceedType proceedType, LocalDate proceedingStart,
+                                      LocalDate proceedingEnd,
+                                      LocalDate deadline,
+                                      long bookmarkCount, String kakaoLink, boolean isClosed,
+                                      Meeteam meeteam, long applicantCount,
+                                      long responseCount) {
+        this.title = title;
+        this.content = content;
+        this.scope = scope;
+        this.category = category;
+        this.field = field;
+        this.proceedType = proceedType;
+        this.proceedingStart = proceedingStart;
+        this.proceedingEnd = proceedingEnd;
+        this.deadline = deadline;
+        this.bookmarkCount = bookmarkCount;
+        this.kakaoLink = kakaoLink;
+        this.isClosed = isClosed;
+        this.meeteam = meeteam;
+        this.applicantCount = applicantCount;
+        this.responseCount = responseCount;
+    }
+
     public RecruitmentPost incrementBookmarkCount() {
         this.bookmarkCount += 1;
         return this;
