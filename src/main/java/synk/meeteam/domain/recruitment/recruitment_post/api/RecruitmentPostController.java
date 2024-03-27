@@ -1,7 +1,6 @@
 package synk.meeteam.domain.recruitment.recruitment_post.api;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +93,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @GetMapping("/{id}")
     @Override
     public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @Valid @PathVariable("id") Long postId) {
+            @PathVariable("id") Long postId) {
         // 단일 트랜잭션으로 하지 않아도 될듯
         // 트랜잭션으로 하지 않아도 될듯?
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
@@ -117,7 +116,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @GetMapping("/{id}/apply-info")
     @Override
-    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@Valid @PathVariable("id") Long postId,
+    public ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@PathVariable("id") Long postId,
                                                                 @AuthUser User user) {
         List<AvailableRecruitmentRoleDto> availableRecruitmentRoleDtos = recruitmentRoleService.findAvailableRecruitmentRole(
                 postId);
@@ -132,7 +131,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @PostMapping("/{id}/apply")
     @Override
-    public ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
+    public ResponseEntity<Void> applyRecruitment(@PathVariable("id") Long postId,
                                                  @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
                                                  @AuthUser User user) {
         RecruitmentRole recruitmentRole = recruitmentRoleService.findAppliableRecruitmentRole(requestDto.applyRoleId());
@@ -147,7 +146,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @PatchMapping("/{id}/close")
     @Override
-    public ResponseEntity<Void> closeRecruitment(@Valid @PathVariable("id") Long postId, @AuthUser User user) {
+    public ResponseEntity<Void> closeRecruitment(@PathVariable("id") Long postId, @AuthUser User user) {
         recruitmentPostService.closeRecruitment(postId, user.getId());
         return ResponseEntity.ok().build();
     }
@@ -155,7 +154,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @PutMapping("/{id}")
     @Override
     public ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto,
-                                                      @Valid @PathVariable("id") Long postId, @AuthUser User user) {
+                                                      @PathVariable("id") Long postId, @AuthUser User user) {
 
         Field field = fieldService.findById(DEVELOP_ID);
 
@@ -176,18 +175,17 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @PostMapping("/{id}/bookmark")
     @Override
-    public ResponseEntity<Void> bookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user) {
-        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
-        recruitmentPostFacade.bookmarkRecruitmentPost(recruitmentPost, user);
-
+    public ResponseEntity<Void> bookmarkRecruitmentPost(@PathVariable("id") Long postId,
+                                                        @AuthUser User user) {
+        recruitmentPostFacade.bookmarkRecruitmentPost(postId, user);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/bookmark")
     @Override
-    public ResponseEntity<Void> cancelBookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId,
+    public ResponseEntity<Void> cancelBookmarkRecruitmentPost(@PathVariable("id") Long postId,
                                                               @AuthUser User user) {
-
+        recruitmentPostFacade.cancelBookmarkRecruitmentPost(postId, user);
         return ResponseEntity.ok().build();
     }
 

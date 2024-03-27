@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +44,7 @@ public interface RecruitmentPostApi {
     @Operation(summary = "특정 구인글 조회 API")
     @SecurityRequirements
     ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @Valid @PathVariable("id") Long postId);
+            @PathVariable("id") Long postId);
 
 
     @ApiResponses(
@@ -54,7 +53,7 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "신청 정보 조회 API")
-    ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@Valid @PathVariable("id") Long postId,
+    ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@PathVariable("id") Long postId,
                                                          @AuthUser User user);
 
     @ApiResponses(
@@ -66,7 +65,7 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "구인 신청 API")
-    ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
+    ResponseEntity<Void> applyRecruitment(@PathVariable("id") Long postId,
                                           @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
                                           @AuthUser User user);
 
@@ -79,7 +78,7 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "구인 마감 API")
-    ResponseEntity<Void> closeRecruitment(@Valid @PathVariable("id") Long postId, @AuthUser User user);
+    ResponseEntity<Void> closeRecruitment(@PathVariable("id") Long postId, @AuthUser User user);
 
     @ApiResponses(
             value = {
@@ -91,7 +90,7 @@ public interface RecruitmentPostApi {
     )
     @Operation(summary = "구인글 수정 API")
     ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto,
-                                               @Valid @PathVariable("id") Long postId, @AuthUser User user);
+                                               @PathVariable("id") Long postId, @AuthUser User user);
 
     @ApiResponses(
             value = {
@@ -102,7 +101,7 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "구인글 북마크 API")
-    ResponseEntity<Void> bookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user);
+    ResponseEntity<Void> bookmarkRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user);
 
     @ApiResponses(
             value = {
@@ -113,6 +112,6 @@ public interface RecruitmentPostApi {
             }
     )
     @Operation(summary = "구인글 북마크 취소 API")
-    ResponseEntity<Void> cancelBookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user);
+    ResponseEntity<Void> cancelBookmarkRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user);
 
 }
