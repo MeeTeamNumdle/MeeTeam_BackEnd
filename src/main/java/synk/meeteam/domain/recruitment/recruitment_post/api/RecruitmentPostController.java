@@ -29,6 +29,7 @@ import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCo
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
@@ -221,6 +222,15 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 )
         );
     }
+
+    @Override
+    @PutMapping("/{id}/openTalk")
+    public ResponseEntity<Void> setOpenKaKaoLink(@AuthUser User user, @PathVariable("id") Long postId,
+                                                 @Valid @RequestBody
+                                                 SetOpenKakaoLinkRequestDto requestDto) {
+        return ResponseEntity.ok().build();
+    }
+
 
     ////////////////  변환 로직들  ////////////////
     private List<RecruitmentRole> getRecruitmentRoles(CreateRecruitmentPostRequestDto requestDto,
