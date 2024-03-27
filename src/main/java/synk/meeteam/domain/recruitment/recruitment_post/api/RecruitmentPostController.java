@@ -176,6 +176,8 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @PostMapping("/{id}/bookmark")
     @Override
     public ResponseEntity<Void> bookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        recruitmentPostFacade.bookmarkRecruitmentPost(recruitmentPost, user);
 
         return ResponseEntity.ok().build();
     }
