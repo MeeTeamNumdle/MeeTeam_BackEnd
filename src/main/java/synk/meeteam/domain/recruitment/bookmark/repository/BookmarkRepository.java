@@ -8,4 +8,6 @@ import synk.meeteam.domain.user.user.entity.User;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     Optional<Bookmark> findByRecruitmentPostAndUser(RecruitmentPost recruitmentPost, User user);
+
+    void deleteByRecruitmentPostAndUser(RecruitmentPost recruitmentPost, User user);
 }
