@@ -198,11 +198,11 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @Override
     public ResponseEntity<PaginationSearchPostResponseDto> searchRecruitmentPost(
             @RequestParam(value = "field", required = false) Long fieldId,
-            @RequestParam(value = "scope", required = false) Long scopeIndex,
-            @RequestParam(value = "category", required = false) Long categoryIndex,
-            @RequestParam(value = "skill", required = false) List<Long> skills,
-            @RequestParam(value = "role", required = false) List<Long> roles,
-            @RequestParam(value = "tag", required = false) List<Long> tags,
+            @RequestParam(value = "scope", required = false) Long scopeOrdinal,
+            @RequestParam(value = "category", required = false) Long categoryOrdinal,
+            @RequestParam(value = "skill", required = false) List<Long> skillIds,
+            @RequestParam(value = "role", required = false) List<Long> roleIds,
+            @RequestParam(value = "tag", required = false) List<Long> tagIds,
             @RequestParam(value = "keyword", required = false) String keyword) {
         return ResponseEntity.ok(
                 new PaginationSearchPostResponseDto(

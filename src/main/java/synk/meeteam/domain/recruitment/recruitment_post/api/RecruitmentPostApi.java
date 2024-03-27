@@ -127,11 +127,11 @@ public interface RecruitmentPostApi {
     @Operation(summary = "구인글 목록 검색 API")
     ResponseEntity<PaginationSearchPostResponseDto> searchRecruitmentPost(
             @RequestParam Long fieldId,
-            @RequestParam Long scopeIndex,
-            @RequestParam Long categoryIndex,
-            @RequestParam List<Long> skills,
-            @RequestParam List<Long> roles,
-            @RequestParam List<Long> tags,
+            @RequestParam Long scopeOrdinal,
+            @RequestParam Long categoryOrdinal,
+            @RequestParam List<Long> skillIds,
+            @RequestParam List<Long> roleIds,
+            @RequestParam List<Long> tagIds,
             @RequestParam String keyword
     );
 
