@@ -6,7 +6,7 @@ import synk.meeteam.global.common.exception.ExceptionType;
 
 @RequiredArgsConstructor
 public enum BookmarkExceptionType implements ExceptionType {
-    INVALID_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 북마크된 구인글입니다.");
+    INVALID_BOOKMARK(HttpStatus.BAD_REQUEST, "올바르지 않은 북마크 요청입니다.");
 
     private final HttpStatus status;
     private final String message;
