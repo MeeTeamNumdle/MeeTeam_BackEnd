@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -178,6 +179,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<Void> bookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user) {
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
         recruitmentPostFacade.bookmarkRecruitmentPost(recruitmentPost, user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/bookmark")
+    @Override
+    public ResponseEntity<Void> cancelBookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId,
+                                                              @AuthUser User user) {
 
         return ResponseEntity.ok().build();
     }
