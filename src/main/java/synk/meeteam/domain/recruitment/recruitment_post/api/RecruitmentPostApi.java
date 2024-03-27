@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
@@ -114,4 +115,13 @@ public interface RecruitmentPostApi {
     @Operation(summary = "구인글 북마크 취소 API")
     ResponseEntity<Void> cancelBookmarkRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user);
 
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "오픈 카톡방 링크 설정 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 오픈 카톡방 링크")
+            }
+    )
+    @Operation(summary = "구인글 오픈카톡 설정 API")
+    ResponseEntity<Void> setOpenKaKaoLink(@AuthUser User user, @PathVariable("id") Long postId,
+                                          SetOpenKakaoLinkRequestDto requestDto);
 }
