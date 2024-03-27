@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.service.FieldService;
@@ -29,10 +30,13 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMappe
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.PaginationSearchPostResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SearchRecruitmentPostsResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.facade.RecruitmentPostFacade;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
@@ -45,6 +49,7 @@ import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagSer
 import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.UserService;
+import synk.meeteam.global.dto.PageInfo;
 import synk.meeteam.infra.s3.S3FileName;
 import synk.meeteam.infra.s3.service.S3Service;
 import synk.meeteam.security.AuthUser;
@@ -187,6 +192,43 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<Void> cancelBookmarkRecruitmentPost(@PathVariable("id") Long postId,
                                                               @AuthUser User user) {
         recruitmentPostFacade.cancelBookmarkRecruitmentPost(postId, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/search")
+    @Override
+    public ResponseEntity<PaginationSearchPostResponseDto> searchRecruitmentPost(
+            @RequestParam(value = "field", required = false) Long fieldId,
+            @RequestParam(value = "scope", required = false) Long scopeIndex,
+            @RequestParam(value = "category", required = false) Long categoryIndex,
+            @RequestParam(value = "skill", required = false) List<Long> skills,
+            @RequestParam(value = "role", required = false) List<Long> roles,
+            @RequestParam(value = "tag", required = false) List<Long> tags,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        return ResponseEntity.ok(
+                new PaginationSearchPostResponseDto(
+                        List.of(
+                                new SearchRecruitmentPostsResponseDto(
+                                        1L,
+                                        "구인합니다",
+                                        "프로젝트",
+                                        "goder",
+                                        "https://image.png",
+                                        "2024-12-15",
+                                        "",
+                                        true
+                                )
+                        ),
+                        new PageInfo(1L, 24L, 10L, 1L)
+                )
+        );
+    }
+
+    @Override
+    @PutMapping("/{id}/openTalk")
+    public ResponseEntity<Void> setOpenKaKaoLink(@AuthUser User user, @PathVariable("id") Long postId,
+                                                 @Valid @RequestBody
+                                                 SetOpenKakaoLinkRequestDto requestDto) {
         return ResponseEntity.ok().build();
     }
 

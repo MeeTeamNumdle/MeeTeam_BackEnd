@@ -69,7 +69,8 @@ public class SwaggerConfig {
                 .info(new Info().title("Your API").version("1.0.0"))
                 .tags(List.of(
                                 new Tag().name("recruitment").description("구인 관련 API"),
-                                new Tag().name("comment").description("댓글 관련 API")
+                                new Tag().name("comment").description("댓글 관련 API"),
+                                new Tag().name("applicant").description("신청자 관련 API")
                         )
                 );
     }

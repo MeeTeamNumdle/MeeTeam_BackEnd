@@ -32,6 +32,7 @@ public class PortfolioFixture {
                 .proceedEnd(LocalDate.now())
                 .isPin(isPin)
                 .pinOrder(pinOrder)
+                .mainImageFileName("이미지")
                 .role(role)
                 .field(field)
                 .build();
