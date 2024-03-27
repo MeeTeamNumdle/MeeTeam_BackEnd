@@ -31,7 +31,7 @@ public class RecruitmentCommentService {
         for (RecruitmentCommentVO comment : commentVOs) {
             boolean isWriter = writerId.equals(comment.getUserId());
             String profileImg = s3Service.createPreSignedGetUrl(
-                    S3FileName.getProfileImgUrl(Encryption.encryptLong(comment.getUserId())),
+                    S3FileName.USER,
                     comment.getProfileImg());
             if (comment.isParent()) {
                 List<GetReplyResponseDto> replies = new ArrayList<>();
