@@ -85,7 +85,6 @@ public class UserControllerTest {
                             .header("Authorization", "aaaaa")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(gson.toJson(UserFixture.createEditProfileDto()))
-
             );
             //then
             resultActions
@@ -93,6 +92,27 @@ public class UserControllerTest {
                     .andExpect(jsonPath("$").exists())
                     .andExpect(jsonPath("$").value("1234"));
         }
+    }
+
+    @Test
+    void 유저프로필조회_조회성공() throws Exception {
+        //given
+        String encryptedId = "암호화된아이디";
+        final String url = "/user/profile/" + encryptedId;
+        doReturn(UserFixture.createReadProfile()).when(profileFacade).readProfile(encryptedId);
+        //when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url));
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.userName").value("민지"))
+                .andExpect(jsonPath("$.nickname").value("mingi123"))
+                .andExpect(jsonPath("$.isUserNamePublic").value(true))
+                .andExpect(jsonPath("$.universityEmail.content").value("minji@kw.ac.kr"))
+                .andExpect(jsonPath("$.awards[0].title").value("공공데이터 공모전"))
+                .andExpect(jsonPath("$.links[1].description").value("Github"));
     }
 
 }

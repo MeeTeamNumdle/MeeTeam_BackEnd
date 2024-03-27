@@ -9,7 +9,7 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.domain.user.user.exception.UserException;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, UserCustomRepository {
     Optional<User> findById(Long userId);
 
     default User findByIdOrElseThrow(Long userId) {
@@ -30,7 +30,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
         return findByPlatformIdAndPlatformType(platformId, platformType).orElseThrow(
                 () -> new AuthException(NOT_FOUND_USER));
     }
-
 
 
 }

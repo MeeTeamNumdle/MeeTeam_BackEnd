@@ -9,18 +9,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
-import synk.meeteam.domain.common.output.entity.Output;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.global.entity.BaseEntity;
 
@@ -28,6 +27,8 @@ import synk.meeteam.global.entity.BaseEntity;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.MODULE)
+@Builder
 public class Portfolio extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,10 +68,12 @@ public class Portfolio extends BaseEntity {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    //산출물
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "output_id")
-    private Output output;
+    //포트폴리오 커버 이미지
+    @NotNull
+    private String mainImageFileName;
+
+    //포트폴리오 모든슬라이드
+    private String slideZipFileName;
 
     //핀인지 여부
     @ColumnDefault("0")
