@@ -19,7 +19,9 @@ public class BookmarkService {
     @Transactional
     public Bookmark bookmarkRecruitmentPost(final RecruitmentPost recruitmentPost, final User user) {
         // 이미 북마크 했는지 검증
-        checkAlreadyBookmark(recruitmentPost, user);
+        if (isBookmarked(recruitmentPost, user)) {
+            throw new BookmarkException(INVALID_BOOKMARK);
+        }
 
         Bookmark bookmark = Bookmark.builder()
                 .recruitmentPost(recruitmentPost)
@@ -28,12 +30,23 @@ public class BookmarkService {
         return bookmarkRepository.save(bookmark);
     }
 
-    private void checkAlreadyBookmark(final RecruitmentPost recruitmentPost, final User user) {
-        Bookmark bookmark = bookmarkRepository.findByRecruitmentPostAndUser(recruitmentPost,
-                user).orElse(null);
-
-        if (bookmark != null) {
+    @Transactional
+    public void cancelBookmarkRecruitmentPost(final RecruitmentPost recruitmentPost, final User user) {
+        // 북마크한 기록이 없는지 검증
+        if (!isBookmarked(recruitmentPost, user)) {
             throw new BookmarkException(INVALID_BOOKMARK);
         }
+
+        bookmarkRepository.deleteByRecruitmentPostAndUser(recruitmentPost, user);
+    }
+
+    private boolean isBookmarked(final RecruitmentPost recruitmentPost, final User user) {
+        Bookmark foundBookmark = bookmarkRepository.findByRecruitmentPostAndUser(recruitmentPost,
+                user).orElse(null);
+
+        if (foundBookmark == null) {
+            return false;
+        }
+        return true;
     }
 }
