@@ -117,4 +117,16 @@ public class RecruitmentPostServiceTest {
         // then
         Assertions.assertThat(newRecruitmentPost.getTitle()).isEqualTo("수정하려는제목입니다");
     }
+
+    @Test
+    void 북마크수증가_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        Long curBookmarkCnt = recruitmentPost.getBookmarkCount();
+        // when
+        RecruitmentPost newRecruitmentPost = recruitmentPostService.incrementBookmarkCount(recruitmentPost);
+
+        // then
+        Assertions.assertThat(newRecruitmentPost.getBookmarkCount()).isEqualTo(curBookmarkCnt + 1);
+    }
 }

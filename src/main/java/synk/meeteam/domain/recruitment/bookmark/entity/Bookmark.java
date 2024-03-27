@@ -12,21 +12,23 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
 
 @Getter
-@Setter
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(uniqueConstraints = {
         @UniqueConstraint(
                 name = "bookmark_uk",
-                columnNames = {"user_id", "meeteam_id"}
+                columnNames = {"user_id", "recruitment_post_id"}
         )
 })
 public class Bookmark extends BaseTimeEntity {
@@ -40,6 +42,6 @@ public class Bookmark extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "meeteam_id")
-    private Meeteam meeteam;
+    @JoinColumn(name = "recruitment_post_id")
+    private RecruitmentPost recruitmentPost;
 }

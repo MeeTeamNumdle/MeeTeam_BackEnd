@@ -177,4 +177,9 @@ public class RecruitmentPost extends BaseEntity {
         this.applicantCount = applicantCount;
         this.responseCount = responseCount;
     }
+
+    public RecruitmentPost incrementBookmarkCount() {
+        this.bookmarkCount += 1;
+        return this;
+    }
 }

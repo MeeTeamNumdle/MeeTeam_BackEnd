@@ -55,4 +55,17 @@ public class RecruitmentPostEntityTest {
                 .containsExactly("정상제목2", "내용", Scope.ON_CAMPUS, Category.PROJECT);
     }
 
+    @Test
+    void 북마크수증가_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        long curBookmarkCnt = recruitmentPost.getBookmarkCount();
+
+        // when
+        RecruitmentPost newRecruitmentPost = recruitmentPost.incrementBookmarkCount();
+
+        // then
+        Assertions.assertThat(newRecruitmentPost.getBookmarkCount()).isEqualTo(curBookmarkCnt + 1);
+    }
+
 }

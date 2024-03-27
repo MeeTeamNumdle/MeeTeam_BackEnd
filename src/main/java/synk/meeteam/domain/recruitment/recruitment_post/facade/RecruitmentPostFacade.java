@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
@@ -14,6 +15,7 @@ import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.Recruitment
 import synk.meeteam.domain.recruitment.recruitment_role_skill.service.RecruitmentRoleSkillService;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
+import synk.meeteam.domain.user.user.entity.User;
 
 
 @Service
@@ -24,6 +26,7 @@ public class RecruitmentPostFacade {
     private final RecruitmentRoleSkillService recruitmentRoleSkillService;
     private final RecruitmentTagService recruitmentTagService;
     private final RecruitmentApplicantService recruitmentApplicantService;
+    private final BookmarkService bookmarkService;
 
 
     @Transactional
@@ -61,4 +64,11 @@ public class RecruitmentPostFacade {
 
         recruitmentRoleService.addApplicantCount(recruitmentRole);
     }
+
+    @Transactional
+    public void bookmarkRecruitmentPost(RecruitmentPost recruitmentPost, User user) {
+        bookmarkService.bookmarkRecruitmentPost(recruitmentPost, user);
+        recruitmentPostService.incrementBookmarkCount(recruitmentPost);
+    }
+
 }

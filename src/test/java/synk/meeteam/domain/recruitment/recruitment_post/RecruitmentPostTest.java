@@ -249,6 +249,23 @@ public class RecruitmentPostTest {
         assertEquals(body.title(), "수정된 제목입니다.");
     }
 
+    @Test
+    void 구인글북마크_예외발생_이미북마크한경우() {
+        Long postId = 1L;
+        HttpEntity<ApplyRecruitmentRequestDto> requestEntity = new HttpEntity<>(headers);
+
+        restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/bookmark"),
+                requestEntity, ExceptionResponse.class);
+
+        ResponseEntity<ExceptionResponse> twiceResponseEntity = restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/bookmark"),
+                requestEntity, ExceptionResponse.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, twiceResponseEntity.getStatusCode());
+
+    }
+
     ///////// Dto 생성 로직 /////////
 
     private CreateRecruitmentPostRequestDto createRequestDto() {
