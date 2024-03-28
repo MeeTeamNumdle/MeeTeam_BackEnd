@@ -19,8 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.response.QSearchRecruitmentPostsResponseDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SearchRecruitmentPostsResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.QRecruitmentPostVo;
+import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.QUser;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.Category;
@@ -33,7 +33,7 @@ public class RecruitmentPostCustomRepositoryImpl implements RecruitmentPostCusto
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<SearchRecruitmentPostsResponseDto> findBySearchConditionAndKeyword(
+    public Page<RecruitmentPostVo> findBySearchConditionAndKeyword(
             Pageable pageable,
             SearchCondition condition,
             String keyword,
@@ -44,23 +44,24 @@ public class RecruitmentPostCustomRepositoryImpl implements RecruitmentPostCusto
             userId = user.getId();
         }
 
-        List<SearchRecruitmentPostsResponseDto> contents = getPostDtos(pageable, condition, keyword, userId);
+        List<RecruitmentPostVo> contents = getPostVos(pageable, condition, keyword, userId);
         JPAQuery<Long> countQuery = getCount(condition, keyword, userId);
+
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
     }
 
-    private List<SearchRecruitmentPostsResponseDto> getPostDtos(Pageable pageable, SearchCondition condition,
-                                                                String keyword, Long userId) {
+    private List<RecruitmentPostVo> getPostVos(Pageable pageable, SearchCondition condition,
+                                               String keyword, Long userId) {
         QUser writer = new QUser("writer");
         return queryFactory.select(
-                        new QSearchRecruitmentPostsResponseDto(
+                        new QRecruitmentPostVo(
                                 recruitmentPost.id,
                                 recruitmentPost.title,
-                                recruitmentPost.category.stringValue(),
+                                recruitmentPost.category,
                                 writer.nickname,
                                 writer.profileImgFileName,
-                                recruitmentPost.deadline.stringValue(),
-                                recruitmentPost.scope.stringValue(),
+                                recruitmentPost.deadline,
+                                recruitmentPost.scope,
                                 isBookmarkUser(userId)
                         )
                 )
@@ -80,7 +81,6 @@ public class RecruitmentPostCustomRepositoryImpl implements RecruitmentPostCusto
                         tagIdIn(condition.getTagIds()),
                         skillIdIn(condition.getSkillIds()),
                         roleIdIn(condition.getRoleIds()),
-                        skillIdIn(condition.getSkillIds()),
                         titleContain(keyword)
                 )
                 .orderBy(recruitmentPost.createdAt.desc())
@@ -108,7 +108,6 @@ public class RecruitmentPostCustomRepositoryImpl implements RecruitmentPostCusto
                         tagIdIn(condition.getTagIds()),
                         skillIdIn(condition.getSkillIds()),
                         roleIdIn(condition.getRoleIds()),
-                        skillIdIn(condition.getSkillIds()),
                         titleContain(keyword)
                 );
     }
@@ -152,6 +151,6 @@ public class RecruitmentPostCustomRepositoryImpl implements RecruitmentPostCusto
     }
 
     private BooleanExpression isFalse() {
-        return Expressions.asBoolean(true).isFalse();
+        return Expressions.asBoolean(false);
     }
 }

@@ -12,8 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SearchRecruitmentPostsResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
+import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.Scope;
@@ -21,7 +21,7 @@ import synk.meeteam.global.entity.Scope;
 @Sql({"classpath:test.sql"})
 @ActiveProfiles("test")
 @DataJpaTest
-public class SearchRecruitmentPostTest {
+public class RecruitmentPostCustomRepositoryTest {
 
     @Autowired
     RecruitmentPostRepository recruitmentPostRepository;
@@ -40,7 +40,7 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인O검색조건X() {
-        Page<SearchRecruitmentPostsResponseDto> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(),
                 null,
@@ -54,7 +54,7 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인X검색조건X() {
-        Page<SearchRecruitmentPostsResponseDto> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(),
                 null,
@@ -69,7 +69,7 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인O범위검색() {
-        Page<SearchRecruitmentPostsResponseDto> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, Scope.ON_CAMPUS, null, null, null, null),
                 null,
@@ -83,21 +83,21 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인X유형검색() {
-        Page<SearchRecruitmentPostsResponseDto> projectResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> projectResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, Category.PROJECT, null, null, null),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> studyResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> studyResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, Category.STUDY, null, null, null),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> contestResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> contestResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, Category.CONTEST, null, null, null),
                 null,
@@ -111,7 +111,7 @@ public class SearchRecruitmentPostTest {
 
     @Test
     void 검색_성공_로그인O유형검색() {
-        Page<SearchRecruitmentPostsResponseDto> projectResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> projectResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, Category.PROJECT, null, null, null),
                 null,
@@ -119,14 +119,14 @@ public class SearchRecruitmentPostTest {
 
         );
 
-        Page<SearchRecruitmentPostsResponseDto> studyResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> studyResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, Category.STUDY, null, null, null),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> contestResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> contestResult = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, Category.CONTEST, null, null, null),
                 null,
@@ -143,21 +143,21 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인X역할검색() {
-        Page<SearchRecruitmentPostsResponseDto> role1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> role1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, null, List.of(1L)),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> role2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> role2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, null, List.of(2L)),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> role12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> role12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, null, List.of(1L, 2L)),
                 null,
@@ -171,21 +171,21 @@ public class SearchRecruitmentPostTest {
 
     @Test
     void 검색_성공_로그인O역할검색() {
-        Page<SearchRecruitmentPostsResponseDto> role1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> role1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, null, List.of(1L)),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> role2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> role2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, null, List.of(2L)),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> role12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> role12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, null, List.of(1L, 2L)),
                 null,
@@ -202,21 +202,21 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인X스킬검색() {
-        Page<SearchRecruitmentPostsResponseDto> skill1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> skill1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, List.of(1L, 2L), null, null),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> skill2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> skill2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, List.of(3L, 4L), null, null),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> skill12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> skill12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, List.of(1L, 3L), null, null),
                 null,
@@ -230,21 +230,21 @@ public class SearchRecruitmentPostTest {
 
     @Test
     void 검색_성공_로그인O스킬검색() {
-        Page<SearchRecruitmentPostsResponseDto> skill1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> skill1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, List.of(1L, 2L), null, null),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> skill2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> skill2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, List.of(3L, 4L), null, null),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> skill12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> skill12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, List.of(1L, 3L), null, null),
                 null,
@@ -261,21 +261,21 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인X태그검색() {
-        Page<SearchRecruitmentPostsResponseDto> tag1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> tag1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, List.of(1L), null),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> tag2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> tag2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, List.of(3L), null),
                 null,
                 User.builder().build()
         );
 
-        Page<SearchRecruitmentPostsResponseDto> tag12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> tag12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, List.of(1L, 3L), null),
                 null,
@@ -289,21 +289,21 @@ public class SearchRecruitmentPostTest {
 
     @Test
     void 검색_성공_로그인O태그검색() {
-        Page<SearchRecruitmentPostsResponseDto> tag1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> tag1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, List.of(1L), null),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> tag2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> tag2Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, List.of(3L), null),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> tag12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> tag12Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, List.of(1L, 3L), null),
                 null,
@@ -320,14 +320,14 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인X북마크테스트() {
-        Page<SearchRecruitmentPostsResponseDto> role1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> role1Result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(1L, null, null, null, null, List.of(1L)),
                 null,
                 new User(1L)
         );
 
-        Page<SearchRecruitmentPostsResponseDto> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(),
                 null,
@@ -340,7 +340,7 @@ public class SearchRecruitmentPostTest {
 
     @Test
     void 검색_성공_로그인O북마크테스트() {
-        Page<SearchRecruitmentPostsResponseDto> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(),
                 null,
@@ -356,7 +356,7 @@ public class SearchRecruitmentPostTest {
      */
     @Test
     void 검색_성공_로그인X키워드검색() {
-        Page<SearchRecruitmentPostsResponseDto> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(),
                 "프로젝트",
@@ -368,7 +368,7 @@ public class SearchRecruitmentPostTest {
 
     @Test
     void 검색_성공_로그인O키워드검색() {
-        Page<SearchRecruitmentPostsResponseDto> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
+        Page<RecruitmentPostVo> result = recruitmentPostRepository.findBySearchConditionAndKeyword(
                 PageRequest.of(0, 3),
                 new SearchCondition(),
                 "프로젝트",
@@ -378,13 +378,13 @@ public class SearchRecruitmentPostTest {
         testSearch(result, 2, 1, "프로젝트입니다1", "프로젝트입니다2");
     }
 
-    private void testSearch(Page<SearchRecruitmentPostsResponseDto> result, int totalElements, int totalPages) {
+    private void testSearch(Page<RecruitmentPostVo> result, int totalElements, int totalPages) {
         assertThat(result.getTotalElements()).isEqualTo(totalElements);
         assertThat(result.getTotalPages()).isEqualTo(totalPages);
         assertThat(result.getContent().size()).isEqualTo(0);
     }
 
-    private void testSearch(Page<SearchRecruitmentPostsResponseDto> result, int totalElements, int totalPages,
+    private void testSearch(Page<RecruitmentPostVo> result, int totalElements, int totalPages,
                             String... titles) {
         assertThat(result.getTotalElements()).isEqualTo(totalElements);
         assertThat(result.getTotalPages()).isEqualTo(totalPages);
