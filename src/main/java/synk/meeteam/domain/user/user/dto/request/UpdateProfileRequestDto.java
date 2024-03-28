@@ -13,7 +13,7 @@ public record UpdateProfileRequestDto(
 
         @Schema(description = "이름", example = "부겸")
         @NotBlank
-        String name,
+        String userName,
 
         @Schema(description = "닉네임", example = "goder")
         @Pattern(regexp = "^[a-zA-Z0-9가-힣._]*$", message = "닉네임은 영어, 숫자, 한글, '_', '.' 문자만 가능합니다.")
@@ -26,23 +26,23 @@ public record UpdateProfileRequestDto(
 
         @Schema(description = "전화정보", example = "010-1234-5678")
         @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$", message = "핸드폰 번호의 약식과 맞지 않습니다. xxx-xxxx-xxxx")
-        String phoneNumber,
+        String phone,
 
         @Schema(description = "전화번호 공개여부")
-        boolean isPublicPhone,
+        boolean isPhonePublic,
 
         @Schema(description = "학교 이메일이 주 이메일인지", example = "true")
-        boolean isSchoolMain,
+        boolean isUniversityMain,
 
         @Schema(description = "보조 이메일")
         @Email
         String subEmail,
 
         @Schema(description = "보조이메일 공개 여부")
-        boolean isPublicSubEmail,
+        boolean isSubEmailPublic,
 
         @Schema(description = "학교이메일 공개여부")
-        boolean isPublicUniversityEmail,
+        boolean isUniversityEmailPublic,
 
         @Schema(description = "한줄소개", example = "고통을 즐기는 개발자")
         String introduction,
@@ -51,7 +51,7 @@ public record UpdateProfileRequestDto(
         String aboutMe,
 
         @Schema(description = "관심있는 역할명", example = "서버 개발자")
-        Long interest_id,
+        Long interestId,
 
         @Schema(description = "학점", example = "4.0")
         Double gpa,
