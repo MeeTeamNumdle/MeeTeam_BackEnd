@@ -48,7 +48,7 @@ public interface RecruitmentPostApi {
     @Operation(summary = "특정 구인글 조회 API", tags = {"recruitment"})
     @SecurityRequirements
     ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @PathVariable("id") Long postId);
+            @PathVariable("id") Long postId, @AuthUser User user);
 
 
     @ApiResponses(

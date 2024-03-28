@@ -40,7 +40,7 @@ public class BookmarkService {
         bookmarkRepository.deleteByRecruitmentPostAndUser(recruitmentPost, user);
     }
 
-    private boolean isBookmarked(final RecruitmentPost recruitmentPost, final User user) {
+    public boolean isBookmarked(final RecruitmentPost recruitmentPost, final User user) {
         Bookmark foundBookmark = bookmarkRepository.findByRecruitmentPostAndUser(recruitmentPost,
                 user).orElse(null);
 
