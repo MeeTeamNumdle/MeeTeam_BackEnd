@@ -76,7 +76,7 @@ public class RecruitmentPostService {
     public PaginationSearchPostResponseDto searchWithPageRecruitmentPost(int size, int page, SearchCondition condition,
                                                                          String keyword, User user) {
         Page<RecruitmentPostVo> postVos = recruitmentPostRepository
-                .findBySearchConditionAndKeyword(PageRequest.of(page, size), condition, keyword, user);
+                .findBySearchConditionAndKeyword(PageRequest.of(page - 1, size), condition, keyword, user);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
         List<SearchRecruitmentPostDto> contents = postVos.stream()
                 .map(searchRecruitmentPostMapper::toSearchRecruitmentPostDto).toList();
