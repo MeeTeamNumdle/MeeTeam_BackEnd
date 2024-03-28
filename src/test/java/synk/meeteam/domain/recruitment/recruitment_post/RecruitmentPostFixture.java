@@ -1,8 +1,12 @@
 package synk.meeteam.domain.recruitment.recruitment_post;
 
 import java.time.LocalDate;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.entity.Scope;
@@ -42,4 +46,23 @@ public class RecruitmentPostFixture {
                 .bookmarkCount(bookmarkCount)
                 .build();
     }
+
+    public static Page<RecruitmentPostVo> createPagePostVo() {
+        return new PageImpl<>(List.of(
+                createTitlePostVo("제목1"),
+                createTitlePostVo("제목2"),
+                createTitlePostVo("제목3")
+        ));
+    }
+
+    public static RecruitmentPostVo createTitlePostVo(String title) {
+        return RecruitmentPostVo.builder()
+                .title(title)
+                .writerNickname("작성자")
+                .scope(Scope.ON_CAMPUS)
+                .category(Category.STUDY)
+                .isBookmarked(false)
+                .build();
+    }
+
 }
