@@ -33,6 +33,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -239,6 +240,12 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                                                 @AuthUser User user) {
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/{id}/comment")
+    @Override
+    public ResponseEntity<Void> deleteComment(Long postId, DeleteCommentRequestDto requestDto, User user) {
+        return ResponseEntity.ok().build();
     }
 
 
