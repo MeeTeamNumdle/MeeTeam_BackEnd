@@ -22,6 +22,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .leftJoin(user.interestRole).fetchJoin()
                 .leftJoin(user.university).fetchJoin()
                 .leftJoin(user.department).fetchJoin()
+                .where(user.id.eq(id))
                 .fetchOne());
         findUser.orElseThrow(() -> new UserException(NOT_FOUND_USER));
         return findUser.get();

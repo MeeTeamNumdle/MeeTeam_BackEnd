@@ -25,11 +25,13 @@ import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.service.SkillService;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
+import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
@@ -69,6 +71,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentTagService recruitmentTagService;
     private final RecruitmentCommentService recruitmentCommentService;
+    private final BookmarkService bookmarkService;
     private final RoleService roleService;
     private final FieldService fieldService;
     private final SkillService skillService;
@@ -100,10 +103,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @GetMapping("/{id}")
     @Override
     public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @PathVariable("id") Long postId) {
+            @PathVariable("id") Long postId, @AuthUser User user) {
         // 단일 트랜잭션으로 하지 않아도 될듯
         // 트랜잭션으로 하지 않아도 될듯?
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        boolean isBookmarked = false;
+        if (user != null) {
+            isBookmarked = bookmarkService.isBookmarked(recruitmentPost, user);
+        }
 
         User writer = userService.findById(recruitmentPost.getCreatedBy());
         String writerImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, writer.getProfileImgFileName());
@@ -116,7 +123,8 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 recruitmentPost);
 
         return ResponseEntity.ok()
-                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, recruitmentRoles, writer, writerImgUrl,
+                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isBookmarked, recruitmentRoles, writer,
+                        writerImgUrl,
                         recruitmentTagVO,
                         recruitmentCommentDtos));
     }
@@ -222,6 +230,15 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                                                  @Valid @RequestBody
                                                  SetOpenKakaoLinkRequestDto requestDto) {
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/comment")
+    @Override
+    public ResponseEntity<Void> registerComment(@PathVariable("id") Long postId,
+                                                @Valid @RequestBody CreateCommentRequestDto requestDto,
+                                                @AuthUser User user) {
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 

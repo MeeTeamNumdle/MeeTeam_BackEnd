@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record GetReplyResponseDto(
         @Schema(description = "대댓글 id", example = "1")
         Long id,
+        @Schema(description = "암호화된 댓글 작성자 id", example = "40aVE421DSwR63xfKf6vxA==")
+        String userId,
         @Schema(description = "대댓글 작성자 닉네임", example = "song123")
         String nickname,
         @Schema(description = "대댓글 작성자 프로필 사진", example = "url형태")
@@ -15,6 +17,8 @@ public record GetReplyResponseDto(
         @Schema(description = "작성날짜", example = "2023-12-25")
         String createAt,
         @Schema(description = "구인글 작성자 여부", example = "true")
-        boolean isWriter
+        boolean isWriter,
+        @Schema(description = "댓글 그룹 순서", example = "3")
+        long groupOrder
 ) {
 }

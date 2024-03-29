@@ -41,15 +41,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void changeUserInfo(User user, UpdateInfoCommand command) {
 
-        Role interestRole = roleRepository.findByIdOrElseThrowException(command.interest_id());
+        Role interestRole = roleRepository.findByIdOrElseThrowException(command.interestId());
         user.updateProfile(
                 command.name(),
                 command.isPublicName(),
                 command.pictureFileName(),
                 command.subEmail(),
                 command.isPublicSubEmail(),
-                command.isPublicSchoolEmail(),
-                command.isSchoolMain(),
+                command.isPublicUniversityEmail(),
+                command.isUniversityMainEmail(),
                 command.phoneNumber(),
                 command.isPublicPhone(),
                 command.oneLineIntroduction(),
