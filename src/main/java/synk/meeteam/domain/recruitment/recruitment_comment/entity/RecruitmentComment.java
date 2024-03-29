@@ -34,7 +34,7 @@ public class RecruitmentComment extends BaseEntity {
 
     //내용
     @NotNull
-    @Size(max = 100)
+    @Size(min = 1, max = 100)
     @Column(length = 100)
     private String content;
 
