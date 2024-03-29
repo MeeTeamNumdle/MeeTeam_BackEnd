@@ -242,7 +242,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PatchMapping("/{id}/comment")
+    @DeleteMapping("/{id}/comment")
     @Override
     public ResponseEntity<Void> deleteComment(Long postId, DeleteCommentRequestDto requestDto, User user) {
         return ResponseEntity.ok().build();
