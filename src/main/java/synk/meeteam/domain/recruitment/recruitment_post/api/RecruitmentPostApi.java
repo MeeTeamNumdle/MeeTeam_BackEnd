@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -126,13 +127,16 @@ public interface RecruitmentPostApi {
     )
     @Operation(summary = "구인글 목록 검색 API", tags = {"recruitment"})
     ResponseEntity<PaginationSearchPostResponseDto> searchRecruitmentPost(
-            @RequestParam Long fieldId,
-            @RequestParam Long scopeIndex,
-            @RequestParam Long categoryIndex,
-            @RequestParam List<Long> skills,
-            @RequestParam List<Long> roles,
-            @RequestParam List<Long> tags,
-            @RequestParam String keyword
+            @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
+            @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
+            @RequestParam(value = "field", required = false) Long fieldId,
+            @RequestParam(value = "scope", required = false) Integer scopeOrdinal,
+            @RequestParam(value = "category", required = false) Integer categoryOrdinal,
+            @RequestParam(value = "skill", required = false) List<Long> skillIds,
+            @RequestParam(value = "role", required = false) List<Long> roleIds,
+            @RequestParam(value = "tag", required = false) List<Long> tagIds,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @AuthUser User user
     );
 
 
@@ -144,7 +148,7 @@ public interface RecruitmentPostApi {
     )
     @Operation(summary = "구인글 오픈카톡 설정 API", tags = {"applicant"})
     ResponseEntity<Void> setOpenKaKaoLink(@AuthUser User user, @PathVariable("id") Long postId,
-                                          SetOpenKakaoLinkRequestDto requestDto);
+                                          @Valid @RequestBody SetOpenKakaoLinkRequestDto requestDto);
 
     @ApiResponses(
             value = {

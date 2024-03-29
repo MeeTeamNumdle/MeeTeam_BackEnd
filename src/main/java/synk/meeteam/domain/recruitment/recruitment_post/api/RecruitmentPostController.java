@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_post.api;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
@@ -37,7 +39,6 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInf
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.PaginationSearchPostResponseDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SearchRecruitmentPostsResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.facade.RecruitmentPostFacade;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
@@ -50,7 +51,8 @@ import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagSer
 import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.UserService;
-import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.entity.Category;
+import synk.meeteam.global.entity.Scope;
 import synk.meeteam.infra.s3.S3FileName;
 import synk.meeteam.infra.s3.service.S3Service;
 import synk.meeteam.security.AuthUser;
@@ -205,30 +207,21 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @GetMapping("/search")
     @Override
     public ResponseEntity<PaginationSearchPostResponseDto> searchRecruitmentPost(
+            @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
+            @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
             @RequestParam(value = "field", required = false) Long fieldId,
-            @RequestParam(value = "scope", required = false) Long scopeIndex,
-            @RequestParam(value = "category", required = false) Long categoryIndex,
-            @RequestParam(value = "skill", required = false) List<Long> skills,
-            @RequestParam(value = "role", required = false) List<Long> roles,
-            @RequestParam(value = "tag", required = false) List<Long> tags,
-            @RequestParam(value = "keyword", required = false) String keyword) {
-        return ResponseEntity.ok(
-                new PaginationSearchPostResponseDto(
-                        List.of(
-                                new SearchRecruitmentPostsResponseDto(
-                                        1L,
-                                        "구인합니다",
-                                        "프로젝트",
-                                        "goder",
-                                        "https://image.png",
-                                        "2024-12-15",
-                                        "",
-                                        true
-                                )
-                        ),
-                        new PageInfo(1L, 24L, 10L, 1L)
-                )
-        );
+            @RequestParam(value = "scope", required = false) Integer scopeOrdinal,
+            @RequestParam(value = "category", required = false) Integer categoryOrdinal,
+            @RequestParam(value = "skill", required = false) List<Long> skillIds,
+            @RequestParam(value = "role", required = false) List<Long> roleIds,
+            @RequestParam(value = "tag", required = false) List<Long> tagIds,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @AuthUser User user) {
+        SearchCondition condition = getCondition(fieldId, scopeOrdinal, categoryOrdinal, skillIds, roleIds, tagIds);
+        PaginationSearchPostResponseDto result = recruitmentPostService.searchWithPageRecruitmentPost(
+                size, page, condition, keyword, user);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @Override
@@ -283,5 +276,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                     recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseProfessor(), TagType.PROFESSOR)));
         }
         return recruitmentTags;
+    }
+
+    private SearchCondition getCondition(Long fieldId, Integer scopeOrdinal, Integer categoryOrdinal,
+                                         List<Long> skillIds,
+                                         List<Long> roleIds,
+                                         List<Long> tagIds) {
+        Scope scope = scopeOrdinal == null ? null : Scope.values()[scopeOrdinal - 1];
+        Category category = categoryOrdinal == null ? null : Category.values()[categoryOrdinal - 1];
+        return new SearchCondition(fieldId, scope, category, skillIds, tagIds, roleIds);
     }
 }
