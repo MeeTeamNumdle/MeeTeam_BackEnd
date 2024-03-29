@@ -12,7 +12,6 @@ import synk.meeteam.global.entity.exception.EnumException;
 public enum Category {
     PROJECT("프로젝트"),
     STUDY("스터디"),
-    CLUB("동아리"),
     CONTEST("공모전"),
     ;
 

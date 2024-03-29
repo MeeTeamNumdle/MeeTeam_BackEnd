@@ -4,7 +4,7 @@ import java.util.List;
 import synk.meeteam.global.dto.PageInfo;
 
 public record PaginationSearchPostResponseDto(
-        List<SearchRecruitmentPostsResponseDto> posts,
+        List<SearchRecruitmentPostDto> posts,
         PageInfo pageInfo
 ) {
 }
