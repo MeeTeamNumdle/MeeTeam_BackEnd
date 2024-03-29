@@ -2,6 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_COMMENT;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE_EXCEED_40;
 import static synk.meeteam.domain.recruitment.recruitment_role.exception.RecruitmentRoleExceptionType.INVALID_RECRUITMENT_ROLE_ID;
 import static synk.meeteam.global.common.exception.GlobalExceptionType.INVALID_INPUT_VALUE;
@@ -16,6 +17,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.DatabaseCleanUp;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CourseTagDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.RecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
@@ -46,6 +49,7 @@ import synk.meeteam.global.common.exception.ExceptionResponse;
 public class RecruitmentPostTest {
 
     private static final String RECRUITMENT_URL = "/recruitment/postings";
+    private static final String COMMENT_EXCEED_100 = "이 내용은 100자가 넘는 내용입니다.이 내용은 100자가 넘는 내용입니다.이 내용은 100자가 넘는 내용입니다.이 내용은 100자가 넘는 내용입니다.이 내용은 100자가 넘는 내용";
 
     @Value("${jwt.access.header}")
     private String accessHeader;
@@ -276,6 +280,58 @@ public class RecruitmentPostTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
+    }
+
+    @Test
+    void 댓글등록_예외발생_길이100자넘는경우() {
+        // given
+        CreateCommentRequestDto requestDto = new CreateCommentRequestDto(COMMENT_EXCEED_100, true, 2, 2);
+        HttpEntity<CreateCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        ResponseEntity<ExceptionResponse> twiceResponseEntity = restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/comment"),
+                requestEntity, ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, twiceResponseEntity.getStatusCode());
+        assertEquals(INVALID_INPUT_VALUE.name(), twiceResponseEntity.getBody().getName());
+    }
+
+    // 해당 테스트는 data.sql에 의존하고 있다.
+    @ParameterizedTest
+    @CsvSource({"2,1", "3,2", "3,0", "4,1"})
+    void 댓글등록_예외발생_groupNumber나groupOrder가잘못된경우(long groupNumber, long groupOrder) {
+        // given
+        CreateCommentRequestDto requestDto = new CreateCommentRequestDto("저 하고 싶어용", true, groupNumber, groupOrder);
+        HttpEntity<CreateCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        ResponseEntity<ExceptionResponse> twiceResponseEntity = restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/comment"),
+                requestEntity, ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, twiceResponseEntity.getStatusCode());
+        assertEquals(INVALID_COMMENT.name(), twiceResponseEntity.getBody().getName());
+    }
+
+    // 해당 테스트는 data.sql에 의존하고 있다.
+    @ParameterizedTest
+    @CsvSource({"2,1", "2,3", "3,1", "3,2", "1,5", "1,3"})
+    void 대댓글등록_예외발생_groupNumber나groupOrder가잘못된경우(long groupNumber, long groupOrder) {
+        // given
+        CreateCommentRequestDto requestDto = new CreateCommentRequestDto("저 하고 싶어용", false, groupNumber, groupOrder);
+        HttpEntity<CreateCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        ResponseEntity<ExceptionResponse> twiceResponseEntity = restTemplate.postForEntity(
+                URI.create(RECRUITMENT_URL + "/1/comment"),
+                requestEntity, ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, twiceResponseEntity.getStatusCode());
+        assertEquals(INVALID_COMMENT.name(), twiceResponseEntity.getBody().getName());
     }
 
     ///////// Dto 생성 로직 /////////
