@@ -15,13 +15,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.global.entity.BaseEntity;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RecruitmentComment extends BaseEntity {
@@ -36,7 +34,7 @@ public class RecruitmentComment extends BaseEntity {
 
     //내용
     @NotNull
-    @Size(max = 100)
+    @Size(min = 1, max = 100)
     @Column(length = 100)
     private String content;
 
@@ -62,5 +60,10 @@ public class RecruitmentComment extends BaseEntity {
         this.groupNumber = groupNumber;
         this.groupOrder = groupOrder;
         this.isDeleted = isDeleted;
+    }
+
+    public void updateGroupNumberAndGroupOrder(long groupNumber, long groupOrder) {
+        this.groupNumber = groupNumber;
+        this.groupOrder = groupOrder;
     }
 }
