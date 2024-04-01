@@ -1,9 +1,14 @@
 package synk.meeteam.domain.recruitment.recruitment_comment.service;
 
+import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_COMMENT;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.recruitment.recruitment_comment.entity.RecruitmentComment;
+import synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentException;
 import synk.meeteam.domain.recruitment.recruitment_comment.repository.RecruitmentCommentRepository;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.vo.RecruitmentCommentVO;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
@@ -50,5 +55,58 @@ public class RecruitmentCommentService {
         }
 
         return groupedComments;
+    }
+
+    @Transactional
+    public RecruitmentComment registerRecruitmentComment(RecruitmentComment recruitmentComment) {
+        validateComment(recruitmentComment);
+
+        long groupNumber = recruitmentComment.getGroupNumber();
+        if (groupNumber == 0) {  // 댓글인 경우
+            groupNumber = getNewGroupNumber(recruitmentComment.getRecruitmentPost());
+        }
+
+        long groupOrder = getNewGroupOrder(recruitmentComment.getRecruitmentPost(), groupNumber);
+
+        recruitmentComment.updateGroupNumberAndGroupOrder(groupNumber, groupOrder);
+
+        return recruitmentCommentRepository.save(recruitmentComment);
+    }
+
+    private long getNewGroupNumber(RecruitmentPost recruitmentPost) {
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostOrderByGroupNumberDesc(
+                recruitmentPost).orElse(null);
+
+        if (recruitmentComment == null) {
+            return 1;
+        }
+
+        return recruitmentComment.getGroupNumber() + 1;
+    }
+
+    private long getNewGroupOrder(RecruitmentPost recruitmentPost, long groupNumber) {
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(
+                recruitmentPost, groupNumber).orElse(null);
+
+        if (recruitmentComment == null) {
+            return 1;
+        }
+
+        return recruitmentComment.getGroupOrder() + 1;
+    }
+
+    private void validateComment(RecruitmentComment recruitmentComment) {
+        long validGroupNumber = 0;
+
+        if (!recruitmentComment.isParent()) {
+            // 대댓글인 경우
+            RecruitmentComment foundRecruitmentComment = recruitmentCommentRepository.findLatestGroupOrderOrElseThrow(
+                    recruitmentComment.getRecruitmentPost(), recruitmentComment.getGroupNumber());
+            validGroupNumber = foundRecruitmentComment.getGroupNumber();
+        }
+
+        if (validGroupNumber != recruitmentComment.getGroupNumber()) {
+            throw new RecruitmentCommentException(INVALID_COMMENT);
+        }
     }
 }

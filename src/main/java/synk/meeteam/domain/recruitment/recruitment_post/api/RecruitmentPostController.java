@@ -27,6 +27,7 @@ import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
+import synk.meeteam.domain.recruitment.recruitment_comment.entity.RecruitmentComment;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
@@ -238,7 +239,11 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     public ResponseEntity<Void> registerComment(@PathVariable("id") Long postId,
                                                 @Valid @RequestBody CreateCommentRequestDto requestDto,
                                                 @AuthUser User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        RecruitmentComment recruitmentComment = recruitmentPostMapper.toRecruitmentCommentEntity(recruitmentPost,
+                requestDto);
 
+        recruitmentCommentService.registerRecruitmentComment(recruitmentComment);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
