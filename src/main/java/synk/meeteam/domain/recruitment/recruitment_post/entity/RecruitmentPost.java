@@ -24,6 +24,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import synk.meeteam.domain.common.course.entity.Course;
+import synk.meeteam.domain.common.course.entity.Professor;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.meeteam.meeteam.entity.Meeteam;
 import synk.meeteam.domain.recruitment.bookmark.exception.BookmarkException;
@@ -109,6 +111,15 @@ public class RecruitmentPost extends BaseEntity {
     // 응답 횟수
     private long responseCount = 0L;
 
+    private boolean isCourse;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "professor_id")
+    private Professor professor;
 
     @Builder
     public RecruitmentPost(String title, String content, Scope scope, Category category, Field field,
