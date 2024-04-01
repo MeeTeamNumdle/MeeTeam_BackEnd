@@ -37,7 +37,7 @@ public interface RecruitmentPostApi {
     )
     @Operation(summary = "구인글 생성 API", tags = {"recruitment"})
     ResponseEntity<CreateRecruitmentPostResponseDto> createRecruitmentPost(
-            @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto);
+            @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto, @AuthUser User user);
 
     @ApiResponses(
             value = {
