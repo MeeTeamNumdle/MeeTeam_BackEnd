@@ -285,7 +285,7 @@ public class RecruitmentPostTest {
     @Test
     void 댓글등록_예외발생_길이100자넘는경우() {
         // given
-        CreateCommentRequestDto requestDto = new CreateCommentRequestDto(COMMENT_EXCEED_100, true, 2, 2);
+        CreateCommentRequestDto requestDto = new CreateCommentRequestDto(COMMENT_EXCEED_100, true, 2);
         HttpEntity<CreateCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         // when
@@ -301,9 +301,9 @@ public class RecruitmentPostTest {
     // 해당 테스트는 data.sql에 의존하고 있다.
     @ParameterizedTest
     @CsvSource({"2,1", "3,2", "3,0", "4,1"})
-    void 댓글등록_예외발생_groupNumber나groupOrder가잘못된경우(long groupNumber, long groupOrder) {
+    void 댓글등록_예외발생_groupNumber가잘못된경우(long groupNumber, long groupOrder) {
         // given
-        CreateCommentRequestDto requestDto = new CreateCommentRequestDto("저 하고 싶어용", true, groupNumber, groupOrder);
+        CreateCommentRequestDto requestDto = new CreateCommentRequestDto("저 하고 싶어용", true, groupNumber);
         HttpEntity<CreateCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         // when
@@ -318,10 +318,10 @@ public class RecruitmentPostTest {
 
     // 해당 테스트는 data.sql에 의존하고 있다.
     @ParameterizedTest
-    @CsvSource({"2,1", "2,3", "3,1", "3,2", "1,5", "1,3"})
-    void 대댓글등록_예외발생_groupNumber나groupOrder가잘못된경우(long groupNumber, long groupOrder) {
+    @CsvSource({"0", "3"})
+    void 대댓글등록_예외발생_groupNumber가잘못된경우(long groupNumber) {
         // given
-        CreateCommentRequestDto requestDto = new CreateCommentRequestDto("저 하고 싶어용", false, groupNumber, groupOrder);
+        CreateCommentRequestDto requestDto = new CreateCommentRequestDto("저 하고 싶어용", false, groupNumber);
         HttpEntity<CreateCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
         // when

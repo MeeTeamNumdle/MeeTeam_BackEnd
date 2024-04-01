@@ -61,33 +61,51 @@ public class RecruitmentCommentService {
     public RecruitmentComment registerRecruitmentComment(RecruitmentComment recruitmentComment) {
         validateComment(recruitmentComment);
 
+        long groupNumber = recruitmentComment.getGroupNumber();
+        if (groupNumber == 0) {  // 댓글인 경우
+            groupNumber = getNewGroupNumber(recruitmentComment.getRecruitmentPost());
+        }
+
+        long groupOrder = getNewGroupOrder(recruitmentComment.getRecruitmentPost(), groupNumber);
+
+        recruitmentComment.updateGroupNumberAndGroupOrder(groupNumber, groupOrder);
+
         return recruitmentCommentRepository.save(recruitmentComment);
     }
 
-    private void validateComment(RecruitmentComment recruitmentComment) {
-        long nextGroupNumber = 1;
-        long nextGroupOrder = 1;
+    private long getNewGroupNumber(RecruitmentPost recruitmentPost) {
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostOrderByGroupNumberDesc(
+                recruitmentPost).orElse(null);
 
-        if (recruitmentComment.isParent()) {  // 페치 조인으로 변경하는게 좋을듯?
-            // 댓글인 경우
-            // 현재 가장 최신 그룹 번호를 찾아서, 그 다음 번호로 할당 + 그룹오더 1로 할당
-            RecruitmentComment foundRecruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostOrderByGroupNumberDesc(
-                    recruitmentComment.getRecruitmentPost()).orElse(null);
-            if (foundRecruitmentComment != null) {
-                nextGroupNumber = foundRecruitmentComment.getGroupNumber() + 1;
-            }
-
-        } else if (!recruitmentComment.isParent()) {
-            // 대댓글인 경우
-            // 해당 그룹 번호가 있는지 찾아서, 그 그룹 오더 가장 최신 번호 찾아서, 그 다음 번호로 할당
-            RecruitmentComment foundRecruitmentComment = recruitmentCommentRepository.findLatestGroupOrderOrElseThrow(
-                    recruitmentComment.getRecruitmentPost(), recruitmentComment.getGroupNumber());
-
-            nextGroupOrder = foundRecruitmentComment.getGroupOrder() + 1;
+        if (recruitmentComment == null) {
+            return 1;
         }
 
-        if (nextGroupNumber != recruitmentComment.getGroupNumber()
-                || nextGroupOrder != recruitmentComment.getGroupOrder()) {
+        return recruitmentComment.getGroupNumber() + 1;
+    }
+
+    private long getNewGroupOrder(RecruitmentPost recruitmentPost, long groupNumber) {
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(
+                recruitmentPost, groupNumber).orElse(null);
+
+        if (recruitmentComment == null) {
+            return 1;
+        }
+
+        return recruitmentComment.getGroupOrder() + 1;
+    }
+
+    private void validateComment(RecruitmentComment recruitmentComment) {
+        long validGroupNumber = 0;
+
+        if (!recruitmentComment.isParent()) {
+            // 대댓글인 경우
+            RecruitmentComment foundRecruitmentComment = recruitmentCommentRepository.findLatestGroupOrderOrElseThrow(
+                    recruitmentComment.getRecruitmentPost(), recruitmentComment.getGroupNumber());
+            validGroupNumber = foundRecruitmentComment.getGroupNumber();
+        }
+
+        if (validGroupNumber != recruitmentComment.getGroupNumber()) {
             throw new RecruitmentCommentException(INVALID_COMMENT);
         }
     }

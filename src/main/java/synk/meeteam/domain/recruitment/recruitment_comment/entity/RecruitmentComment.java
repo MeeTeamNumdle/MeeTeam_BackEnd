@@ -61,4 +61,9 @@ public class RecruitmentComment extends BaseEntity {
         this.groupOrder = groupOrder;
         this.isDeleted = isDeleted;
     }
+
+    public void updateGroupNumberAndGroupOrder(long groupNumber, long groupOrder) {
+        this.groupNumber = groupNumber;
+        this.groupOrder = groupOrder;
+    }
 }

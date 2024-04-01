@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_comment;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_COMMENT;
 
@@ -22,6 +23,7 @@ import synk.meeteam.domain.recruitment.recruitment_comment.service.vo.Recruitmen
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.infra.s3.service.S3Service;
 
 @ExtendWith(MockitoExtension.class)
 public class RecruitmentCommentServiceTest {
@@ -31,6 +33,9 @@ public class RecruitmentCommentServiceTest {
 
     @Mock
     private RecruitmentCommentRepository recruitmentCommentRepository;
+
+    @Mock
+    private S3Service s3Service;
 
     @Test
     void 댓글조회_댓글그룹반환() {
@@ -42,6 +47,8 @@ public class RecruitmentCommentServiceTest {
                 recruitmentPost);
         doReturn(recruitmentComments).when(recruitmentCommentRepository)
                 .findAllByRecruitmentId(recruitmentPost.getId());
+
+        doReturn("임시 url").when(s3Service).createPreSignedGetUrl(any(), any());
 
         // when
         List<GetCommentResponseDto> getCommentResponseDtos = recruitmentCommentService.getRecruitmentComments(
@@ -69,7 +76,7 @@ public class RecruitmentCommentServiceTest {
     void 댓글등록_성공_최초댓글경우() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("제목입니당");
-        long groupNumber = 1L;
+        long groupNumber = 0L;
         long groupOrder = 1L;
 
         RecruitmentComment comment = RecruitmentComment.builder()
@@ -90,7 +97,7 @@ public class RecruitmentCommentServiceTest {
         // then
         Assertions.assertThat(savedRecruitmentComment)
                 .extracting("content", "isParent", "groupNumber", "groupOrder")
-                .containsExactly("저 하고 싶어요", true, groupNumber, groupOrder);
+                .containsExactly("저 하고 싶어요", true, groupNumber + 1, groupOrder);
     }
 
     @Test
@@ -100,7 +107,7 @@ public class RecruitmentCommentServiceTest {
         long prevGroupNumber = 1L;
         long prevGroupOrder = 1L;
 
-        long groupNumber = 2L;
+        long groupNumber = 0L;
         long groupOrder = 1L;
 
         RecruitmentComment prevComment = RecruitmentComment.builder()
@@ -129,7 +136,7 @@ public class RecruitmentCommentServiceTest {
         // then
         Assertions.assertThat(savedRecruitmentComment)
                 .extracting("content", "isParent", "groupNumber", "groupOrder")
-                .containsExactly("저 하고 싶어요", true, groupNumber, groupOrder);
+                .containsExactly("저 하고 싶어요", true, prevGroupNumber + 1, groupOrder);
     }
 
     @Test
@@ -161,6 +168,8 @@ public class RecruitmentCommentServiceTest {
         doReturn(childComment).when(recruitmentCommentRepository).save(any());
         doReturn(parentComment).when(recruitmentCommentRepository)
                 .findLatestGroupOrderOrElseThrow(recruitmentPost, groupNumber);
+        doReturn(Optional.of(parentComment)).when(recruitmentCommentRepository)
+                .findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(any(), anyLong());
 
         // when
         RecruitmentComment savedRecruitmentComment = recruitmentCommentService.registerRecruitmentComment(childComment);
@@ -172,8 +181,8 @@ public class RecruitmentCommentServiceTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"0,1", "1,2", "1,0", "2,1", "2,2"})
-    void 댓글등록_예외발생_댓글의groupNumber나groupOrder가잘못된경우(long groupNumber, long groupOrder) {
+    @CsvSource(value = {"1", "2"})
+    void 댓글등록_예외발생_groupNumber가잘못된경우(long groupNumber) {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("제목입니당");
 
@@ -182,11 +191,7 @@ public class RecruitmentCommentServiceTest {
                 .isParent(true)
                 .recruitmentPost(recruitmentPost)
                 .groupNumber(groupNumber)
-                .groupOrder(groupOrder)
                 .build();
-
-        doReturn(Optional.ofNullable(null)).when(recruitmentCommentRepository)
-                .findFirstByRecruitmentPostOrderByGroupNumberDesc(recruitmentPost);
 
         // when, then
         Assertions.assertThatThrownBy(() -> recruitmentCommentService.registerRecruitmentComment(comment))
@@ -196,8 +201,8 @@ public class RecruitmentCommentServiceTest {
 
 
     @ParameterizedTest
-    @CsvSource(value = {"2,1", "2,4", "2,0"})
-    void 대댓글등록_예외발생_대댓글의groupNumber나groupOrder가잘못된경우(long groupNumber, long groupOrder) {
+    @CsvSource(value = {"1", "3"})
+    void 대댓글등록_예외발생_대댓글의groupNumber가잘못된경우(long groupNumber) {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("제목입니당");
         long parentGroupNumber = 2L;
@@ -216,7 +221,6 @@ public class RecruitmentCommentServiceTest {
                 .isParent(false)
                 .recruitmentPost(recruitmentPost)
                 .groupNumber(groupNumber)
-                .groupOrder(groupOrder)
                 .build();
 
         doReturn(parentComment).when(recruitmentCommentRepository)
