@@ -250,7 +250,13 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
     @DeleteMapping("/{id}/comment")
     @Override
-    public ResponseEntity<Void> deleteComment(Long postId, DeleteCommentRequestDto requestDto, User user) {
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long postId,
+                                              @Valid @RequestBody DeleteCommentRequestDto requestDto,
+                                              @AuthUser User user) {
+
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        recruitmentCommentService.deleteComment(requestDto.commentId(), user.getId(), recruitmentPost);
+
         return ResponseEntity.ok().build();
     }
 
