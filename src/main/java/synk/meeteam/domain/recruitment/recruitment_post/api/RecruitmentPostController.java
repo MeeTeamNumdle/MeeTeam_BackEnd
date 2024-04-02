@@ -91,7 +91,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         Field field = fieldService.findById(DEVELOP_ID);
 
-        Course course = getCourses(requestDto.courseTag().courseTagName(), user.getUniversity());
+        Course course = getCourse(requestDto.courseTag().courseTagName(), user.getUniversity());
         Professor professor = getProfessor(requestDto.courseTag().courseProfessor(), user.getUniversity());
 
         RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field, course,
@@ -180,7 +180,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         Field field = fieldService.findById(DEVELOP_ID);
 
-        Course course = getCourses(requestDto.courseTag().courseTagName(), user.getUniversity());
+        Course course = getCourse(requestDto.courseTag().courseTagName(), user.getUniversity());
         Professor professor = getProfessor(requestDto.courseTag().courseProfessor(), user.getUniversity());
 
         RecruitmentPost srcRecruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field, course,
@@ -292,7 +292,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return recruitmentTags;
     }
 
-    private Course getCourses(String courseName, University university) {
+    private Course getCourse(String courseName, University university) {
         return Course.builder()
                 .name(courseName)
                 .university(university)
