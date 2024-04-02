@@ -15,6 +15,9 @@ public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole
     @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentRoleSkills s JOIN FETCH s.skill WHERE r.recruitmentPost.id = :postId")
     List<RecruitmentRole> findByPostIdWithSkills(@Param("postId") Long postId);
 
+    @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentPost p JOIN FETCH r.role WHERE p.id = :postId")
+    List<RecruitmentRole> findAllByPostIdWithRecruitmentRoleAndRole(@Param("postId") Long postId);
+
     @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentPost p JOIN FETCH r.role WHERE r.id = :recruitmentRoleId")
     Optional<RecruitmentRole> findByIdWithRecruitmentRoleAndRole(@Param("recruitmentRoleId") Long recruitmentRoleId);
 

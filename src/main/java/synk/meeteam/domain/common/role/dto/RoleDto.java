@@ -12,11 +12,11 @@ public class RoleDto {
     private Long id;
 
     @Schema(description = "역할 이름", example = "백엔드개발자")
-    private String name;
+    private String title;
 
     @QueryProjection
-    public RoleDto(Long id, String name) {
+    public RoleDto(Long id, String title) {
         this.id = id;
-        this.name = name;
+        this.title = title;
     }
 }
