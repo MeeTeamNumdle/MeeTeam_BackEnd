@@ -2,9 +2,15 @@ package synk.meeteam.domain.portfolio.portfolio;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
+import synk.meeteam.global.dto.SliceInfo;
 
 public class PortfolioFixture {
     public static List<Portfolio> createPortfolioFixtures_1_2() {
@@ -38,5 +44,26 @@ public class PortfolioFixture {
                 .build();
         portfolio.setCreatedBy(createdBy);
         return portfolio;
+    }
+
+    public static Slice<GetProfilePortfolioDto> createSlicePortfolioDtos() {
+        return new SliceImpl<>(
+                List.of(
+                        new GetProfilePortfolioDto(1L, "타이틀1", "이미지url", "개발", "개발자", true, 1),
+                        new GetProfilePortfolioDto(2L, "타이틀2", "이미지url", "개발", "개발자", true, 2)
+                ),
+                PageRequest.of(1, 12),
+                false
+        );
+    }
+
+    public static GetUserPortfolioResponseDto createUserAllPortfolios() {
+        return new GetUserPortfolioResponseDto(
+                List.of(
+                        new GetProfilePortfolioDto(1L, "타이틀1", "이미지url", "개발", "개발자", true, 1),
+                        new GetProfilePortfolioDto(2L, "타이틀2", "이미지url", "개발", "개발자", true, 2)
+                ),
+                new SliceInfo(1, 12, false)
+        );
     }
 }
