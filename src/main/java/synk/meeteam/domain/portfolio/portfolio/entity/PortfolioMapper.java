@@ -23,5 +23,6 @@ public interface PortfolioMapper {
 
     @Mapping(target = "field", qualifiedByName = "toField")
     @Mapping(target = "role", qualifiedByName = "toRole")
+    @Mapping(source = "portfolio.isPin", target = "isPinned")
     GetProfilePortfolioDto toGetProfilePortfolioDto(Portfolio portfolio, String mainImageUrl);
 }
