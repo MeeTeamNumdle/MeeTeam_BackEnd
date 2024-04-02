@@ -49,4 +49,9 @@ public class RecruitmentRoleService {
         recruitmentRoleRepository.saveAll(recruitmentRoles);
         recruitmentRoleSkillRepository.saveAll(recruitmentRoleSkills);
     }
+
+    @Transactional(readOnly = true)
+    public List<RecruitmentRole> findApplyStatusRecruitmentRole(Long postId) {
+        return recruitmentRoleRepository.findAllByPostIdWithRecruitmentRoleAndRole(postId);
+    }
 }
