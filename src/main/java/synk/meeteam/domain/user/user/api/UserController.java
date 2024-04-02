@@ -76,14 +76,14 @@ public class UserController implements UserApi {
                                         "개발",
                                         "백엔드",
                                         true,
-                                        1L),
+                                        1),
                                 new GetProfilePortfolioDto(2L,
                                         "타이틀2",
                                         "https://image.png",
                                         "개발",
                                         "프론트",
                                         true,
-                                        2L)
+                                        2)
                         ),
                         new SliceInfo(1, 10, false)
                 )
