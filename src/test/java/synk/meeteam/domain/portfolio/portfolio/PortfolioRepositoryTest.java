@@ -55,16 +55,15 @@ public class PortfolioRepositoryTest {
     }
 
     @Test
-    void 유저포트폴리오조회_조회성공() {
+    void 유저핀포트폴리오조회_조회성공() {
         //when
-        List<Portfolio> userPortfolios = portfolioRepository.findAllByCreatedByOrderByProceedStartAsc(1L);
+        List<Portfolio> userPortfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(1L);
         //then
-        assertThat(userPortfolios).extracting("title").containsExactly("타이틀1", "타이틀2", "타이틀3");
+        assertThat(userPortfolios).extracting("title").containsExactly("타이틀1", "타이틀2");
         assertThat(userPortfolios).extracting("proceedStart")
                 .containsExactly(
                         LocalDate.of(2024, 1, 2),
-                        LocalDate.of(2024, 1, 3),
-                        LocalDate.of(2024, 1, 4)
+                        LocalDate.of(2024, 1, 3)
                 );
 
     }
