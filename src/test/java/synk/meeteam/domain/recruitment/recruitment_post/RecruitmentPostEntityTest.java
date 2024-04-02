@@ -1,6 +1,8 @@
 package synk.meeteam.domain.recruitment.recruitment_post;
 
 
+import static synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostExceptionType.INVALID_USER_ID;
+
 import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -96,13 +98,31 @@ public class RecruitmentPostEntityTest {
     void 링크설정_성공() {
         // given
         String kakaoLink = "http://카카오링크입니다";
+        Long userId = 1L;
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상 제목입니다.");
+        recruitmentPost.setCreatedBy(userId);
 
         // when
-        RecruitmentPost updatedRecruitmentPost = recruitmentPost.setLink(kakaoLink);
+        RecruitmentPost updatedRecruitmentPost = recruitmentPost.setLink(kakaoLink, userId);
 
         // then
         Assertions.assertThat(updatedRecruitmentPost.getKakaoLink()).isEqualTo(kakaoLink);
+
+    }
+
+    @Test
+    void 링크설정_예외발생_작성자가아닌경우() {
+        // given
+        String kakaoLink = "http://카카오링크입니다";
+        Long userId = 1L;
+        Long writerId = 2L;
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상 제목입니다.");
+        recruitmentPost.setCreatedBy(writerId);
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> recruitmentPost.setLink(kakaoLink, userId))
+                .isInstanceOf(RecruitmentPostException.class)
+                .hasMessageContaining(INVALID_USER_ID.message());
 
     }
 

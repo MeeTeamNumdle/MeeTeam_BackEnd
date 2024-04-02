@@ -191,7 +191,9 @@ public class RecruitmentPost extends BaseEntity {
         this.responseCount = responseCount;
     }
 
-    public RecruitmentPost setLink(String kakaoLink) {
+    public RecruitmentPost setLink(String kakaoLink, Long userId) {
+        validateWriter(userId);
+
         this.kakaoLink = kakaoLink;
         return this;
     }
