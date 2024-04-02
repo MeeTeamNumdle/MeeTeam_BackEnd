@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
@@ -53,4 +54,15 @@ public interface UserApi {
     @Operation(summary = "닉네임 중복 확인 API")
     @SecurityRequirements
     ResponseEntity<CheckDuplicateNicknameResponseDto> checkDuplicateNickname(@RequestParam String nickname);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "포트폴리오 조회에 성공하였습니다.")
+            }
+    )
+    @Operation(summary = "내 포트폴리오 목록 조회 API")
+    @SecurityRequirement(name = "Authorization")
+    ResponseEntity<GetUserPortfolioResponseDto> getUserPortfolio(@AuthUser User user,
+                                                                 @RequestParam Long size,
+                                                                 @RequestParam Long page);
 }

@@ -21,8 +21,9 @@ public interface RecruitmentApplicantApi {
                     @ApiResponse(responseCode = "200", description = "오픈카톡방 링크 설정 성공"),
             }
     )
-    @Operation(summary = "오픈카톡 링크 설정 API")
-    ResponseEntity<Void> setLink(@PathVariable("id") Long postId, @Valid @RequestBody SetLinkRequestDto requestDto);
+    @Operation(summary = "오픈카톡 링크 설정(수정) API")
+    ResponseEntity<Void> setLink(@PathVariable("id") Long postId, @Valid @RequestBody SetLinkRequestDto requestDto,
+                                 @AuthUser User user);
 
     @ApiResponses(
             value = {

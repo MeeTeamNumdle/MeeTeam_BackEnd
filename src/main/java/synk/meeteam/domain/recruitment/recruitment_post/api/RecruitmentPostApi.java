@@ -19,7 +19,6 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruit
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
@@ -140,16 +139,6 @@ public interface RecruitmentPostApi {
             @AuthUser User user
     );
 
-
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "오픈 카톡방 링크 설정 성공"),
-                    @ApiResponse(responseCode = "400", description = "잘못된 오픈 카톡방 링크")
-            }
-    )
-    @Operation(summary = "구인글 오픈카톡 설정 API", tags = {"applicant"})
-    ResponseEntity<Void> setOpenKaKaoLink(@AuthUser User user, @PathVariable("id") Long postId,
-                                          @Valid @RequestBody SetOpenKakaoLinkRequestDto requestDto);
 
     @ApiResponses(
             value = {

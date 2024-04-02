@@ -30,10 +30,12 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
 
-    @PutMapping("{id}/link")
+    @PutMapping("/{id}/link")
     @Override
     public ResponseEntity<Void> setLink(@PathVariable("id") Long postId,
-                                        @Valid @RequestBody SetLinkRequestDto requestDto) {
+                                        @Valid @RequestBody SetLinkRequestDto requestDto, @AuthUser User user) {
+
+        recruitmentPostService.setLink(postId, requestDto.link(), user.getId());
 
         return ResponseEntity.ok().build();
     }
