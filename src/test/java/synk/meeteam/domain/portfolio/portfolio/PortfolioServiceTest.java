@@ -72,9 +72,9 @@ public class PortfolioServiceTest {
     void 포트폴리오목록조회_목록조회성공() {
         //given
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByCreatedByOrderByProceedStartAsc(anyLong());
+                .findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(anyLong());
         //when
-        List<Portfolio> userPortfolio = portfolioService.getUserPortfolio(anyLong());
+        List<Portfolio> userPortfolio = portfolioService.getUserPinPortfolio(anyLong());
         //then
         assertThat(userPortfolio).extracting("title").containsExactly("타이틀1", "타이틀2");
     }

@@ -39,7 +39,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public List<Portfolio> getUserPortfolio(Long userId) {
-        return portfolioRepository.findAllByCreatedByOrderByProceedStartAsc(userId);
+    public List<Portfolio> getUserPinPortfolio(Long userId) {
+        return portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(userId);
     }
 }

@@ -88,7 +88,7 @@ public class ProfileFacade {
     }
 
     private List<GetProfilePortfolioDto> getProfilePortfolios(Long userId, String encryptedId) {
-        List<Portfolio> portfolios = portfolioService.getUserPortfolio(userId);
+        List<Portfolio> portfolios = portfolioService.getUserPinPortfolio(userId);
 
         return portfolios.stream().map((portfolio) -> {
             String imageUrl = s3Service.createPreSignedGetUrl(
