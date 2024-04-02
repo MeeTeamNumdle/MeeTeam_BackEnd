@@ -85,7 +85,7 @@ public class UserController implements UserApi {
                                         true,
                                         2L)
                         ),
-                        new PageInfo(1L, 10L, 30L, 3L)
+                        new PageInfo(1, 10, 30L, 3)
                 )
         );
     }
