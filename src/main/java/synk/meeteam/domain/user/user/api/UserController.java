@@ -1,7 +1,6 @@
 package synk.meeteam.domain.user.user.api;
 
 import jakarta.validation.Valid;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -70,9 +69,22 @@ public class UserController implements UserApi {
             @RequestParam(name = "page", defaultValue = "1") Long page) {
         return ResponseEntity.ok(
                 new GetUserPortfolioResponseDto(
-                        List.of(new GetProfilePortfolioDto(
-                                1L, "타이틀1", "https://image.png", LocalDate.now(), LocalDate.now(), "개발", "백엔드 개발자"
-                        )),
+                        List.of(
+                                new GetProfilePortfolioDto(1L,
+                                        "타이틀1",
+                                        "https://image.png",
+                                        "개발",
+                                        "백엔드",
+                                        true,
+                                        1L),
+                                new GetProfilePortfolioDto(2L,
+                                        "타이틀2",
+                                        "https://image.png",
+                                        "개발",
+                                        "프론트",
+                                        true,
+                                        2L)
+                        ),
                         new PageInfo(1L, 10L, 30L, 3L)
                 )
         );
