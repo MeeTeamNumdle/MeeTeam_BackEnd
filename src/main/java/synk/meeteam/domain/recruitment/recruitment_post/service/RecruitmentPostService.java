@@ -83,4 +83,14 @@ public class RecruitmentPostService {
 
         return new PaginationSearchPostResponseDto(contents, pageInfo);
     }
+
+    @Transactional
+    public RecruitmentPost setLink(Long postId, String link, Long userId) {
+
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
+
+        recruitmentPost.setLink(link, userId);
+
+        return recruitmentPost;
+    }
 }

@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE_EXCEED_40;
+import static synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostExceptionType.INVALID_USER_ID;
+import static synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostExceptionType.NOT_FOUND_POST;
 
 import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
@@ -162,5 +164,59 @@ public class RecruitmentPostServiceTest {
                 .extracting("title").containsExactly("제목1", "제목2", "제목3");
         assertThat(postVos.getTotalElements()).isEqualTo(3);
 
+    }
+
+    @Test
+    void 링크설정_성공() {
+        // given
+        Long postId = 1L;
+        Long userId = 1L;
+        String link = "카카오링크입니다.";
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목입니다");
+        recruitmentPost.setCreatedBy(userId);
+
+        doReturn(recruitmentPost).when(recruitmentPostRepository).findByIdOrElseThrow(any());
+
+        // when
+        RecruitmentPost savedRecruitmentPost = recruitmentPostService.setLink(postId, link, userId);
+
+        // then
+        Assertions.assertThat(savedRecruitmentPost.getKakaoLink()).isEqualTo(link);
+    }
+
+    @Test
+    void 링크설정_예외발생_존재하지않은구인글경우() {
+        // given
+        Long postId = 1L;
+        Long userId = 1L;
+        String link = "카카오링크입니다.";
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목입니다");
+        recruitmentPost.setCreatedBy(userId);
+
+        doThrow(new RecruitmentPostException(NOT_FOUND_POST)).when(recruitmentPostRepository)
+                .findByIdOrElseThrow(any());
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> recruitmentPostService.setLink(postId, link, userId))
+                .isInstanceOf(RecruitmentPostException.class)
+                .hasMessageContaining(NOT_FOUND_POST.message());
+    }
+
+    @Test
+    void 링크설정_예외발생_작성자가아닌경우() {
+        // given
+        Long postId = 1L;
+        Long userId = 1L;
+        Long writerId = 2L;
+        String link = "카카오링크입니다.";
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목입니다");
+        recruitmentPost.setCreatedBy(writerId);
+
+        doReturn(recruitmentPost).when(recruitmentPostRepository).findByIdOrElseThrow(any());
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> recruitmentPostService.setLink(postId, link, userId))
+                .isInstanceOf(RecruitmentPostException.class)
+                .hasMessageContaining(INVALID_USER_ID.message());
     }
 }
