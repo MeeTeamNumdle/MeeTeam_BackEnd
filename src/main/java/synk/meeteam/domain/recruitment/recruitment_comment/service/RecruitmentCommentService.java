@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_comment.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_COMMENT;
+import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_USER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ import synk.meeteam.infra.s3.service.S3Service;
 @Service
 @RequiredArgsConstructor
 public class RecruitmentCommentService {
+    private static final String DELETE_MESSAGE = "삭제된 댓글입니다.";
+
     private final RecruitmentCommentRepository recruitmentCommentRepository;
     private final S3Service s3Service;
 
@@ -55,6 +58,28 @@ public class RecruitmentCommentService {
         }
 
         return groupedComments;
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId, Long userId, RecruitmentPost recruitmentPost) {
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findByIdOrElseThrow(commentId);
+
+        // 검증 로직
+        if (!recruitmentComment.getCreatedBy().equals(userId)) {
+            throw new RecruitmentCommentException(INVALID_USER);
+        }
+
+        RecruitmentComment latestRecruitmentComment = recruitmentCommentRepository.findLatestGroupOrderOrElseThrow(
+                recruitmentPost, recruitmentComment.getGroupNumber());
+
+        if (recruitmentComment.isParent()
+                && (latestRecruitmentComment.getGroupOrder() == recruitmentComment.getGroupOrder())) {
+
+            recruitmentComment.softDelete();
+            return;
+        }
+
+        recruitmentCommentRepository.delete(recruitmentComment);
     }
 
     @Transactional
