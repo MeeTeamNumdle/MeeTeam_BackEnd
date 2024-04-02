@@ -11,4 +11,8 @@ public record GetRecruitmentRoleStatusResponseDto(
         @Schema(description = "승인 인원", example = "1")
         long approvedMemberCount
 ) {
+        public static GetRecruitmentRoleStatusResponseDto of(String roleName, long recruitMemberCount,
+                                                             long approvedMemberCount) {
+                return new GetRecruitmentRoleStatusResponseDto(roleName, recruitMemberCount, approvedMemberCount);
+        }
 }
