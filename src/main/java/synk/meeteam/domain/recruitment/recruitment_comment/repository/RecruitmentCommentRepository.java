@@ -21,4 +21,8 @@ public interface RecruitmentCommentRepository extends JpaRepository<RecruitmentC
         return findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(recruitmentPost, groupNumber).orElseThrow(
                 () -> new RecruitmentCommentException(INVALID_COMMENT));
     }
+
+    default RecruitmentComment findByIdOrElseThrow(Long commentId) {
+        return findById(commentId).orElseThrow(() -> new RecruitmentCommentException(INVALID_COMMENT));
+    }
 }
