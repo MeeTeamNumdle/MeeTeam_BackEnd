@@ -66,4 +66,8 @@ public class RecruitmentComment extends BaseEntity {
         this.groupNumber = groupNumber;
         this.groupOrder = groupOrder;
     }
+
+    public void softDelete() {
+        this.isDeleted = true;
+    }
 }
