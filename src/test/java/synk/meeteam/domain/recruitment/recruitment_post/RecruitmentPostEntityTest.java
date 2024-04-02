@@ -92,4 +92,18 @@ public class RecruitmentPostEntityTest {
                 .isInstanceOf(BookmarkException.class);
     }
 
+    @Test
+    void 링크설정_성공() {
+        // given
+        String kakaoLink = "http://카카오링크입니다";
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상 제목입니다.");
+
+        // when
+        RecruitmentPost updatedRecruitmentPost = recruitmentPost.setLink(kakaoLink);
+
+        // then
+        Assertions.assertThat(updatedRecruitmentPost.getKakaoLink()).isEqualTo(kakaoLink);
+
+    }
+
 }

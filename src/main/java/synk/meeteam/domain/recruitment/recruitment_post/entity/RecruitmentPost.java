@@ -191,6 +191,11 @@ public class RecruitmentPost extends BaseEntity {
         this.responseCount = responseCount;
     }
 
+    public RecruitmentPost setLink(String kakaoLink) {
+        this.kakaoLink = kakaoLink;
+        return this;
+    }
+
     public RecruitmentPost incrementBookmarkCount() {
         this.bookmarkCount += 1;
         return this;
