@@ -1,7 +1,6 @@
 package synk.meeteam.domain.recruitment.recruitment_comment.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_COMMENT;
-import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_USER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,10 +73,7 @@ public class RecruitmentCommentService {
     public void deleteComment(Long commentId, Long userId, RecruitmentPost recruitmentPost) {
         RecruitmentComment recruitmentComment = recruitmentCommentRepository.findByIdOrElseThrow(commentId);
 
-        // 검증 로직
-        if (!recruitmentComment.getCreatedBy().equals(userId)) {
-            throw new RecruitmentCommentException(INVALID_USER);
-        }
+        recruitmentComment.validateWriter(userId);
 
         RecruitmentComment latestRecruitmentComment = recruitmentCommentRepository.findLatestGroupOrderOrElseThrow(
                 recruitmentPost, recruitmentComment.getGroupNumber());
