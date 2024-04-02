@@ -12,14 +12,14 @@ import synk.meeteam.global.entity.exception.EnumException;
 public class EnumsTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {"프로젝트", "스터디", "동아리", "공모전"})
+    @ValueSource(strings = {"프로젝트", "스터디", "공모전"})
     public void 입력에맞는Category찾기_입력에맞는Enum반환_여러입력(String categoryName) {
         Category category = Category.findByName(categoryName);
         Assertions.assertThat(category.getName()).isEqualTo(categoryName);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"온라인", "오프라인", "온/오프라인"})
+    @ValueSource(strings = {"온라인", "오프라인", "상관없음"})
     public void 입력에맞는ProceedType찾기_입력에맞는Enum반환_여러입력(String proceedTypeName) {
         ProceedType proceedType = ProceedType.findByName(proceedTypeName);
         Assertions.assertThat(proceedType.getName()).isEqualTo(proceedTypeName);

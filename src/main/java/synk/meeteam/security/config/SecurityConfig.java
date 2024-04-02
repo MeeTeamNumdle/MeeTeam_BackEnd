@@ -46,6 +46,7 @@ public class SecurityConfig {
     private static final String[] SEMI_AUTH_WHITELIST = {
             // 꼭 GET만 가능해야 하는 리스트
             "/recruitment/postings/{id}",
+            "/recruitment/postings/search",
             "/user/profile/**"
     };
 
@@ -67,7 +68,8 @@ public class SecurityConfig {
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
                                 HttpMethod.PUT.name(),
-                                HttpMethod.PATCH.name()
+                                HttpMethod.PATCH.name(),
+                                HttpMethod.DELETE.name()
                         );
             }
         };

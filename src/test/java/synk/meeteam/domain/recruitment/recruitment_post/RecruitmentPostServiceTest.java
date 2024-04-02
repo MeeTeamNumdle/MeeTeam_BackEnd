@@ -1,5 +1,6 @@
 package synk.meeteam.domain.recruitment.recruitment_post;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -12,10 +13,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
+import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
+import synk.meeteam.domain.user.user.entity.User;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +44,7 @@ public class RecruitmentPostServiceTest {
         RecruitmentPost savedRecruitmentPost = recruitmentPostService.writeRecruitmentPost(recruitmentPost);
 
         // then
-        Assertions.assertThat(savedRecruitmentPost)
+        assertThat(savedRecruitmentPost)
                 .extracting("title", "content", "scope", "category", "field", "proceedType", "proceedingStart",
                         "proceedingEnd", "deadline")
                 .containsExactly(recruitmentPost.getTitle(), recruitmentPost.getContent(), recruitmentPost.getScope(),
@@ -68,7 +74,7 @@ public class RecruitmentPostServiceTest {
         recruitmentPostService.incrementApplicantCount(recruitmentPost);
 
         // then
-        Assertions.assertThat(recruitmentPost.getApplicantCount()).isEqualTo(cur + 1);
+        assertThat(recruitmentPost.getApplicantCount()).isEqualTo(cur + 1);
     }
 
     @Test
@@ -84,7 +90,7 @@ public class RecruitmentPostServiceTest {
         RecruitmentPost recruitmentPost = recruitmentPostService.closeRecruitment(postId, userId);
 
         // then
-        Assertions.assertThat(recruitmentPost.isClosed()).isEqualTo(true);
+        assertThat(recruitmentPost.isClosed()).isEqualTo(true);
     }
 
     @Test
@@ -115,6 +121,46 @@ public class RecruitmentPostServiceTest {
                 srcRecruitmentPost);
 
         // then
-        Assertions.assertThat(newRecruitmentPost.getTitle()).isEqualTo("수정하려는제목입니다");
+        assertThat(newRecruitmentPost.getTitle()).isEqualTo("수정하려는제목입니다");
+    }
+
+    @Test
+    void 북마크수증가_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        Long curBookmarkCnt = recruitmentPost.getBookmarkCount();
+        // when
+        RecruitmentPost newRecruitmentPost = recruitmentPostService.incrementBookmarkCount(recruitmentPost);
+
+        // then
+        assertThat(newRecruitmentPost.getBookmarkCount()).isEqualTo(curBookmarkCnt + 1);
+    }
+
+    @Test
+    void 북마크수감소_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        Long curBookmarkCnt = recruitmentPost.getBookmarkCount();
+        // when
+        RecruitmentPost newRecruitmentPost = recruitmentPostService.decrementBookmarkCount(recruitmentPost);
+
+        // then
+        assertThat(newRecruitmentPost.getBookmarkCount()).isEqualTo(curBookmarkCnt - 1);
+    }
+
+    @Test
+    void 검색_성공() {
+        //given
+        doReturn(RecruitmentPostFixture.createPagePostVo()).when(recruitmentPostRepository)
+                .findBySearchConditionAndKeyword(any(), any(), any(), any());
+        //when
+        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findBySearchConditionAndKeyword(
+                PageRequest.of(0, 3), new SearchCondition(), null,
+                User.builder().build());
+        //then
+        assertThat(postVos.getContent())
+                .extracting("title").containsExactly("제목1", "제목2", "제목3");
+        assertThat(postVos.getTotalElements()).isEqualTo(3);
+
     }
 }

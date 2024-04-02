@@ -3,16 +3,25 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
+import synk.meeteam.domain.common.course.entity.Course;
+import synk.meeteam.domain.common.course.entity.Professor;
+import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
-import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.util.Encryption;
 
 @Builder
 @Schema(name = "GetRecruitmentPostResponseDto", description = "구인글 조회 Dto")
 public record GetRecruitmentPostResponseDto(
         @Schema(description = "내가 해당 글의 작성자인지", example = "true")
         boolean isWriter,
+        @Schema(description = "암호화된 해당 글 작성자의 id", example = "40aVE421DSwR63xfKf6vxA==")
+        String writerId,
+        @Schema(description = "구인 마감 여부", example = "true")
+        boolean isClosed,
+        @Schema(description = "북마크 여부", example = "true")
+        boolean isBookmarked,
         @Schema(description = "유형", example = "프로젝트")
         String category,
         @Schema(description = "글 제목", example = "팀원을 구합니다!")
@@ -53,20 +62,24 @@ public record GetRecruitmentPostResponseDto(
         List<GetCommentResponseDto> comments
 
 ) {
-    public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost,
+    public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost, boolean isBookmarked,
                                                      List<RecruitmentRole> recruitmentRoles, User writer,
                                                      String writerProfileImg,
-                                                     RecruitmentTagVO recruitmentTagVO,
-                                                     List<GetCommentResponseDto> recruitmentCommentDtos) {
+                                                     List<TagDto> recruitmentTags,
+                                                     List<GetCommentResponseDto> recruitmentCommentDtos,
+                                                     Course course, Professor professor) {
         boolean isWriter = writer.getId().equals(recruitmentPost.getCreatedBy());
         List<GetRecruitmentRoleResponseDto> getRecruitmentRoleDtos = recruitmentRoles.stream()
                 .map(GetRecruitmentRoleResponseDto::from)
                 .toList();
 
-        List<GetTagDto> tagDtos = recruitmentTagVO.recruitmentTags().stream().map(GetTagDto::from).toList();
+        List<GetTagDto> tagDtos = recruitmentTags.stream().map(GetTagDto::from).toList();
 
         return GetRecruitmentPostResponseDto.builder()
                 .isWriter(isWriter)
+                .writerId(Encryption.encryptLong(writer.getId()))
+                .isClosed(recruitmentPost.isClosed())
+                .isBookmarked(isBookmarked)
                 .category(recruitmentPost.getCategory().getName())
                 .title(recruitmentPost.getTitle())
                 .createdAt(recruitmentPost.getCreatedAt().toString())
@@ -80,8 +93,8 @@ public record GetRecruitmentPostResponseDto(
                 .proceedType(recruitmentPost.getProceedType().getName())
                 .deadline(recruitmentPost.getDeadline().toString())
                 .scope(recruitmentPost.getScope().getName())
-                .courseName(recruitmentTagVO.courseName())
-                .courseProfessor(recruitmentTagVO.courseProfessor())
+                .courseName(course.getName())
+                .courseProfessor(professor.getName())
                 .tags(tagDtos)
                 .recruitmentRoles(getRecruitmentRoleDtos)
                 .content(recruitmentPost.getContent())

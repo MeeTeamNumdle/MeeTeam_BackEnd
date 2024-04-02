@@ -8,21 +8,26 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.SetOpenKakaoLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.PaginationSearchPostResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.security.AuthUser;
 
-@Tag(name = "recruitment", description = "구인 관련 API")
+// @Tags({@Tag(name = "recruitment", description = "구인 관련 API"), @Tag(name = "comment", description = "댓글 관련 API")})
 public interface RecruitmentPostApi {
 
     @ApiResponses(
@@ -30,9 +35,9 @@ public interface RecruitmentPostApi {
                     @ApiResponse(responseCode = "201", description = "구인글 생성 성공"),
             }
     )
-    @Operation(summary = "구인글 생성 API")
+    @Operation(summary = "구인글 생성 API", tags = {"recruitment"})
     ResponseEntity<CreateRecruitmentPostResponseDto> createRecruitmentPost(
-            @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto);
+            @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto, @AuthUser User user);
 
     @ApiResponses(
             value = {
@@ -42,10 +47,10 @@ public interface RecruitmentPostApi {
                     })
             }
     )
-    @Operation(summary = "특정 구인글 조회 API")
+    @Operation(summary = "특정 구인글 조회 API", tags = {"recruitment"})
     @SecurityRequirements
     ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
-            @Valid @PathVariable("id") Long postId);
+            @PathVariable("id") Long postId, @AuthUser User user);
 
 
     @ApiResponses(
@@ -53,8 +58,8 @@ public interface RecruitmentPostApi {
                     @ApiResponse(responseCode = "200", description = "신청 정보 조회 성공"),
             }
     )
-    @Operation(summary = "신청 정보 조회 API")
-    ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@Valid @PathVariable("id") Long postId,
+    @Operation(summary = "신청 정보 조회 API", tags = {"recruitment"})
+    ResponseEntity<GetApplyInfoResponseDto> getApplyInfo(@PathVariable("id") Long postId,
                                                          @AuthUser User user);
 
     @ApiResponses(
@@ -65,8 +70,8 @@ public interface RecruitmentPostApi {
                     })
             }
     )
-    @Operation(summary = "구인 신청 API")
-    ResponseEntity<Void> applyRecruitment(@Valid @NotNull @PathVariable("id") Long postId,
+    @Operation(summary = "구인 신청 API", tags = {"recruitment"})
+    ResponseEntity<Void> applyRecruitment(@PathVariable("id") Long postId,
                                           @Valid @RequestBody ApplyRecruitmentRequestDto requestDto,
                                           @AuthUser User user);
 
@@ -78,8 +83,8 @@ public interface RecruitmentPostApi {
                     })
             }
     )
-    @Operation(summary = "구인 마감 API")
-    ResponseEntity<Void> closeRecruitment(@Valid @PathVariable("id") Long postId, @AuthUser User user);
+    @Operation(summary = "구인 마감 API", tags = {"recruitment"})
+    ResponseEntity<Void> closeRecruitment(@PathVariable("id") Long postId, @AuthUser User user);
 
     @ApiResponses(
             value = {
@@ -89,9 +94,9 @@ public interface RecruitmentPostApi {
                     })
             }
     )
-    @Operation(summary = "구인글 수정 API")
+    @Operation(summary = "구인글 수정 API", tags = {"recruitment"})
     ResponseEntity<Void> modifyRecruitmentPost(@Valid @RequestBody CreateRecruitmentPostRequestDto requestDto,
-                                               @Valid @PathVariable("id") Long postId, @AuthUser User user);
+                                               @PathVariable("id") Long postId, @AuthUser User user);
 
     @ApiResponses(
             value = {
@@ -101,7 +106,73 @@ public interface RecruitmentPostApi {
                     })
             }
     )
-    @Operation(summary = "구인글 북마크 API")
-    ResponseEntity<Void> bookmarkRecruitmentPost(@Valid @PathVariable("id") Long postId, @AuthUser User user);
+    @Operation(summary = "구인글 북마크 API", tags = {"recruitment"})
+    ResponseEntity<Void> bookmarkRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "북마크 취소 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "구인글 북마크 취소 API", tags = {"recruitment"})
+    ResponseEntity<Void> cancelBookmarkRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "검색 성공"),
+                    @ApiResponse(responseCode = "403", description = "접근 권한이 없습니다")
+            }
+    )
+    @Operation(summary = "구인글 목록 검색 API", tags = {"recruitment"})
+    ResponseEntity<PaginationSearchPostResponseDto> searchRecruitmentPost(
+            @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
+            @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
+            @RequestParam(value = "field", required = false) Long fieldId,
+            @RequestParam(value = "scope", required = false) Integer scopeOrdinal,
+            @RequestParam(value = "category", required = false) Integer categoryOrdinal,
+            @RequestParam(value = "skill", required = false) List<Long> skillIds,
+            @RequestParam(value = "role", required = false) List<Long> roleIds,
+            @RequestParam(value = "tag", required = false) List<Long> tagIds,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @AuthUser User user
+    );
+
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "오픈 카톡방 링크 설정 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 오픈 카톡방 링크")
+            }
+    )
+    @Operation(summary = "구인글 오픈카톡 설정 API", tags = {"applicant"})
+    ResponseEntity<Void> setOpenKaKaoLink(@AuthUser User user, @PathVariable("id") Long postId,
+                                          @Valid @RequestBody SetOpenKakaoLinkRequestDto requestDto);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "댓글 등록 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "댓글 등록 API", tags = {"comment"})
+    ResponseEntity<Void> registerComment(@PathVariable("id") Long postId,
+                                         @Valid @RequestBody CreateCommentRequestDto requestDto, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "댓글 삭제 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "댓글 삭제 API", tags = {"comment"})
+    ResponseEntity<Void> deleteComment(@PathVariable("id") Long postId,
+                                       @Valid @RequestBody DeleteCommentRequestDto requestDto, @AuthUser User user);
 
 }

@@ -3,12 +3,16 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import synk.meeteam.domain.common.course.entity.Course;
+import synk.meeteam.domain.common.course.entity.Professor;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
+import synk.meeteam.domain.recruitment.recruitment_comment.entity.RecruitmentComment;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
@@ -25,7 +29,8 @@ public interface RecruitmentPostMapper {
     @Mapping(source = "requestDto.scope", target = "scope", qualifiedByName = "scopeToEnum")
     @Mapping(source = "requestDto.category", target = "category", qualifiedByName = "categoryToEnum")
     @Mapping(source = "requestDto.proceedType", target = "proceedType", qualifiedByName = "proceedTypeToEnum")
-    RecruitmentPost toRecruitmentEntity(CreateRecruitmentPostRequestDto requestDto, Field field);
+    RecruitmentPost toRecruitmentEntity(CreateRecruitmentPostRequestDto requestDto, Field field, Course course,
+                                        Professor professor, boolean isCourse);
 
     RecruitmentRole toRecruitmentRoleEntity(RecruitmentPost recruitmentPost, Role role, int count);
 
@@ -37,8 +42,10 @@ public interface RecruitmentPostMapper {
     RecruitmentApplicant toRecruitmentApplicantEntity(RecruitmentPost recruitmentPost, Role role, User user,
                                                       String comment);
 
+    @Mapping(source = "requestDto.content", target = "content")
+    RecruitmentComment toRecruitmentCommentEntity(RecruitmentPost recruitmentPost, CreateCommentRequestDto requestDto);
+
     @Mapping(source = "name", target = "name")
-    @Mapping(source = "type", target = "type")
     Tag toTagEntity(String name, TagType type);
 
     @Named("scopeToEnum")

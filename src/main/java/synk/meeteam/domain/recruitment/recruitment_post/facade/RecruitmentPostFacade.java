@@ -4,6 +4,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.common.course.entity.Course;
+import synk.meeteam.domain.common.course.entity.Professor;
+import synk.meeteam.domain.common.course.service.CourseService;
+import synk.meeteam.domain.common.course.service.ProfessorService;
+import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
@@ -14,6 +19,7 @@ import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.Recruitment
 import synk.meeteam.domain.recruitment.recruitment_role_skill.service.RecruitmentRoleSkillService;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
+import synk.meeteam.domain.user.user.entity.User;
 
 
 @Service
@@ -23,17 +29,22 @@ public class RecruitmentPostFacade {
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentRoleSkillService recruitmentRoleSkillService;
     private final RecruitmentTagService recruitmentTagService;
+    private final CourseService courseService;
+    private final ProfessorService professorService;
     private final RecruitmentApplicantService recruitmentApplicantService;
+    private final BookmarkService bookmarkService;
 
 
     @Transactional
     public Long createRecruitmentPost(RecruitmentPost recruitmentPost, List<RecruitmentRole> recruitmentRoles,
                                       List<RecruitmentRoleSkill> recruitmentRoleSkills,
-                                      List<RecruitmentTag> recruitmentTags) {
+                                      List<RecruitmentTag> recruitmentTags, Course course, Professor professor) {
         RecruitmentPost newRecruitmentPost = recruitmentPostService.writeRecruitmentPost(recruitmentPost);
         recruitmentRoleService.createRecruitmentRoles(recruitmentRoles);
         recruitmentRoleSkillService.createRecruitmentRoleSkills(recruitmentRoleSkills);
         recruitmentTagService.createRecruitmentTags(recruitmentTags);
+        courseService.createCourse(course);
+        professorService.createProfessor(professor);
 
         return newRecruitmentPost.getId();
     }
@@ -61,4 +72,21 @@ public class RecruitmentPostFacade {
 
         recruitmentRoleService.addApplicantCount(recruitmentRole);
     }
+
+    @Transactional
+    public void bookmarkRecruitmentPost(Long postId, User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+
+        bookmarkService.bookmarkRecruitmentPost(recruitmentPost, user);
+        recruitmentPostService.incrementBookmarkCount(recruitmentPost);
+    }
+
+    @Transactional
+    public void cancelBookmarkRecruitmentPost(Long postId, User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+
+        bookmarkService.cancelBookmarkRecruitmentPost(recruitmentPost, user);
+        recruitmentPostService.decrementBookmarkCount(recruitmentPost);
+    }
+
 }

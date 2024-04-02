@@ -6,14 +6,14 @@ public record UpdateInfoCommand(
         String pictureFileName,
         String subEmail,
         boolean isPublicSubEmail,
-        boolean isPublicSchoolEmail,
-        boolean isSchoolMain,
+        boolean isPublicUniversityEmail,
+        boolean isUniversityMainEmail,
         String phoneNumber,
         boolean isPublicPhone,
         String oneLineIntroduction,
         String mainIntroduction,
         double gpa,
         double maxGpa,
-        Long interest_id) {
+        Long interestId) {
 
 }

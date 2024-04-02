@@ -160,6 +160,10 @@ public class User extends BaseTimeEntity {
         this.platformId = platformId;
     }
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     @Builder
     public User(String universityEmail, String name, String nickname, String password, String phoneNumber,
                 Integer admissionYear, String profileImgFileName, Authority authority, PlatformType platformType,
