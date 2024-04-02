@@ -17,14 +17,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import synk.meeteam.domain.common.course.entity.Course;
+import synk.meeteam.domain.common.course.entity.Professor;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.service.FieldService;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.service.RoleService;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.common.skill.service.SkillService;
-import synk.meeteam.domain.common.tag.entity.Tag;
+import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.common.tag.entity.TagType;
+import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_comment.entity.RecruitmentComment;
@@ -50,7 +53,6 @@ import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleS
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
-import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.global.entity.Category;
@@ -85,11 +87,15 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     @PostMapping
     @Override
     public ResponseEntity<CreateRecruitmentPostResponseDto> createRecruitmentPost(
-            @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto) {
+            @Valid @RequestBody CreateRecruitmentPostRequestDto requestDto, @AuthUser User user) {
 
         Field field = fieldService.findById(DEVELOP_ID);
 
-        RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field);
+        Course course = getCourse(requestDto.courseTag().courseTagName(), user.getUniversity());
+        Professor professor = getProfessor(requestDto.courseTag().courseProfessor(), user.getUniversity());
+
+        RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field, course,
+                professor, requestDto.courseTag().isCourse());
 
         List<RecruitmentRoleSkill> recruitmentRoleSkills = new ArrayList<>();
         List<RecruitmentRole> recruitmentRoles = getRecruitmentRoles(requestDto, recruitmentPost,
@@ -99,15 +105,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(CreateRecruitmentPostResponseDto.from(
                 recruitmentPostFacade.createRecruitmentPost(recruitmentPost, recruitmentRoles, recruitmentRoleSkills,
-                        recruitmentTags)));
+                        recruitmentTags, course, professor)));
     }
 
     @GetMapping("/{id}")
     @Override
     public ResponseEntity<GetRecruitmentPostResponseDto> getRecruitmentPost(
             @PathVariable("id") Long postId, @AuthUser User user) {
-        // 단일 트랜잭션으로 하지 않아도 될듯
-        // 트랜잭션으로 하지 않아도 될듯?
+
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
         boolean isBookmarked = false;
         if (user != null) {
@@ -119,7 +124,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         List<RecruitmentRole> recruitmentRoles = recruitmentRoleService.findByRecruitmentPostId(postId);
 
-        RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(postId);
+        List<TagDto> recruitmentTags = recruitmentTagService.findByRecruitmentPostId(postId);
 
         List<GetCommentResponseDto> recruitmentCommentDtos = recruitmentCommentService.getRecruitmentComments(
                 recruitmentPost);
@@ -127,8 +132,8 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.ok()
                 .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isBookmarked, recruitmentRoles, writer,
                         writerImgUrl,
-                        recruitmentTagVO,
-                        recruitmentCommentDtos));
+                        recruitmentTags,
+                        recruitmentCommentDtos, recruitmentPost.getCourse(), recruitmentPost.getProfessor()));
     }
 
     @GetMapping("/{id}/apply-info")
@@ -175,7 +180,12 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         Field field = fieldService.findById(DEVELOP_ID);
 
-        RecruitmentPost srcRecruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field);
+        Course course = getCourse(requestDto.courseTag().courseTagName(), user.getUniversity());
+        Professor professor = getProfessor(requestDto.courseTag().courseProfessor(), user.getUniversity());
+
+        RecruitmentPost srcRecruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field, course,
+                professor, requestDto.courseTag()
+                        .isCourse());
         RecruitmentPost dstRecruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
 
         List<RecruitmentRoleSkill> recruitmentRoleSkills = new ArrayList<>();
@@ -279,15 +289,21 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 .map(tag -> recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost, tag))
                 .toList());
 
-        if (requestDto.courseTag().isCourse()) {
-            Tag tagEntity = recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseTagName(), TagType.COURSE);
-            RecruitmentTag recruitmentTagEntity = recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost,
-                    tagEntity);
-            recruitmentTags.add(recruitmentTagEntity);
-            recruitmentTags.add(recruitmentPostMapper.toRecruitmentTagEntity(recruitmentPost,
-                    recruitmentPostMapper.toTagEntity(requestDto.courseTag().courseProfessor(), TagType.PROFESSOR)));
-        }
         return recruitmentTags;
+    }
+
+    private Course getCourse(String courseName, University university) {
+        return Course.builder()
+                .name(courseName)
+                .university(university)
+                .build();
+    }
+
+    private Professor getProfessor(String professorName, University university) {
+        return Professor.builder()
+                .name(professorName)
+                .university(university)
+                .build();
     }
 
     private SearchCondition getCondition(Long fieldId, Integer scopeOrdinal, Integer categoryOrdinal,

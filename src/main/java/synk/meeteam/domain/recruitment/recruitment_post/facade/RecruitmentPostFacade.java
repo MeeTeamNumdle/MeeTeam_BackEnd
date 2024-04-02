@@ -4,6 +4,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.common.course.entity.Course;
+import synk.meeteam.domain.common.course.entity.Professor;
+import synk.meeteam.domain.common.course.service.CourseService;
+import synk.meeteam.domain.common.course.service.ProfessorService;
 import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
@@ -25,6 +29,8 @@ public class RecruitmentPostFacade {
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentRoleSkillService recruitmentRoleSkillService;
     private final RecruitmentTagService recruitmentTagService;
+    private final CourseService courseService;
+    private final ProfessorService professorService;
     private final RecruitmentApplicantService recruitmentApplicantService;
     private final BookmarkService bookmarkService;
 
@@ -32,11 +38,13 @@ public class RecruitmentPostFacade {
     @Transactional
     public Long createRecruitmentPost(RecruitmentPost recruitmentPost, List<RecruitmentRole> recruitmentRoles,
                                       List<RecruitmentRoleSkill> recruitmentRoleSkills,
-                                      List<RecruitmentTag> recruitmentTags) {
+                                      List<RecruitmentTag> recruitmentTags, Course course, Professor professor) {
         RecruitmentPost newRecruitmentPost = recruitmentPostService.writeRecruitmentPost(recruitmentPost);
         recruitmentRoleService.createRecruitmentRoles(recruitmentRoles);
         recruitmentRoleSkillService.createRecruitmentRoleSkills(recruitmentRoleSkills);
         recruitmentTagService.createRecruitmentTags(recruitmentTags);
+        courseService.createCourse(course);
+        professorService.createProfessor(professor);
 
         return newRecruitmentPost.getId();
     }

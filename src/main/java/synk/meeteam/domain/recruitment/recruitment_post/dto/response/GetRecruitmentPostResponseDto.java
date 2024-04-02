@@ -3,9 +3,11 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
+import synk.meeteam.domain.common.course.entity.Course;
+import synk.meeteam.domain.common.course.entity.Professor;
+import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
-import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.util.Encryption;
 
@@ -63,14 +65,15 @@ public record GetRecruitmentPostResponseDto(
     public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost, boolean isBookmarked,
                                                      List<RecruitmentRole> recruitmentRoles, User writer,
                                                      String writerProfileImg,
-                                                     RecruitmentTagVO recruitmentTagVO,
-                                                     List<GetCommentResponseDto> recruitmentCommentDtos) {
+                                                     List<TagDto> recruitmentTags,
+                                                     List<GetCommentResponseDto> recruitmentCommentDtos,
+                                                     Course course, Professor professor) {
         boolean isWriter = writer.getId().equals(recruitmentPost.getCreatedBy());
         List<GetRecruitmentRoleResponseDto> getRecruitmentRoleDtos = recruitmentRoles.stream()
                 .map(GetRecruitmentRoleResponseDto::from)
                 .toList();
 
-        List<GetTagDto> tagDtos = recruitmentTagVO.recruitmentTags().stream().map(GetTagDto::from).toList();
+        List<GetTagDto> tagDtos = recruitmentTags.stream().map(GetTagDto::from).toList();
 
         return GetRecruitmentPostResponseDto.builder()
                 .isWriter(isWriter)
@@ -90,8 +93,8 @@ public record GetRecruitmentPostResponseDto(
                 .proceedType(recruitmentPost.getProceedType().getName())
                 .deadline(recruitmentPost.getDeadline().toString())
                 .scope(recruitmentPost.getScope().getName())
-                .courseName(recruitmentTagVO.courseName())
-                .courseProfessor(recruitmentTagVO.courseProfessor())
+                .courseName(course.getName())
+                .courseProfessor(professor.getName())
                 .tags(tagDtos)
                 .recruitmentRoles(getRecruitmentRoleDtos)
                 .content(recruitmentPost.getContent())
