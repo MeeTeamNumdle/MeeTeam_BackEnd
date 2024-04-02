@@ -10,7 +10,7 @@ public record GetApplicantInfoResponseDto(
         String title,
         @Schema(description = "오픈카톡방 링크", example = "https://open.kakao.com/o/gLmqdijg")
         String link,
-        List<GetRecruitmentRoleStatusResponseDto> recruitmentRoleStatus,
+        List<GetRecruitmentRoleStatusResponseDto> recruitmentStatus,
         List<RoleDto> roles
 ) {
 }
