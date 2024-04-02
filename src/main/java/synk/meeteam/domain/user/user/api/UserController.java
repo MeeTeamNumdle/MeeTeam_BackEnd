@@ -19,7 +19,7 @@ import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.ProfileFacade;
 import synk.meeteam.domain.user.user.service.UserService;
-import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.dto.SliceInfo;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.security.AuthUser;
 
@@ -85,7 +85,7 @@ public class UserController implements UserApi {
                                         true,
                                         2L)
                         ),
-                        new PageInfo(1, 10, 30L, 3)
+                        new SliceInfo(1, 10, false)
                 )
         );
     }
