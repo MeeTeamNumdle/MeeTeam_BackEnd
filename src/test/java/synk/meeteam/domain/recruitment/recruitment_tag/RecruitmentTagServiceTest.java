@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static synk.meeteam.domain.common.tag.TagFixture.NAME_EXCEED_15;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE;
 
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import synk.meeteam.domain.common.tag.TagFixture;
+import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.common.tag.entity.Tag;
 import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.common.tag.repository.TagRepository;
@@ -24,7 +26,6 @@ import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.repository.RecruitmentTagRepository;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
-import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 
 @ExtendWith(MockitoExtension.class)
 public class RecruitmentTagServiceTest {
@@ -114,15 +115,13 @@ public class RecruitmentTagServiceTest {
         doReturn(TagFixture.createRecruitmentTags(tag)).when(tagRepository).findAllByRecruitmentId(1L);
 
         // when
-        RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(1L);
+        List<TagDto> recruitmentTags = recruitmentTagService.findByRecruitmentPostId(1L);
 
         // then
-        Assertions.assertThat(recruitmentTagVO)
-                .extracting("courseName", "courseProfessor")
-                .containsExactly("응소실", "김용혁");
-        Assertions.assertThat(recruitmentTagVO.recruitmentTags().get(0))
-                .extracting("name", "type")
-                .containsExactly(tag.getName(), tag.getType());
+        Assertions.assertThat(recruitmentTags.get(0).name()).isEqualTo(tag.getName());
+        Assertions.assertThat(recruitmentTags.get(1).name()).isEqualTo("김용혁");
+
+        ;
     }
 
     @Test
@@ -132,10 +131,10 @@ public class RecruitmentTagServiceTest {
         doReturn(TagFixture.createRecruitmentTags(tag)).when(tagRepository).findAllByRecruitmentId(1L);
 
         // when
-        RecruitmentTagVO recruitmentTagVO = recruitmentTagService.findByRecruitmentPostId(1L);
+        List<TagDto> recruitmentTags = recruitmentTagService.findByRecruitmentPostId(1L);
 
         // then
-        Assertions.assertThat(recruitmentTagVO.recruitmentTags().get(0))
+        Assertions.assertThat(recruitmentTags.get(0))
                 .extracting("name", "type")
                 .containsExactly(tag.getName(), tag.getType());
     }

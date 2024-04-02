@@ -2,7 +2,6 @@ package synk.meeteam.domain.recruitment.recruitment_tag.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_tag.exception.RecruitmentTagExceptionType.TAG_NAME_EXCEED_LIMIT;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,12 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.common.tag.entity.Tag;
-import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.common.tag.repository.TagRepository;
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.exception.RecruitmentTagException;
 import synk.meeteam.domain.recruitment.recruitment_tag.repository.RecruitmentTagRepository;
-import synk.meeteam.domain.recruitment.recruitment_tag.service.vo.RecruitmentTagVO;
 
 @RequiredArgsConstructor
 @Service
@@ -46,26 +43,8 @@ public class RecruitmentTagService {
         return recruitmentTagRepository.save(recruitmentTag);
     }
 
-    public RecruitmentTagVO findByRecruitmentPostId(Long postId) {
-        List<TagDto> recruitmentTags = tagRepository.findAllByRecruitmentId(postId);
-
-        String courseName = null;
-        String courseProfessor = null;
-        List<TagDto> removedTags = new ArrayList<>();
-
-        for (TagDto tag : recruitmentTags) {
-            if (tag.type().equals(TagType.COURSE)) {
-                courseName = tag.name();
-                removedTags.add(tag);
-            }
-            if (tag.type().equals(TagType.PROFESSOR)) {
-                courseProfessor = tag.name();
-                removedTags.add(tag);
-            }
-        }
-        recruitmentTags.removeAll(removedTags);
-
-        return RecruitmentTagVO.from(recruitmentTags, courseName, courseProfessor);
+    public List<TagDto> findByRecruitmentPostId(Long postId) {
+        return tagRepository.findAllByRecruitmentId(postId);
     }
 
     @Transactional
