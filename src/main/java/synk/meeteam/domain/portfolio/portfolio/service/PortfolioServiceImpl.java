@@ -51,7 +51,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public GetUserPortfolioResponseDto getUserAllPortfolio(int page, int size, User user) {
+    public GetUserPortfolioResponseDto getMyAllPortfolio(int page, int size, User user) {
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size);
         Slice<GetProfilePortfolioDto> userPortfolioDtos = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
