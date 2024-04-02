@@ -21,8 +21,6 @@ public interface PortfolioMapper {
         return role.getName();
     }
 
-    @Mapping(source = "portfolio.proceedStart", target = "startDate")
-    @Mapping(source = "portfolio.proceedEnd", target = "endDate")
     @Mapping(target = "field", qualifiedByName = "toField")
     @Mapping(target = "role", qualifiedByName = "toRole")
     GetProfilePortfolioDto toGetProfilePortfolioDto(Portfolio portfolio, String mainImageUrl);
