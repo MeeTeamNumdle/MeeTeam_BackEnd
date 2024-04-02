@@ -171,7 +171,7 @@ public class RecruitmentCommentServiceTest {
         doReturn(parentComment).when(recruitmentCommentRepository)
                 .findLatestGroupOrderOrElseThrow(recruitmentPost, groupNumber);
         doReturn(Optional.of(parentComment)).when(recruitmentCommentRepository)
-                .findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(any(), anyLong());
+                .findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrderDesc(any(), anyLong());
 
         // when
         RecruitmentComment savedRecruitmentComment = recruitmentCommentService.registerRecruitmentComment(childComment);

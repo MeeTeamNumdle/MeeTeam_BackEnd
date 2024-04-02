@@ -79,7 +79,7 @@ public class RecruitmentCommentService {
                 recruitmentPost, recruitmentComment.getGroupNumber());
 
         if (recruitmentComment.isParent()
-                && (latestRecruitmentComment.getGroupOrder() == recruitmentComment.getGroupOrder())) {
+                && (latestRecruitmentComment.getGroupOrder() != recruitmentComment.getGroupOrder())) {
 
             recruitmentComment.softDelete();
             return;
@@ -116,7 +116,7 @@ public class RecruitmentCommentService {
     }
 
     private long getNewGroupOrder(RecruitmentPost recruitmentPost, long groupNumber) {
-        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrderDesc(
                 recruitmentPost, groupNumber).orElse(null);
 
         if (recruitmentComment == null) {
