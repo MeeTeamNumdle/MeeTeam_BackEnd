@@ -303,8 +303,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private SearchCondition filterCondition(Long fieldId, Integer scopeOrdinal, Integer categoryOrdinal,
                                             List<Long> skillIds, List<Long> roleIds, List<Long> tagIds, Long courseId,
                                             Long professorId) {
-        Scope scope = scopeOrdinal == null ? null : Scope.values()[scopeOrdinal - 1];
-        Category category = categoryOrdinal == null ? null : Category.values()[categoryOrdinal - 1];
+        Scope scope = null;
+        Category category = null;
+        if (scopeOrdinal != null && scopeOrdinal > 1 && scopeOrdinal < Scope.values().length) {
+            scope = Scope.values()[scopeOrdinal - 1];
+        }
+        if (categoryOrdinal != null && categoryOrdinal > 1 && categoryOrdinal < Category.values().length) {
+            category = Category.values()[categoryOrdinal - 1];
+        }
         return new SearchCondition(fieldId, scope, category, skillIds, tagIds, roleIds, courseId, professorId);
     }
 }
