@@ -69,8 +69,17 @@ public class RecruitmentComment extends BaseEntity {
         this.groupOrder = groupOrder;
     }
 
-    public void softDelete() {
+    public void softDelete(Long userId) {
+        validateWriter(userId);
+
         this.isDeleted = true;
+    }
+
+    public boolean hasChildComment(long latestGroupOrder) {
+        if (this.isParent && (this.groupOrder != latestGroupOrder)) {
+            return true;
+        }
+        return false;
     }
 
     public void validateWriter(Long userId) {

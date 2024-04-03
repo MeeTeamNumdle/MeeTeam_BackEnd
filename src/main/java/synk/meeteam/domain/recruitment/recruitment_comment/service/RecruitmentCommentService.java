@@ -78,10 +78,8 @@ public class RecruitmentCommentService {
         RecruitmentComment latestRecruitmentComment = recruitmentCommentRepository.findLatestGroupOrderOrElseThrow(
                 recruitmentPost, recruitmentComment.getGroupNumber());
 
-        if (recruitmentComment.isParent()
-                && (latestRecruitmentComment.getGroupOrder() != recruitmentComment.getGroupOrder())) {
-
-            recruitmentComment.softDelete();
+        if (recruitmentComment.hasChildComment(latestRecruitmentComment.getGroupOrder())) {
+            recruitmentComment.softDelete(userId);
             return;
         }
 
