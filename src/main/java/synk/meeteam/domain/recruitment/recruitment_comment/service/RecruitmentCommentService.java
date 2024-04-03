@@ -40,22 +40,12 @@ public class RecruitmentCommentService {
                     S3FileName.USER,
                     comment.getProfileImg());
             String commentWriterId = Encryption.encryptLong(comment.getUserId());
-            String nickname = comment.getNickname();
-            String content = comment.getContent();
-
-            if (comment.isDeleted()) {
-                isWriter = false;
-                profileImg = null;
-                commentWriterId = null;
-                nickname = null;
-                content = null;
-            }
 
             if (comment.isParent()) {
                 List<GetReplyResponseDto> replies = new ArrayList<>();
                 groupedComments.add(
-                        new GetCommentResponseDto(comment.getId(), commentWriterId, nickname, profileImg,
-                                content, comment.getCreateAt(), isWriter, comment.getGroupNumber(),
+                        new GetCommentResponseDto(comment.getId(), commentWriterId, comment.getNickname(), profileImg,
+                                comment.getContent(), comment.getCreateAt(), isWriter, comment.getGroupNumber(),
                                 comment.getGroupOrder(), replies));
                 continue;
             }
