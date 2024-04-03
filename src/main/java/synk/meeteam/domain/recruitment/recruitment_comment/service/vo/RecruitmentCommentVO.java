@@ -34,4 +34,32 @@ public class RecruitmentCommentVO {
         this.groupOrder = groupOrder;
         this.isDeleted = isDeleted;
     }
+
+    public Long getUserId() {
+        if (isDeleted) {
+            return null;
+        }
+        return userId;
+    }
+
+    public String getProfileImg() {
+        if (isDeleted) {
+            return null;
+        }
+        return profileImg;
+    }
+
+    public String getNickname() {
+        if (isDeleted) {
+            return null;
+        }
+        return nickname;
+    }
+
+    public String getContent() {
+        if (isDeleted) {
+            return null;
+        }
+        return content;
+    }
 }

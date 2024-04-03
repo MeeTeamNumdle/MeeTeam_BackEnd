@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_comment.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_USER;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentException;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.global.entity.BaseEntity;
 
@@ -65,5 +67,24 @@ public class RecruitmentComment extends BaseEntity {
     public void updateGroupNumberAndGroupOrder(long groupNumber, long groupOrder) {
         this.groupNumber = groupNumber;
         this.groupOrder = groupOrder;
+    }
+
+    public void softDelete(Long userId) {
+        validateWriter(userId);
+
+        this.isDeleted = true;
+    }
+
+    public boolean hasChildComment(long latestGroupOrder) {
+        if (this.isParent && (this.groupOrder != latestGroupOrder)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void validateWriter(Long userId) {
+        if (!this.getCreatedBy().equals(userId)) {
+            throw new RecruitmentCommentException(INVALID_USER);
+        }
     }
 }

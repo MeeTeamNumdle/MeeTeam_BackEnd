@@ -22,6 +22,10 @@ public class Encryption {
     }
 
     public static String encryptLong(Long value) {
+        if (value == null) {
+            return null;
+        }
+
         try {
             SecretKeySpec keySpec = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);

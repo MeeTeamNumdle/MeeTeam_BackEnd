@@ -21,6 +21,7 @@ import synk.meeteam.infra.s3.service.S3Service;
 @Service
 @RequiredArgsConstructor
 public class RecruitmentCommentService {
+
     private final RecruitmentCommentRepository recruitmentCommentRepository;
     private final S3Service s3Service;
 
@@ -38,11 +39,12 @@ public class RecruitmentCommentService {
             String profileImg = s3Service.createPreSignedGetUrl(
                     S3FileName.USER,
                     comment.getProfileImg());
+            String commentWriterId = Encryption.encryptLong(comment.getUserId());
+
             if (comment.isParent()) {
                 List<GetReplyResponseDto> replies = new ArrayList<>();
                 groupedComments.add(
-                        new GetCommentResponseDto(comment.getId(), Encryption.encryptLong(comment.getUserId()),
-                                comment.getNickname(), profileImg,
+                        new GetCommentResponseDto(comment.getId(), commentWriterId, comment.getNickname(), profileImg,
                                 comment.getContent(), comment.getCreateAt(), isWriter, comment.getGroupNumber(),
                                 comment.getGroupOrder(), replies));
                 continue;
@@ -55,6 +57,23 @@ public class RecruitmentCommentService {
         }
 
         return groupedComments;
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId, Long userId, RecruitmentPost recruitmentPost) {
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findByIdOrElseThrow(commentId);
+
+        recruitmentComment.validateWriter(userId);
+
+        RecruitmentComment latestRecruitmentComment = recruitmentCommentRepository.findLatestGroupOrderOrElseThrow(
+                recruitmentPost, recruitmentComment.getGroupNumber());
+
+        if (recruitmentComment.hasChildComment(latestRecruitmentComment.getGroupOrder())) {
+            recruitmentComment.softDelete(userId);
+            return;
+        }
+
+        recruitmentCommentRepository.delete(recruitmentComment);
     }
 
     @Transactional
@@ -85,7 +104,7 @@ public class RecruitmentCommentService {
     }
 
     private long getNewGroupOrder(RecruitmentPost recruitmentPost, long groupNumber) {
-        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrderDesc(
                 recruitmentPost, groupNumber).orElse(null);
 
         if (recruitmentComment == null) {
