@@ -17,4 +17,30 @@ public class SearchCondition {
     private List<Long> skillIds;
     private List<Long> tagIds;
     private List<Long> roleIds;
+    private Long courseId;
+    private Long professorId;
+
+    public boolean isExistField() {
+        return fieldId != null;
+    }
+
+    public boolean isExistSkills() {
+        return skillIds != null && !skillIds.isEmpty();
+    }
+
+    public boolean isExistTags() {
+        return tagIds != null && !tagIds.isEmpty();
+    }
+
+    public boolean isExistRoles() {
+        return roleIds != null && !roleIds.isEmpty();
+    }
+
+    public boolean isExistCourse() {
+        return courseId != null;
+    }
+
+    public boolean isExistProfessor() {
+        return professorId != null;
+    }
 }
