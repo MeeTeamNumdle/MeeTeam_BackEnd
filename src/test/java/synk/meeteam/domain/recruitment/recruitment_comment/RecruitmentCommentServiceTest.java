@@ -357,4 +357,57 @@ public class RecruitmentCommentServiceTest {
 
     }
 
+    @Test
+    void 댓글수정_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상 제목입니다.");
+        Long userId = 1L;
+        Long commentId = 1L;
+        long groupNumber = 1;
+        long groupOrder = 1;
+
+        RecruitmentComment comment = RecruitmentComment.builder()
+                .content("저 하고 싶어요")
+                .isParent(true)
+                .recruitmentPost(recruitmentPost)
+                .groupNumber(groupNumber)
+                .groupOrder(groupOrder)
+                .build();
+
+        comment.setCreatedBy(userId);
+
+        doReturn(comment).when(recruitmentCommentRepository).findByIdOrElseThrow(any());
+
+        // when, then
+        recruitmentCommentService.modifyRecruitmentComment(userId, commentId, "수정내용입니다.");
+    }
+
+    @Test
+    void 댓글수정_예외발생_작성자가아닌경우() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상 제목입니다.");
+        Long userId = 1L;
+        Long commentId = 1L;
+        long groupNumber = 1;
+        long groupOrder = 1;
+
+        RecruitmentComment comment = RecruitmentComment.builder()
+                .content("저 하고 싶어요")
+                .isParent(true)
+                .recruitmentPost(recruitmentPost)
+                .groupNumber(groupNumber)
+                .groupOrder(groupOrder)
+                .build();
+
+        comment.setCreatedBy(0L);
+
+        doReturn(comment).when(recruitmentCommentRepository).findByIdOrElseThrow(any());
+
+        // when, then
+        Assertions.assertThatThrownBy(
+                        () -> recruitmentCommentService.modifyRecruitmentComment(userId, commentId, "수정내용입니다."))
+                .isInstanceOf(RecruitmentCommentException.class)
+                .hasMessageContaining(INVALID_USER.message());
+    }
+
 }

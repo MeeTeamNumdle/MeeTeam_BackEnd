@@ -31,6 +31,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.DatabaseCleanUp;
@@ -39,6 +40,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CourseTagDto
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ModifyCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.RecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -79,6 +81,8 @@ public class RecruitmentPostTest {
 
     @BeforeEach
     void init() {
+        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set(accessHeader, TOKEN);
@@ -369,6 +373,52 @@ public class RecruitmentPostTest {
         // when
         String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment";
         ResponseEntity<ExceptionResponse> ResponseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity,
+                ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, ResponseEntity.getStatusCode());
+        assertEquals(INVALID_USER.name(), ResponseEntity.getBody().getName());
+    }
+
+    @Test
+    void 댓글수정_성공() {
+        // given
+        Long postId = 1L;
+        Long commentId = 1L;
+        String modifyContent = "수정내용입니다.";
+
+        ModifyCommentRequestDto requestDto = new ModifyCommentRequestDto(commentId, modifyContent);
+        HttpEntity<ModifyCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment";
+        ResponseEntity<Void> responseEntity1 = restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, Void.class);
+
+        assertEquals(HttpStatus.OK, responseEntity1.getStatusCode());
+
+        url = RECRUITMENT_URL + "/" + postId.toString();
+        requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<GetRecruitmentPostResponseDto> responseEntity2 = restTemplate.exchange(url, HttpMethod.GET,
+                requestEntity, GetRecruitmentPostResponseDto.class);
+
+        // then
+        GetRecruitmentPostResponseDto body = responseEntity2.getBody();
+
+        assertEquals(body.comments().get(0).content(), modifyContent);
+    }
+
+    @Test
+    void 댓글수정_예외발생_댓글작성자가아닌경우() {
+        // given
+        Long postId = 1L;
+        Long commentId = 1L;
+        headers.set(accessHeader, TOKEN_OTHER);
+        ModifyCommentRequestDto requestDto = new ModifyCommentRequestDto(commentId, "수정내용입니다.");
+        HttpEntity<ModifyCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment";
+        ResponseEntity<ExceptionResponse> ResponseEntity = restTemplate.exchange(url, HttpMethod.PATCH, requestEntity,
                 ExceptionResponse.class);
 
         // then
