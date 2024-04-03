@@ -2,6 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post.repository.vo;
 
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 import synk.meeteam.global.entity.Category;
@@ -17,11 +18,12 @@ public class RecruitmentPostVo {
     private String writerProfileImg;
     private LocalDate deadline;
     private Boolean isBookmarked;
+    private LocalDateTime createdAt;
 
     @Builder
     @QueryProjection
     public RecruitmentPostVo(Long id, String title, Category category, String writerNickname, String writerProfileImg,
-                             LocalDate deadline, Scope scope, Boolean isBookmarked) {
+                             LocalDate deadline, Scope scope, Boolean isBookmarked, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -30,5 +32,6 @@ public class RecruitmentPostVo {
         this.deadline = deadline;
         this.scope = scope;
         this.isBookmarked = isBookmarked;
+        this.createdAt = createdAt;
     }
 }
