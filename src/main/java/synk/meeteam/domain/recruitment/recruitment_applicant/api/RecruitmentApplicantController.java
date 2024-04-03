@@ -6,12 +6,14 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.role.dto.RoleDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ApproveApplicantRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.SetLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRecruitmentRoleStatusResponseDto;
@@ -60,6 +62,15 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
         return ResponseEntity.ok()
                 .body(new GetApplicantInfoResponseDto(recruitmentPost.getTitle(), recruitmentPost.getKakaoLink(),
                         roleStatusResponseDtos, roleDtos));
+    }
+
+    @PatchMapping("/{id}/approve")
+    @Override
+    public ResponseEntity<Void> approveApplicant(@PathVariable("id") Long postId,
+                                                 @RequestBody ApproveApplicantRequestDto requestDto,
+                                                 @AuthUser User user) {
+
+        return ResponseEntity.ok().build();
     }
 
 }
