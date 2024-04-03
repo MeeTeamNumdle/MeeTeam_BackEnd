@@ -3,6 +3,7 @@ package synk.meeteam.domain.recruitment.recruitment_post;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_COMMENT;
+import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_USER;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE_EXCEED_40;
 import static synk.meeteam.domain.recruitment.recruitment_role.exception.RecruitmentRoleExceptionType.INVALID_RECRUITMENT_ROLE_ID;
 import static synk.meeteam.global.common.exception.GlobalExceptionType.INVALID_INPUT_VALUE;
@@ -37,6 +38,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruit
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CourseTagDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.RecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -58,6 +60,9 @@ public class RecruitmentPostTest {
     private String refreshHeader;
 
     private String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInBsYXRmb3JtSWQiOiJEaTdsQ2hNR3hqWlZUYWk2ZDc2SG8xWUxEVV94TDh0bDFDZmRQTVY1U1FNIiwicGxhdGZvcm1UeXBlIjoiTkFWRVIiLCJpYXQiOjE3MDg1OTkyMTMsImV4cCI6MTgxNjU5OTIxM30.C9Rt8t2dM_9pmUIwyMiRwi2kZSXAFVJnjAPj2rTbQtw";
+
+    private String TOKEN_OTHER = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInBsYXRmb3JtSWQiOiJEaTdsQ2hNR3hqWlZUYWk2ZDc2SG8xWUxEVV94TDh0bDFDZmRQTVY1U1ExIiwicGxhdGZvcm1UeXBlIjoiTkFWRVIiLCJpYXQiOjE3MDg1OTkyMTMsImV4cCI6MTgxNjU5OTIxM30.ujVS6-qGhaOYJv0aPet3tgcc5iN93-k0Kv9w1rETFpA";
+
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -332,6 +337,43 @@ public class RecruitmentPostTest {
         // then
         assertEquals(HttpStatus.BAD_REQUEST, twiceResponseEntity.getStatusCode());
         assertEquals(INVALID_COMMENT.name(), twiceResponseEntity.getBody().getName());
+    }
+
+    @Test
+    void 댓글삭제_예외발생_존재하지않은댓글경우() {
+        // given
+        Long postId = 1L;
+        Long commentId = 0L;
+        DeleteCommentRequestDto requestDto = new DeleteCommentRequestDto(commentId);
+        HttpEntity<DeleteCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment";
+        ResponseEntity<ExceptionResponse> ResponseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity,
+                ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, ResponseEntity.getStatusCode());
+        assertEquals(INVALID_COMMENT.name(), ResponseEntity.getBody().getName());
+    }
+
+    @Test
+    void 댓글삭제_예외발생_댓글작성자가아닌경우() {
+        // given
+        Long postId = 1L;
+        Long commentId = 1L;
+        headers.set(accessHeader, TOKEN_OTHER);
+        DeleteCommentRequestDto requestDto = new DeleteCommentRequestDto(commentId);
+        HttpEntity<DeleteCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment";
+        ResponseEntity<ExceptionResponse> ResponseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity,
+                ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, ResponseEntity.getStatusCode());
+        assertEquals(INVALID_USER.name(), ResponseEntity.getBody().getName());
     }
 
     ///////// Dto 생성 로직 /////////

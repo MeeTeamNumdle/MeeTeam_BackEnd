@@ -14,11 +14,15 @@ public interface RecruitmentCommentRepository extends JpaRepository<RecruitmentC
 
     Optional<RecruitmentComment> findFirstByRecruitmentPostOrderByGroupNumberDesc(RecruitmentPost recruitmentPost);
 
-    Optional<RecruitmentComment> findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(
+    Optional<RecruitmentComment> findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrderDesc(
             RecruitmentPost recruitmentPost, long groupNumber);
 
     default RecruitmentComment findLatestGroupOrderOrElseThrow(RecruitmentPost recruitmentPost, long groupNumber) {
-        return findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrder(recruitmentPost, groupNumber).orElseThrow(
+        return findFirstByRecruitmentPostAndGroupNumberOrderByGroupOrderDesc(recruitmentPost, groupNumber).orElseThrow(
                 () -> new RecruitmentCommentException(INVALID_COMMENT));
+    }
+
+    default RecruitmentComment findByIdOrElseThrow(Long commentId) {
+        return findById(commentId).orElseThrow(() -> new RecruitmentCommentException(INVALID_COMMENT));
     }
 }
