@@ -92,6 +92,13 @@ public class RecruitmentCommentService {
         return recruitmentCommentRepository.save(recruitmentComment);
     }
 
+    @Transactional
+    public void modifyRecruitmentComment(Long userId, Long commentId, String content) {
+        RecruitmentComment recruitmentComment = recruitmentCommentRepository.findByIdOrElseThrow(commentId);
+
+        recruitmentComment.modifyContent(content, userId);
+    }
+
     private long getNewGroupNumber(RecruitmentPost recruitmentPost) {
         RecruitmentComment recruitmentComment = recruitmentCommentRepository.findFirstByRecruitmentPostOrderByGroupNumberDesc(
                 recruitmentPost).orElse(null);

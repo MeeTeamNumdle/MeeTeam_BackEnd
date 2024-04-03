@@ -82,6 +82,12 @@ public class RecruitmentComment extends BaseEntity {
         return false;
     }
 
+    public void modifyContent(String content, Long userId) {
+        validateWriter(userId);
+
+        this.content = content;
+    }
+
     public void validateWriter(Long userId) {
         if (!this.getCreatedBy().equals(userId)) {
             throw new RecruitmentCommentException(INVALID_USER);
