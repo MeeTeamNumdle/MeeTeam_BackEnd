@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.SetLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantInfoResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
@@ -32,4 +33,13 @@ public interface RecruitmentApplicantApi {
     )
     @Operation(summary = "신청 관리 정보 조회 API")
     ResponseEntity<GetApplicantInfoResponseDto> getApplyInfo(@PathVariable("id") Long postId, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "신청자 승인 성공"),
+            }
+    )
+    @Operation(summary = "신청자 승인 API")
+    ResponseEntity<Void> approveApplicant(@PathVariable("id") Long postId, @RequestParam("id") Long id,
+                                          @AuthUser User user);
 }
