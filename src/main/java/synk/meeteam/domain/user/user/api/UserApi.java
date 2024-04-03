@@ -63,6 +63,6 @@ public interface UserApi {
     @Operation(summary = "내 포트폴리오 목록 조회 API")
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<GetUserPortfolioResponseDto> getUserPortfolio(@AuthUser User user,
-                                                                 @RequestParam Long size,
-                                                                 @RequestParam Long page);
+                                                                 @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                 @RequestParam(name = "size", defaultValue = "12") int size);
 }

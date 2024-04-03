@@ -4,11 +4,18 @@ import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExcepti
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.dto.SliceInfo;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +46,17 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public List<Portfolio> getUserPortfolio(Long userId) {
-        return portfolioRepository.findAllByCreatedByOrderByProceedStartAsc(userId);
+    public List<Portfolio> getUserPinPortfolio(Long userId) {
+        return portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(userId);
+    }
+
+    @Override
+    public GetUserPortfolioResponseDto getMyAllPortfolio(int page, int size, User user) {
+        int pageNumber = page - 1;
+        Pageable pageable = PageRequest.of(pageNumber, size);
+        Slice<GetProfilePortfolioDto> userPortfolioDtos = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
+                pageable, user);
+        SliceInfo pageInfo = new SliceInfo(page, size, userPortfolioDtos.hasNext());
+        return new GetUserPortfolioResponseDto(userPortfolioDtos.getContent(), pageInfo);
     }
 }
