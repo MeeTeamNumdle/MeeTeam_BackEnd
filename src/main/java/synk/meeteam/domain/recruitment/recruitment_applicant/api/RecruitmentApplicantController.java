@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.role.dto.RoleDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ApproveApplicantRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.SetLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRecruitmentRoleStatusResponseDto;
@@ -67,7 +67,7 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
     @PatchMapping("/{id}/approve")
     @Override
     public ResponseEntity<Void> approveApplicant(@PathVariable("id") Long postId,
-                                                 @RequestParam("applicant-id") Long applicantId,
+                                                 @RequestBody ApproveApplicantRequestDto requestDto,
                                                  @AuthUser User user) {
 
         return ResponseEntity.ok().build();
