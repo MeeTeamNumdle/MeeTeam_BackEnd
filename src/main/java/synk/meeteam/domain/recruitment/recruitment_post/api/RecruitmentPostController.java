@@ -38,6 +38,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruit
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ModifyCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
@@ -256,6 +257,17 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
         recruitmentCommentService.deleteComment(requestDto.commentId(), user.getId(), recruitmentPost);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/comment")
+    @Override
+    public ResponseEntity<Void> modifyComment(@PathVariable("id") Long postId,
+                                              @Valid @RequestBody ModifyCommentRequestDto requestDto,
+                                              @AuthUser User user) {
+
+        recruitmentCommentService.modifyRecruitmentComment(user.getId(), requestDto.commentId(), requestDto.content());
 
         return ResponseEntity.ok().build();
     }
