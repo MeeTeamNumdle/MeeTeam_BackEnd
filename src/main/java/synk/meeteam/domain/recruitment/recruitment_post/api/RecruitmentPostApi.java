@@ -19,6 +19,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruit
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ModifyCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetRecruitmentPostResponseDto;
@@ -164,4 +165,15 @@ public interface RecruitmentPostApi {
     ResponseEntity<Void> deleteComment(@PathVariable("id") Long postId,
                                        @Valid @RequestBody DeleteCommentRequestDto requestDto, @AuthUser User user);
 
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "댓글 삭제 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "댓글 수정 API", tags = {"comment"})
+    ResponseEntity<Void> modifyComment(@PathVariable("id") Long postId,
+                                       @Valid @RequestBody ModifyCommentRequestDto requestDto, @AuthUser User user);
 }
