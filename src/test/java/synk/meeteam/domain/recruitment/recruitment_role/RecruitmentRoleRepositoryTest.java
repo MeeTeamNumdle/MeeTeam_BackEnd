@@ -151,4 +151,34 @@ public class RecruitmentRoleRepositoryTest {
         assertThat(availableRoleDtos.size()).isEqualTo(0);
 
     }
+
+    @Test
+    void 구인역할조회_성공_id리스트로조회() {
+        // given
+        Long postId = 1L;
+        List<Long> roleIds = List.of(1L, 2L);
+
+        // when
+        List<RecruitmentRole> recruitmentRoles = recruitmentRoleRepository.findAllByPostIdAndRoleIds(postId,
+                roleIds);
+
+        // then
+        Assertions.assertThat(recruitmentRoles.get(0).getRole().getName()).isEqualTo("소프트웨어 엔지니어");
+        Assertions.assertThat(recruitmentRoles.get(1).getRole().getName()).isEqualTo("웹 개발자");
+
+    }
+
+    @Test
+    void 구인역할조회_성공_id리스트null인경우() {
+        // given
+        Long postId = 1L;
+        List<Long> roleIds = null;
+
+        // when
+        List<RecruitmentRole> recruitmentRoles = recruitmentRoleRepository.findAllByPostIdAndRoleIds(postId,
+                roleIds);
+
+        // then
+        Assertions.assertThat(recruitmentRoles.size()).isEqualTo(0);
+    }
 }
