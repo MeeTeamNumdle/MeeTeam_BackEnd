@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
@@ -114,5 +115,21 @@ public class RecruitmentApplicantRepositoryTest {
 
         // then
         Assertions.assertThat(recruitmentApplicants.size()).isEqualTo(2);
+    }
+
+    @Test
+    void 신청자승인처리_성공() {
+        // given
+
+        // when
+        recruitmentApplicantRepository.bulkApprove(List.of(1L, 2L));
+
+        // then
+        List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllById(List.of(1L, 2L));
+        recruitmentApplicants.stream()
+                .forEach(applicant -> {
+                    Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.APPROVED);
+                });
+
     }
 }
