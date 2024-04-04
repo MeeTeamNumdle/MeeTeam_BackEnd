@@ -1,11 +1,14 @@
 package synk.meeteam.domain.recruitment.recruitment_applicant;
 
+import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
@@ -17,6 +20,7 @@ import synk.meeteam.domain.user.user.repository.UserRepository;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@Sql({"classpath:test-recruitment-applicant.sql"})
 public class RecruitmentApplicantRepositoryTest {
 
     @Autowired
@@ -30,6 +34,16 @@ public class RecruitmentApplicantRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+
+    @BeforeEach
+    void init() {
+//        databaseCleanUp.clear();
+//        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+//        populator.addScript(new ClassPathResource("data.sql"));
+//        populator.addScript(new ClassPathResource("test-recruitment-applicant.sql"));
+//        populator.execute(dataSource);
+    }
 
     @Test
     void 신청자저장_신청자정보반환_정상경우() {
@@ -89,5 +103,16 @@ public class RecruitmentApplicantRepositoryTest {
         Assertions.assertThatThrownBy(() -> {
             recruitmentApplicantRepository.saveAndFlush(recruitmentApplicant);
         }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void 신청자목록조회_성공() {
+        // given
+
+        // when
+        List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllById(List.of(1L, 2L));
+
+        // then
+        Assertions.assertThat(recruitmentApplicants.size()).isEqualTo(2);
     }
 }
