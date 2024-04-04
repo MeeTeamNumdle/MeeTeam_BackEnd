@@ -126,4 +126,32 @@ public class RecruitmentPostEntityTest {
 
     }
 
+    @Test
+    void 응답횟수증가_성공() {
+        // given
+        Long userId = 1L;
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상 제목입니다.");
+        recruitmentPost.setCreatedBy(userId);
+
+        // when
+        recruitmentPost.incrementResponseCount(userId, 3L);
+
+        // then
+        Assertions.assertThat(recruitmentPost.getResponseCount()).isEqualTo(3L);
+    }
+
+    @Test
+    void 응답횟수증가_예외발생_작성자가아닌경우() {
+        // given
+        Long userId = 1L;
+        Long writerId = 2L;
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상 제목입니다.");
+        recruitmentPost.setCreatedBy(writerId);
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> recruitmentPost.incrementResponseCount(userId, 3L))
+                .isInstanceOf(RecruitmentPostException.class)
+                .hasMessageContaining(INVALID_USER_ID.message());
+    }
+
 }
