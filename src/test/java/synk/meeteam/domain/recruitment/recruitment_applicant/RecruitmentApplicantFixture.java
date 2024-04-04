@@ -18,4 +18,16 @@ public class RecruitmentApplicantFixture {
                 .recruitStatus(RecruitStatus.NONE)
                 .build();
     }
+
+    public static RecruitmentApplicant createApprovedRecruitmentApplicant(RecruitmentPost recruitmentPost,
+                                                                          User applicant,
+                                                                          Role role) {
+        return RecruitmentApplicant.builder()
+                .recruitmentPost(recruitmentPost)
+                .applicant(applicant)
+                .role(role)
+                .comment("저 하고 싶어영")
+                .recruitStatus(RecruitStatus.APPROVED)
+                .build();
+    }
 }
