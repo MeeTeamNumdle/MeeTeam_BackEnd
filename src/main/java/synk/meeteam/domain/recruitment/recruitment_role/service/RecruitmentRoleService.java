@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_role.service;
 
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,4 +55,16 @@ public class RecruitmentRoleService {
     public List<RecruitmentRole> findApplyStatusRecruitmentRole(Long postId) {
         return recruitmentRoleRepository.findAllByPostIdWithRecruitmentRoleAndRole(postId);
     }
+
+    @Transactional
+    public void incrementRecruitedCount(Long postId, Long userId, List<Long> roleIds, Map<Long, Long> recruitedCounts) {
+        List<RecruitmentRole> recruitmentRoles = recruitmentRoleRepository.findAllByPostIdAndRoleIds(postId, roleIds);
+
+        recruitmentRoles.stream()
+                .forEach(recruitmentRole -> {
+                    long recruitedCount = recruitedCounts.get(recruitmentRole.getRole().getId());
+                    recruitmentRole.incrementRecruitedCount(recruitedCount, userId);
+                });
+    }
+
 }

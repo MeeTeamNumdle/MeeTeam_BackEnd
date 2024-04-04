@@ -28,6 +28,6 @@ public class RecruitmentApplicantFacade {
         Map<Long, Long> recruitedCounts = recruitmentApplicantService.getRecruitedCounts(applicants);
 
         recruitmentPostService.incrementResponseCount(postId, userId, applicantIds.size());
-        recruitmentRoleService.incrementRecruitedCount(postId, roleIds, recruitedCounts);
+        recruitmentRoleService.incrementRecruitedCount(postId, userId, roleIds, recruitedCounts);
     }
 }

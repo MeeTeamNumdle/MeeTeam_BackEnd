@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_role.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_USER;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.RecruitmentRoleSkill;
 
@@ -61,5 +63,17 @@ public class RecruitmentRole {
 
     public void addApplicantCount() {
         this.applicantCount += 1;
+    }
+
+    public void incrementRecruitedCount(long recruitedCount, Long userId) {
+        validateWriter(userId);
+
+        this.recruitedCount += recruitedCount;
+    }
+
+    private void validateWriter(Long userId) {
+        if (!this.getRecruitmentPost().getCreatedBy().equals(userId)) {
+            throw new RecruitmentApplicantException(INVALID_USER);
+        }
     }
 }
