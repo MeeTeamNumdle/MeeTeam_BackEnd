@@ -2,7 +2,9 @@ package synk.meeteam.domain.recruitment.recruitment_applicant.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +27,28 @@ public class RecruitmentApplicantService {
         return recruitmentApplicantRepository.findAllById(applicantIds);
     }
 
+    @Transactional(readOnly = true)
+    public List<Long> getRoleIds(List<RecruitmentApplicant> approvedApplicants) {
+        return approvedApplicants.stream()
+                .map(applicant -> applicant.getRole().getId()).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, Long> getRecruitedCounts(List<RecruitmentApplicant> approvedApplicants) {
+        Map<Long, Long> recruitedRoleCounts = new HashMap<>();
+        approvedApplicants.stream()
+                .forEach(applicant -> {
+                    recruitedRoleCounts.putIfAbsent(applicant.getRole().getId(), 0L);
+
+                    recruitedRoleCounts.put(applicant.getRole().getId(),
+                            recruitedRoleCounts.get(applicant.getRole().getId()) + 1);
+                });
+
+        return recruitedRoleCounts;
+    }
+
     @Transactional
-    public void approveApplicants(List<Long> applicantIds, List<RecruitmentApplicant> applicants, Long userId) {
+    public void approveApplicants(List<RecruitmentApplicant> applicants, List<Long> applicantIds, Long userId) {
         validateCanApprove(applicants, userId);
         validateApplicantCount(applicantIds.size(), applicants.size());
 
