@@ -2,7 +2,6 @@ package synk.meeteam.domain.recruitment.recruitment_applicant;
 
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -36,22 +35,12 @@ public class RecruitmentApplicantRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-
-    @BeforeEach
-    void init() {
-//        databaseCleanUp.clear();
-//        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-//        populator.addScript(new ClassPathResource("data.sql"));
-//        populator.addScript(new ClassPathResource("test-recruitment-applicant.sql"));
-//        populator.execute(dataSource);
-    }
-
     @Test
     void 신청자저장_신청자정보반환_정상경우() {
         // given
-        Role role = roleRepository.findByIdOrElseThrowException(1L);
-        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(1L);
-        User user = userRepository.findByIdOrElseThrow(1L);
+        Role role = roleRepository.findByIdOrElseThrowException(2L);
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(2L);
+        User user = userRepository.findByIdOrElseThrow(2L);
 
         RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user, role);
@@ -71,10 +60,11 @@ public class RecruitmentApplicantRepositoryTest {
     @Test
     void 신청자저장_예외발생_이미신청한경우() {
         // given
+        Long postId = 2L;
         Role role = roleRepository.findByIdOrElseThrowException(1L);
         Role newRole = roleRepository.findByIdOrElseThrowException(2L);
 
-        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(1L);
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
         User user = userRepository.findByIdOrElseThrow(1L);
 
         RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
