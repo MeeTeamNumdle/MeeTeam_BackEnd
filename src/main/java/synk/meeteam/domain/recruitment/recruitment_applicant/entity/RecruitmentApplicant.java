@@ -64,11 +64,13 @@ public class RecruitmentApplicant extends BaseTimeEntity {
     private RecruitStatus recruitStatus;
 
     @Builder
-    public RecruitmentApplicant(RecruitmentPost recruitmentPost, User applicant, Role role, String comment) {
+    public RecruitmentApplicant(RecruitmentPost recruitmentPost, User applicant, Role role, String comment,
+                                RecruitStatus recruitStatus) {
         this.recruitmentPost = recruitmentPost;
         this.applicant = applicant;
         this.role = role;
         this.comment = comment;
+        this.recruitStatus = recruitStatus;
     }
 
     public void validateCanApprove(Long userId) {

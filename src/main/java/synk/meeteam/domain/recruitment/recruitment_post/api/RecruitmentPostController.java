@@ -29,6 +29,7 @@ import synk.meeteam.domain.common.tag.dto.TagDto;
 import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_comment.entity.RecruitmentComment;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
@@ -159,7 +160,8 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         RecruitmentRole recruitmentRole = recruitmentRoleService.findAppliableRecruitmentRole(requestDto.applyRoleId());
 
         RecruitmentApplicant recruitmentApplicant = recruitmentPostMapper.toRecruitmentApplicantEntity(
-                recruitmentRole.getRecruitmentPost(), recruitmentRole.getRole(), user, requestDto.message());
+                recruitmentRole.getRecruitmentPost(), recruitmentRole.getRole(), user, requestDto.message(),
+                RecruitStatus.NONE);
 
         recruitmentPostFacade.applyRecruitment(recruitmentRole, recruitmentApplicant);
 
