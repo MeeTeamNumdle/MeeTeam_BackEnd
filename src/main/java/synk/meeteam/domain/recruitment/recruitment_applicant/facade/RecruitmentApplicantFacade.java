@@ -9,6 +9,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentA
 import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
+import synk.meeteam.infra.mail.MailService;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,8 @@ public class RecruitmentApplicantFacade {
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentApplicantService recruitmentApplicantService;
+
+    private final MailService mailService;
 
     @Transactional
     public void approveApplicant(Long postId, Long userId, List<Long> applicantIds) {
@@ -29,5 +32,7 @@ public class RecruitmentApplicantFacade {
 
         recruitmentPostService.incrementResponseCount(postId, userId, applicantIds.size());
         recruitmentRoleService.incrementRecruitedCount(postId, userId, roleIds, recruitedCounts);
+
+        mailService.sendApproveMails(postId, applicants);
     }
 }
