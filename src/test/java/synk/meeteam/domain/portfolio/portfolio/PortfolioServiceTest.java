@@ -2,6 +2,7 @@ package synk.meeteam.domain.portfolio.portfolio;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -14,11 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioServiceImpl;
+import synk.meeteam.domain.user.user.entity.User;
 
 @ExtendWith(MockitoExtension.class)
 public class PortfolioServiceTest {
@@ -72,11 +76,26 @@ public class PortfolioServiceTest {
     void 포트폴리오목록조회_목록조회성공() {
         //given
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByCreatedByOrderByProceedStartAsc(anyLong());
+                .findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(anyLong());
         //when
-        List<Portfolio> userPortfolio = portfolioService.getUserPortfolio(anyLong());
+        List<Portfolio> userPortfolio = portfolioService.getUserPinPortfolio(anyLong());
         //then
         assertThat(userPortfolio).extracting("title").containsExactly("타이틀1", "타이틀2");
     }
 
+    @Test
+    void 내포트폴리오목록조회_목록조회성공() {
+        //given
+        doReturn(PortfolioFixture.createSlicePortfolioDtos()).when(portfolioRepository)
+                .findUserPortfoliosByUserOrderByCreatedAtDesc(eq(PageRequest.of(0, 12)), any());
+        //when
+        GetUserPortfolioResponseDto userAllPortfolios = portfolioService.getMyAllPortfolio(1, 12,
+                User.builder().build());
+
+        //then
+        assertThat(userAllPortfolios.portfolios()).extracting("title").containsExactly("타이틀1", "타이틀2");
+        assertThat(userAllPortfolios.pageInfo().page()).isEqualTo(1);
+        assertThat(userAllPortfolios.pageInfo().size()).isEqualTo(12);
+        assertThat(userAllPortfolios.pageInfo().hasNextPage()).isEqualTo(false);
+    }
 }

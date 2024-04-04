@@ -50,7 +50,6 @@ public class RecruitmentApplicantTest {
         databaseCleanUp.clear();
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("data.sql"));
-        populator.addScript(new ClassPathResource("test-recruitment-applicant.sql"));
         populator.execute(dataSource);
     }
 

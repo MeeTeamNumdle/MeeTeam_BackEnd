@@ -38,8 +38,7 @@ public class RecruitmentRoleService {
 
     @Transactional(readOnly = true)
     public List<AvailableRecruitmentRoleDto> findAvailableRecruitmentRole(Long postId) {
-        return recruitmentRoleRepository.findAvailableRecruitmentRoleByRecruitmentId(
-                postId);
+        return recruitmentRoleRepository.findAvailableRecruitmentRoleByRecruitmentId(postId);
     }
 
     @Transactional

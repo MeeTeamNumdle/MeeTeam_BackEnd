@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import synk.meeteam.domain.common.role.dto.RoleDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ApproveApplicantRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.SetLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantInfoResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRecruitmentRoleStatusResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.facade.RecruitmentApplicantFacade;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
@@ -58,8 +58,8 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
                         role.getRecruitedCount()))
                 .toList();
 
-        List<RoleDto> roleDtos = applyStatusRecruitmentRoles.stream()
-                .map(role -> new RoleDto(role.getRole().getId(), role.getRole().getName()))
+        List<GetRoleDto> roleDtos = applyStatusRecruitmentRoles.stream()
+                .map(role -> new GetRoleDto(role.getRole().getId(), role.getRole().getName()))
                 .toList();
 
         return ResponseEntity.ok()

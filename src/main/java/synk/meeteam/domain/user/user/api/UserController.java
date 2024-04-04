@@ -1,7 +1,6 @@
 package synk.meeteam.domain.user.user.api;
 
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,15 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
+import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.ProfileFacade;
 import synk.meeteam.domain.user.user.service.UserService;
-import synk.meeteam.global.dto.PageInfo;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.security.AuthUser;
 
@@ -29,6 +27,7 @@ import synk.meeteam.security.AuthUser;
 public class UserController implements UserApi {
 
     private final UserService userService;
+    private final PortfolioService portfolioService;
     private final ProfileFacade profileFacade;
 
     @Override
@@ -65,28 +64,8 @@ public class UserController implements UserApi {
     @Override
     @GetMapping("/portfolios")
     public ResponseEntity<GetUserPortfolioResponseDto> getUserPortfolio(
-            @AuthUser User user, @RequestParam(name = "size", defaultValue = "10") Long size,
-            @RequestParam(name = "page", defaultValue = "1") Long page) {
-        return ResponseEntity.ok(
-                new GetUserPortfolioResponseDto(
-                        List.of(
-                                new GetProfilePortfolioDto(1L,
-                                        "타이틀1",
-                                        "https://image.png",
-                                        "개발",
-                                        "백엔드",
-                                        true,
-                                        1L),
-                                new GetProfilePortfolioDto(2L,
-                                        "타이틀2",
-                                        "https://image.png",
-                                        "개발",
-                                        "프론트",
-                                        true,
-                                        2L)
-                        ),
-                        new PageInfo(1, 10, 30L, 3)
-                )
-        );
+            @AuthUser User user, @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "12") int size) {
+        return ResponseEntity.ok(portfolioService.getMyAllPortfolio(page, size, user));
     }
 }
