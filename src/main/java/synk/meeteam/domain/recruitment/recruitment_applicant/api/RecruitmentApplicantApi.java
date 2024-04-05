@@ -5,13 +5,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ApproveApplicantRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ProcessApplicantRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.SetLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantInfoResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.security.AuthUser;
 
@@ -54,4 +57,14 @@ public interface RecruitmentApplicantApi {
     ResponseEntity<Void> rejectApplicants(@PathVariable("id") Long postId,
                                           @RequestBody ProcessApplicantRequestDto requestDto,
                                           @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "신청자 목록 조회 성공"),
+            }
+    )
+    @Operation(summary = "신청자 목록 조회 API")
+    ResponseEntity<List<GetApplicantResponseDto>> getApplicants(@PathVariable("id") Long postId,
+                                                                @RequestParam(value = "role", required = false) Long roleId,
+                                                                @AuthUser User user);
 }
