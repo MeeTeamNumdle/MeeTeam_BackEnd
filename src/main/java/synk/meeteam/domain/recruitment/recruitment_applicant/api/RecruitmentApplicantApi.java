@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ApproveApplicantRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ProcessApplicantRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.SetLinkRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantInfoResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
@@ -42,5 +43,15 @@ public interface RecruitmentApplicantApi {
     @Operation(summary = "신청자 승인 API")
     ResponseEntity<Void> approveApplicant(@PathVariable("id") Long postId,
                                           @RequestBody ApproveApplicantRequestDto requestDto,
+                                          @AuthUser User user);
+
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "신청자 거절 성공"),
+            }
+    )
+    @Operation(summary = "신청자 거절 API")
+    ResponseEntity<Void> rejectApplicants(@PathVariable("id") Long postId,
+                                          @RequestBody ProcessApplicantRequestDto requestDto,
                                           @AuthUser User user);
 }
