@@ -29,7 +29,7 @@ import synk.meeteam.security.AuthUser;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/recruitment/applicant")
+@RequestMapping("/recruitment/applicants")
 public class RecruitmentApplicantController implements RecruitmentApplicantApi {
 
     private final RecruitmentPostService recruitmentPostService;
@@ -85,7 +85,7 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/applicants")
+    @GetMapping("/{id}")
     @Override
     public ResponseEntity<List<GetApplicantResponseDto>> getApplicants(@PathVariable("id") Long postId,
                                                                        @RequestParam(value = "role", required = false) Long roleId,
