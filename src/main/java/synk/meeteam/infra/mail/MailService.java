@@ -78,9 +78,10 @@ public class MailService {
         }
         MimeMessage message = mailSender.createMimeMessage();
 
-        for (RecruitmentApplicant applicant : applicants) {
-            String receiverMail = applicant.getApplicant().isUniversityMainEmail() ? applicant.getApplicant()
-                    .getUniversityEmail() : applicant.getApplicant().getSubEmail();
+        for (RecruitmentApplicant recruitmentApplicant : applicants) {
+            String receiverMail =
+                    recruitmentApplicant.getApplicant().isUniversityMainEmail() ? recruitmentApplicant.getApplicant()
+                            .getUniversityEmail() : recruitmentApplicant.getApplicant().getSubEmail();
 
             try {
                 message.addRecipients(RecipientType.TO, receiverMail);// 보내는 대상
