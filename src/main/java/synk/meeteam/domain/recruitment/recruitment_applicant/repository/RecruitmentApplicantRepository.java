@@ -10,5 +10,5 @@ public interface RecruitmentApplicantRepository extends JpaRepository<Recruitmen
         RecruitmentApplicantCustomRepository {
 
     @Query("SELECT a FROM RecruitmentApplicant a JOIN FETCH a.recruitmentPost WHERE a.id IN :ids")
-    List<RecruitmentApplicant> findAllById(@Param("ids") List<Long> applicantIds);
+    List<RecruitmentApplicant> findAllInApplicantId(@Param("ids") List<Long> applicantIds);
 }

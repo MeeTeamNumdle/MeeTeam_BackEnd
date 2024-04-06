@@ -24,7 +24,7 @@ public class RecruitmentApplicantService {
 
     @Transactional(readOnly = true)
     public List<RecruitmentApplicant> getAllApplicants(List<Long> applicantIds) {
-        return recruitmentApplicantRepository.findAllById(applicantIds);
+        return recruitmentApplicantRepository.findAllInApplicantId(applicantIds);
     }
 
     @Transactional(readOnly = true)

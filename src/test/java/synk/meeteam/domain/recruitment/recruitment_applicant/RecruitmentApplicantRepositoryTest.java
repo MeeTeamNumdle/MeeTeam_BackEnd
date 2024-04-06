@@ -101,7 +101,8 @@ public class RecruitmentApplicantRepositoryTest {
         // given
 
         // when
-        List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllById(List.of(1L, 2L));
+        List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
+                List.of(1L, 2L));
 
         // then
         Assertions.assertThat(recruitmentApplicants.size()).isEqualTo(2);
@@ -115,7 +116,8 @@ public class RecruitmentApplicantRepositoryTest {
         recruitmentApplicantRepository.bulkApprove(List.of(1L, 2L));
 
         // then
-        List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllById(List.of(1L, 2L));
+        List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
+                List.of(1L, 2L));
         recruitmentApplicants.stream()
                 .forEach(applicant -> {
                     Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.APPROVED);
