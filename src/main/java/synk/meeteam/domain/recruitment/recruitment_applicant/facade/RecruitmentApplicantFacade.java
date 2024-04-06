@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.infra.mail.MailService;
 
 @Service
@@ -18,6 +21,7 @@ public class RecruitmentApplicantFacade {
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentApplicantService recruitmentApplicantService;
+    private final UserService userService;
 
     private final MailService mailService;
 
@@ -33,6 +37,8 @@ public class RecruitmentApplicantFacade {
         recruitmentPostService.incrementResponseCount(postId, userId, applicantIds.size());
         recruitmentRoleService.incrementRecruitedCount(postId, userId, roleIds, recruitedCounts);
 
-        mailService.sendApproveMails(postId, applicants);
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        User user = userService.findById(recruitmentPost.getCreatedBy());
+        mailService.sendApproveMails(postId, applicants, user.getName());
     }
 }

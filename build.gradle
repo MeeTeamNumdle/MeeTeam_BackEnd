@@ -98,6 +98,10 @@ dependencies {
 
     // PATCH 메서드 지원을 위함
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3.1'
+
+    // 메일 서비스를 위함
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 }
 
 tasks.named('test') {
