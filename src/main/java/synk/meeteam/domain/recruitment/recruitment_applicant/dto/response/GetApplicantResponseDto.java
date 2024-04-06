@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "GetApplicantResponseDto", description = "신청자 조회 Dto")
 public record GetApplicantResponseDto(
-        @Schema(description = "신청자 id", example = "4OaVE421DSwR63xfKf6vxA==")
+        @Schema(description = "신청 id", example = "1")
+        Long applicantId,
+        @Schema(description = "유저 id", example = "4OaVE421DSwR63xfKf6vxA==")
         String userId,
         @Schema(description = "신청자 닉네임", example = "minji_98")
         String nickname,
