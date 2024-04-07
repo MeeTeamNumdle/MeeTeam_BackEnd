@@ -77,6 +77,17 @@ public interface RecruitmentPostApi {
 
     @ApiResponses(
             value = {
+                    @ApiResponse(responseCode = "200", description = "구인 신청 취소 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "구인 신청 취소 API", tags = {"recruitment"})
+    ResponseEntity<Void> cancelApplyRecruitment(@PathVariable("id") Long postId, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
                     @ApiResponse(responseCode = "200", description = "구인 마감 성공"
                             , content = {
                             @Content(mediaType = APPLICATION_JSON_VALUE)
