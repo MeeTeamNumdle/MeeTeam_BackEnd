@@ -159,7 +159,7 @@ public class RecruitmentApplicantServiceTest {
         RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user2, role2);
 
-        doReturn(2L).when(recruitmentApplicantRepository).bulkApprove(any());
+        doReturn(2L).when(recruitmentApplicantRepository).bulkProcess(any(), any());
 
         // when, then
         recruitmentApplicantService.approveApplicants(List.of(applicant1, applicant2), List.of(userId1, userId2),
@@ -246,6 +246,120 @@ public class RecruitmentApplicantServiceTest {
         // when, then
         Assertions.assertThatThrownBy(
                         () -> recruitmentApplicantService.approveApplicants(List.of(applicant1),
+                                List.of(userId1, userId2), userId1))
+                .isInstanceOf(RecruitmentApplicantException.class)
+                .hasMessageContaining(INVALID_REQUEST.message());
+    }
+
+    @Test
+    void 신청자거절_성공() {
+        // given
+        User user1 = UserFixture.createUser();
+        Long userId1 = 1L;
+        Role role1 = RoleFixture.createRole("백엔드개발자");
+        role1.setId(1L);
+
+        User user2 = UserFixture.createUser();
+        Long userId2 = 1L;
+        Role role2 = RoleFixture.createRole("프론트엔드개발자");
+        role2.setId(2L);
+
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        recruitmentPost.setCreatedBy(userId1);
+
+        RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user1, role1);
+        RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user2, role2);
+
+        doReturn(2L).when(recruitmentApplicantRepository).bulkProcess(any(), any());
+
+        // when, then
+        recruitmentApplicantService.rejectApplicants(List.of(applicant1, applicant2), List.of(userId1, userId2),
+                userId1);
+    }
+
+
+    @Test
+    void 신청자거절_예외발생_작성자가아닌경우() {
+        // given
+        User user1 = UserFixture.createUser();
+        Long userId1 = 1L;
+        Role role1 = RoleFixture.createRole("백엔드개발자");
+        role1.setId(1L);
+
+        User user2 = UserFixture.createUser();
+        Long userId2 = 1L;
+        Role role2 = RoleFixture.createRole("프론트엔드개발자");
+        role2.setId(2L);
+
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        recruitmentPost.setCreatedBy(0L);
+
+        RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user1, role1);
+        RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user2, role2);
+
+        // when, then
+        Assertions.assertThatThrownBy(
+                        () -> recruitmentApplicantService.rejectApplicants(List.of(applicant1, applicant2),
+                                List.of(userId1, userId2), userId1))
+                .isInstanceOf(RecruitmentApplicantException.class)
+                .hasMessageContaining(INVALID_USER.message());
+    }
+
+    @Test
+    void 신청자거절_예외발생_신청상태가NONE아닌경우() {
+        // given
+        User user1 = UserFixture.createUser();
+        Long userId1 = 1L;
+        Role role1 = RoleFixture.createRole("백엔드개발자");
+        role1.setId(1L);
+
+        User user2 = UserFixture.createUser();
+        Long userId2 = 1L;
+        Role role2 = RoleFixture.createRole("프론트엔드개발자");
+        role2.setId(2L);
+
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        recruitmentPost.setCreatedBy(userId1);
+
+        RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createApprovedRecruitmentApplicant(
+                recruitmentPost, user1, role1);
+        RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createApprovedRecruitmentApplicant(
+                recruitmentPost, user2, role2);
+
+        // when, then
+        Assertions.assertThatThrownBy(
+                        () -> recruitmentApplicantService.rejectApplicants(List.of(applicant1, applicant2),
+                                List.of(userId1, userId2), userId1))
+                .isInstanceOf(RecruitmentApplicantException.class)
+                .hasMessageContaining(ALREADY_PROCESSED_APPLICANT.message());
+    }
+
+    @Test
+    void 신청자거절_예외발생_요청신청자와실제신청자가다를경우() {
+        // given
+        User user1 = UserFixture.createUser();
+        Long userId1 = 1L;
+        Role role1 = RoleFixture.createRole("백엔드개발자");
+        role1.setId(1L);
+
+        User user2 = UserFixture.createUser();
+        Long userId2 = 1L;
+        Role role2 = RoleFixture.createRole("프론트엔드개발자");
+        role2.setId(2L);
+
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        recruitmentPost.setCreatedBy(userId1);
+
+        RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user1, role1);
+
+        // when, then
+        Assertions.assertThatThrownBy(
+                        () -> recruitmentApplicantService.rejectApplicants(List.of(applicant1),
                                 List.of(userId1, userId2), userId1))
                 .isInstanceOf(RecruitmentApplicantException.class)
                 .hasMessageContaining(INVALID_REQUEST.message());
