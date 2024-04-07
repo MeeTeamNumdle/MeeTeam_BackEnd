@@ -210,4 +210,10 @@ public class RecruitmentPost extends BaseEntity {
         this.bookmarkCount -= 1;
         return this;
     }
+
+    public void incrementResponseCount(Long userId, long responseCount) {
+        validateWriter(userId);
+
+        this.responseCount += responseCount;
+    }
 }

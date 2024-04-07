@@ -27,4 +27,7 @@ public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole
     }
 
     void deleteAllByRecruitmentPostId(Long postId);
+
+    @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentPost p JOIN FETCH r.role t WHERE p.id = :postId AND t.id IN :roleIds")
+    List<RecruitmentRole> findAllByPostIdAndRoleIds(@Param("postId") Long postId, @Param("roleIds") List<Long> roleIds);
 }

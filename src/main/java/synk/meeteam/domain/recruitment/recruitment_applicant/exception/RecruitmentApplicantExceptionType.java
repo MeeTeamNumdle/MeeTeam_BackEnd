@@ -6,7 +6,10 @@ import synk.meeteam.global.common.exception.ExceptionType;
 
 @RequiredArgsConstructor
 public enum RecruitmentApplicantExceptionType implements ExceptionType {
-    ;
+    INVALID_USER(HttpStatus.BAD_REQUEST, "신청자 정보에 접근할 수 없습니다."),
+    ALREADY_PROCESSED_APPLICANT(HttpStatus.BAD_REQUEST, "이미 신청/거절된 신청자입니다."),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 신청자 처리 요청입니다.");
+
 
     private final HttpStatus status;
     private final String message;
