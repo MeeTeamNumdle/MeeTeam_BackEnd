@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.user.user.entity.User;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +55,17 @@ public class RecruitmentApplicantService {
         validateApplicantCount(applicantIds.size(), applicants.size());
 
         recruitmentApplicantRepository.bulkApprove(applicantIds);
+    }
+
+    @Transactional
+    public boolean isAppliedUser(RecruitmentPost recruitmentPost, User user) {
+        RecruitmentApplicant recruitmentApplicant = recruitmentApplicantRepository.findByRecruitmentPostAndApplicant(
+                recruitmentPost, user).orElse(null);
+
+        if (recruitmentApplicant != null) {
+            return false;
+        }
+        return true;
     }
 
     private void validateCanApprove(List<RecruitmentApplicant> applicants, Long userId) {

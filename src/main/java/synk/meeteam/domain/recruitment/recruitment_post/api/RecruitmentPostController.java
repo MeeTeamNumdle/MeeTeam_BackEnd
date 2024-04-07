@@ -31,6 +31,7 @@ import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
+import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
 import synk.meeteam.domain.recruitment.recruitment_comment.entity.RecruitmentComment;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
@@ -76,6 +77,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentTagService recruitmentTagService;
     private final RecruitmentCommentService recruitmentCommentService;
+    private final RecruitmentApplicantService recruitmentApplicantService;
     private final BookmarkService bookmarkService;
     private final RoleService roleService;
     private final FieldService fieldService;
@@ -130,8 +132,11 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         List<GetCommentResponseDto> recruitmentCommentDtos = recruitmentCommentService.getRecruitmentComments(
                 recruitmentPost);
 
+        boolean isApplied = recruitmentApplicantService.isAppliedUser(recruitmentPost, user);
+
         return ResponseEntity.ok()
-                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isBookmarked, recruitmentRoles, writer,
+                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isApplied, isBookmarked, recruitmentRoles,
+                        writer,
                         writerImgUrl,
                         recruitmentTags,
                         recruitmentCommentDtos, recruitmentPost.getCourse(), recruitmentPost.getProfessor()));
