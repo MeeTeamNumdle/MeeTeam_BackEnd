@@ -113,7 +113,7 @@ public class RecruitmentApplicantRepositoryTest {
         // given
 
         // when
-        recruitmentApplicantRepository.bulkApprove(List.of(1L, 2L));
+        recruitmentApplicantRepository.bulkProcess(List.of(1L, 2L), RecruitStatus.APPROVED);
 
         // then
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
@@ -123,5 +123,21 @@ public class RecruitmentApplicantRepositoryTest {
                     Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.APPROVED);
                 });
 
+    }
+
+    @Test
+    void 신청자거절처리_성공() {
+        // given
+
+        // when
+        recruitmentApplicantRepository.bulkProcess(List.of(1L, 2L), RecruitStatus.REJECTED);
+
+        // then
+        List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
+                List.of(1L, 2L));
+        recruitmentApplicants.stream()
+                .forEach(applicant -> {
+                    Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.REJECTED);
+                });
     }
 }
