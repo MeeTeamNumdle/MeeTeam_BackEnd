@@ -93,4 +93,10 @@ public class RecruitmentPostService {
 
         return recruitmentPost;
     }
+
+    @Transactional
+    public void incrementResponseCount(Long postId, Long userId, long responseCount) {
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
+        recruitmentPost.incrementResponseCount(userId, responseCount);
+    }
 }

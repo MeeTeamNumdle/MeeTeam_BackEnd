@@ -20,6 +20,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApp
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRecruitmentRoleStatusResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRoleDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.facade.RecruitmentApplicantFacade;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
@@ -31,6 +32,8 @@ import synk.meeteam.security.AuthUser;
 @RequiredArgsConstructor
 @RequestMapping("/recruitment/applicants")
 public class RecruitmentApplicantController implements RecruitmentApplicantApi {
+
+    private final RecruitmentApplicantFacade recruitmentApplicantFacade;
 
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
@@ -73,6 +76,11 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
                                                  @RequestBody ApproveApplicantRequestDto requestDto,
                                                  @AuthUser User user) {
 
+        // recruitmentPost 의 responseCount + 1
+        // recruitmentRole 의 recruitedCount + 1 (거절의 경우 변화X)
+        // applicant의 enum 상태 변경
+
+        recruitmentApplicantFacade.approveApplicant(postId, user.getId(), requestDto.applicantIds());
         return ResponseEntity.ok().build();
     }
 
