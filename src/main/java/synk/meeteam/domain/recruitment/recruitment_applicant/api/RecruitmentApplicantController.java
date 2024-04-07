@@ -89,6 +89,7 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
                                                  @RequestBody ProcessApplicantRequestDto requestDto,
                                                  @AuthUser User user) {
 
+        recruitmentApplicantFacade.rejectApplicants(postId, user.getId(), requestDto.applicantIds());
         return ResponseEntity.ok().build();
     }
 
