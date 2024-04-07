@@ -13,10 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.common.role.RoleFixture;
 import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
@@ -25,6 +28,8 @@ import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.UserFixture;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.util.Encryption;
+import synk.meeteam.infra.s3.service.S3Service;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -34,6 +39,9 @@ public class RecruitmentApplicantServiceTest {
 
     @Mock
     private RecruitmentApplicantRepository recruitmentApplicantRepository;
+
+    @Mock
+    private S3Service s3Service;
 
     @Test
     void 신청자저장_신청자정보반환_정상경우() {
@@ -249,5 +257,38 @@ public class RecruitmentApplicantServiceTest {
                                 List.of(userId1, userId2), userId1))
                 .isInstanceOf(RecruitmentApplicantException.class)
                 .hasMessageContaining(INVALID_REQUEST.message());
+    }
+
+    @Test
+    void 신청자목록조회_NONE신청자목록조회_role설정하지않은경우() {
+        // given
+        Long postId = 1L;
+        Long roleId = null;
+
+        GetApplicantResponseDto dto1 = new GetApplicantResponseDto(1L, "1", "닉네임입니다1",
+                "이미지입니다1", "이름입니다1", 4.3, "광운대학교", "소프트웨어학부", 2018,
+                "백엔드개발자", "전하는 말입니다1");
+        GetApplicantResponseDto dto2 = new GetApplicantResponseDto(2L, "2", "닉네임입니다2",
+                "이미지입니다2", "이름입니다2", 4.2, "광운대학교", "소프트웨어학부", 2018,
+                "백엔드개발자", "전하는 말입니다2");
+
+        doReturn(List.of(dto1, dto2)).when(recruitmentApplicantRepository).findByRoleQuery(any(), any());
+        doReturn("이미지입니다").when(s3Service).createPreSignedGetUrl(any(), any());
+        MockedStatic<Encryption> utilities = Mockito.mockStatic(Encryption.class);
+        utilities.when(() -> Encryption.encryptLong(any())).thenReturn("1234");
+
+        // when
+        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId);
+
+        // then
+        Assertions.assertThat(responseDtos.size()).isEqualTo(2);
+
+        Assertions.assertThat(responseDtos.get(0))
+                .extracting("nickname", "name", "applyRoleName")
+                .containsExactly("닉네임입니다1", "이름입니다1", "백엔드개발자");
+        Assertions.assertThat(responseDtos.get(1))
+                .extracting("nickname", "name", "applyRoleName")
+                .containsExactly("닉네임입니다2", "이름입니다2", "백엔드개발자");
+
     }
 }

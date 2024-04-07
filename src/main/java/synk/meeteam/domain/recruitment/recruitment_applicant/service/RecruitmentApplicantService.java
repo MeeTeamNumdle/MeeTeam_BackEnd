@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_applicant.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
+import static synk.meeteam.infra.s3.S3FileName.USER;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,14 +9,18 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
+import synk.meeteam.global.util.Encryption;
+import synk.meeteam.infra.s3.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
 public class RecruitmentApplicantService {
     private final RecruitmentApplicantRepository recruitmentApplicantRepository;
+    private final S3Service s3Service;
 
     @Transactional
     public void registerRecruitmentApplicant(RecruitmentApplicant recruitmentApplicant) {
@@ -53,6 +58,16 @@ public class RecruitmentApplicantService {
         validateApplicantCount(applicantIds.size(), applicants.size());
 
         recruitmentApplicantRepository.bulkApprove(applicantIds);
+    }
+
+    @Transactional
+    public List<GetApplicantResponseDto> getAllByRole(Long postId, Long roleId) {
+        List<GetApplicantResponseDto> applicantDtos = recruitmentApplicantRepository.findByRoleQuery(postId, roleId);
+        applicantDtos.stream().forEach(applicant -> applicant.setEncryptedUserIdAndProfileImg(
+                Encryption.encryptLong(Long.parseLong(applicant.getUserId())),
+                s3Service.createPreSignedGetUrl(USER, applicant.getProfileImg())));
+
+        return applicantDtos;
     }
 
     private void validateCanApprove(List<RecruitmentApplicant> applicants, Long userId) {
