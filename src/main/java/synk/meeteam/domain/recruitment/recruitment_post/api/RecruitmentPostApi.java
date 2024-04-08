@@ -146,6 +146,8 @@ public interface RecruitmentPostApi {
             @RequestParam(value = "skill", required = false) List<Long> skillIds,
             @RequestParam(value = "role", required = false) List<Long> roleIds,
             @RequestParam(value = "tag", required = false) List<Long> tagIds,
+            @RequestParam(value = "course", required = false) Long courseId,
+            @RequestParam(value = "professor", required = false) Long professorId,
             @RequestParam(value = "keyword", required = false) String keyword,
             @AuthUser User user
     );

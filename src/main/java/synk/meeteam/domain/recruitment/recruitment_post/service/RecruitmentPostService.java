@@ -15,6 +15,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPo
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.entity.Scope;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +76,13 @@ public class RecruitmentPostService {
     @Transactional(readOnly = true)
     public PaginationSearchPostResponseDto searchWithPageRecruitmentPost(int size, int page, SearchCondition condition,
                                                                          String keyword, User user) {
+        boolean isNotAuthenticated = user == null;
+
+        if (isNotAuthenticated) {
+            condition.setScope(Scope.OFF_CAMPUS);
+            condition.setCourseId(null);
+            condition.setProfessorId(null);
+        }
         Page<RecruitmentPostVo> postVos = recruitmentPostRepository
                 .findBySearchConditionAndKeyword(PageRequest.of(page - 1, size), condition, keyword, user);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
