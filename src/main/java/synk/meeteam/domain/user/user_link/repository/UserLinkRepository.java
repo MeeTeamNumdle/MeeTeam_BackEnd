@@ -6,7 +6,7 @@ import synk.meeteam.domain.user.user_link.entity.UserLink;
 
 public interface UserLinkRepository extends JpaRepository<UserLink, Long> {
 
-    void deleteAllByCreatedBy(Long id);
+    void deleteAllByCreatedBy(Long userId);
 
     List<UserLink> findAllByCreatedBy(Long userId);
 }

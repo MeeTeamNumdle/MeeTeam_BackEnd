@@ -18,9 +18,9 @@ public class UserLinkServiceImpl implements UserLinkService {
     private final UserLinkMapper userLinkMapper;
 
     @Transactional
-    public List<UserLink> changeUserLinks(Long id, List<UpdateUserLinkDto> userLinkDtos) {
+    public List<UserLink> changeUserLink(Long userId, List<UpdateUserLinkDto> userLinkDtos) {
         //유저 링크 리스트 모두 삭제
-        userLinkRepository.deleteAllByCreatedBy(id);
+        userLinkRepository.deleteAllByCreatedBy(userId);
         //유저 링크 리스트로 변환
         List<UserLink> userLinks = userLinkDtos.stream().map(userLinkMapper::toUserLink).toList();
         //유저 링크 저장
