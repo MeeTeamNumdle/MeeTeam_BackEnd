@@ -56,6 +56,15 @@ jobs:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
         shell: bash
 
+      - name: Make ApproveMail.html
+        run: |
+          cd ./src/main/resources
+          touch ./ApproveMail.html
+          echo "$MAIL_APPROVE_TEMPLATE" > ./ApproveMail.html
+        env:
+          APPLICATION_DEV: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
+        shell: bash
+
       - name: Gradle 권한 부여
         run: chmod +x gradlew
 
