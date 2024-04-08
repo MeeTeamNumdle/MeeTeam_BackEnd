@@ -27,7 +27,7 @@ import synk.meeteam.global.common.exception.ExceptionResponse;
 @ActiveProfiles("test")
 public class RecruitmentApplicantTest {
 
-    private static final String RECRUITMENT_URL = "/recruitment/applicant";
+    private static final String RECRUITMENT_URL = "/recruitment/applicants";
     HttpHeaders headers;
     @Value("${jwt.access.header}")
     private String accessHeader;
