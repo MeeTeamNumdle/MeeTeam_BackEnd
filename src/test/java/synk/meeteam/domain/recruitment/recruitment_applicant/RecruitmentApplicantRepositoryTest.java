@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
@@ -123,5 +124,40 @@ public class RecruitmentApplicantRepositoryTest {
                     Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.APPROVED);
                 });
 
+    }
+
+    @Test
+    void 신청자목록조회_NONE신청자목록조회_role설정하지않은경우() {
+        // given
+        Long postId = 1L;
+
+        // when
+        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId, null);
+
+        // then
+        Assertions.assertThat(responseDtos.size()).isEqualTo(2);
+        Assertions.assertThat(responseDtos.get(0))
+                .extracting("nickname", "name", "applyRoleName", "message")
+                .containsExactly("송민규짱짱맨", "송민규", "소프트웨어 엔지니어", "나 잘할 수 있음");
+        Assertions.assertThat(responseDtos.get(1))
+                .extracting("nickname", "name", "applyRoleName", "message")
+                .containsExactly("나부겸짱짱맨", "나부겸", "웹 개발자", "나 잘할 수 있여");
+    }
+
+    @Test
+    void 신청자목록조회_NONE이면서해당role신청자목록조회_role설정한경우() {
+        // given
+        Long postId = 1L;
+        Long roleId = 2L;
+
+        // when
+        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
+                roleId);
+
+        // then
+        Assertions.assertThat(responseDtos.size()).isEqualTo(1);
+        Assertions.assertThat(responseDtos.get(0))
+                .extracting("nickname", "name", "applyRoleName", "message")
+                .containsExactly("나부겸짱짱맨", "나부겸", "웹 개발자", "나 잘할 수 있여");
     }
 }
