@@ -54,7 +54,7 @@ public class PortfolioRepositoryTest {
     @Test
     void 특정유저의핀포트폴리오목록조회_특정유저의핀포트폴리오목록반환() {
         //when
-        List<Portfolio> portfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(1L);
+        List<Portfolio> portfolios = portfolioRepository.findAllByCreatedByAndIsPinTrue(1L);
         //then
         assertThat(portfolios).extracting("title").containsExactly("타이틀1", "타이틀2");
     }
@@ -62,14 +62,10 @@ public class PortfolioRepositoryTest {
     @Test
     void 유저핀포트폴리오조회_조회성공() {
         //when
-        List<Portfolio> userPortfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(1L);
+        List<Portfolio> userPortfolios = portfolioRepository.findAllByCreatedByAndIsPinTrueOrderByIds(1L,
+                List.of(1L, 2L));
         //then
         assertThat(userPortfolios).extracting("title").containsExactly("타이틀1", "타이틀2");
-        assertThat(userPortfolios).extracting("proceedStart")
-                .containsExactly(
-                        LocalDate.of(2024, 1, 2),
-                        LocalDate.of(2024, 1, 3)
-                );
 
     }
 
