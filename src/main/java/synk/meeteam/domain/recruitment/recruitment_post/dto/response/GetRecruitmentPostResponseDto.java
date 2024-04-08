@@ -16,6 +16,8 @@ import synk.meeteam.global.util.Encryption;
 public record GetRecruitmentPostResponseDto(
         @Schema(description = "내가 해당 글의 작성자인지", example = "true")
         boolean isWriter,
+        @Schema(description = "신청 여부", example = "true")
+        boolean isApplied,
         @Schema(description = "암호화된 해당 글 작성자의 id", example = "40aVE421DSwR63xfKf6vxA==")
         String writerId,
         @Schema(description = "구인 마감 여부", example = "true")
@@ -62,7 +64,8 @@ public record GetRecruitmentPostResponseDto(
         List<GetCommentResponseDto> comments
 
 ) {
-    public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost, boolean isBookmarked,
+    public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost, boolean isApplied,
+                                                     boolean isBookmarked,
                                                      List<RecruitmentRole> recruitmentRoles, User writer,
                                                      String writerProfileImg,
                                                      List<TagDto> recruitmentTags,
@@ -77,6 +80,7 @@ public record GetRecruitmentPostResponseDto(
 
         return GetRecruitmentPostResponseDto.builder()
                 .isWriter(isWriter)
+                .isApplied(isApplied)
                 .writerId(Encryption.encryptLong(writer.getId()))
                 .isClosed(recruitmentPost.isClosed())
                 .isBookmarked(isBookmarked)
@@ -93,8 +97,8 @@ public record GetRecruitmentPostResponseDto(
                 .proceedType(recruitmentPost.getProceedType().getName())
                 .deadline(recruitmentPost.getDeadline().toString())
                 .scope(recruitmentPost.getScope().getName())
-                .courseName(course.getName())
-                .courseProfessor(professor.getName())
+                .courseName(course != null ? course.getName() : null)
+                .courseProfessor(professor != null ? professor.getName() : null)
                 .tags(tagDtos)
                 .recruitmentRoles(getRecruitmentRoleDtos)
                 .content(recruitmentPost.getContent())

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ModifyCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -163,7 +162,7 @@ public interface RecruitmentPostApi {
     )
     @Operation(summary = "댓글 삭제 API", tags = {"comment"})
     ResponseEntity<Void> deleteComment(@PathVariable("id") Long postId,
-                                       @Valid @RequestBody DeleteCommentRequestDto requestDto, @AuthUser User user);
+                                       @PathVariable("comment-id") Long commentId, @AuthUser User user);
 
     @ApiResponses(
             value = {
