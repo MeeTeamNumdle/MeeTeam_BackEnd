@@ -1,13 +1,13 @@
 package synk.meeteam.domain.recruitment.recruitment_applicant;
 
-import static org.mockito.ArgumentMatchers.any;
-
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -149,9 +149,12 @@ public class RecruitmentApplicantRepositoryTest {
     void 신청자목록조회_NONE신청자목록조회_role설정하지않은경우() {
         // given
         Long postId = 1L;
-
+        int page = 1;
+        Pageable pageable = PageRequest.of(page - 1, 8);
         // when
-        Slice<GetApplicantDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId, null, any());
+
+        Slice<GetApplicantDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId, null,
+                pageable);
 
         // then
         Assertions.assertThat(responseDtos.getContent().size()).isEqualTo(2);
@@ -168,10 +171,12 @@ public class RecruitmentApplicantRepositoryTest {
         // given
         Long postId = 1L;
         Long roleId = 2L;
+        int page = 1;
+        Pageable pageable = PageRequest.of(page - 1, 8);
 
         // when
         Slice<GetApplicantDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
-                roleId, any());
+                roleId, pageable);
 
         // then
         Assertions.assertThat(responseDtos.getContent().size()).isEqualTo(1);
