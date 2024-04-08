@@ -13,6 +13,8 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApp
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
+import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.s3.service.S3Service;
 
@@ -69,6 +71,17 @@ public class RecruitmentApplicantService {
                 s3Service.createPreSignedGetUrl(USER, applicant.getProfileImg())));
 
         return applicantDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isAppliedUser(RecruitmentPost recruitmentPost, User user) {
+        RecruitmentApplicant recruitmentApplicant = recruitmentApplicantRepository.findByRecruitmentPostAndApplicant(
+                recruitmentPost, user).orElse(null);
+
+        if (recruitmentApplicant != null) {
+            return false;
+        }
+        return true;
     }
 
     private void validateCanApprove(List<RecruitmentApplicant> applicants, Long userId) {
