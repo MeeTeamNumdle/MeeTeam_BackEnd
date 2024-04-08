@@ -75,11 +75,11 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                         titleStartWith(keyword)
                 );
 
-        query = joinWithFieldAndTagAndRoleAndSkill(query, condition);
+        query = jpaUtils.joinWithFieldAndTagAndRoleAndSkill(query, condition);
 
         //교내
         if (condition.getScope() == Scope.ON_CAMPUS) {
-            query = joinWithCourseAndProfessor(query, condition, userDomain);
+            query = jpaUtils.joinWithCourseAndProfessor(query, condition, userDomain);
         }
 
         return query.orderBy(recruitmentPost.createdAt.desc())
@@ -101,127 +101,15 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                         titleStartWith(keyword)
                 );
 
-        //분야
-        if (condition.isExistField()) {
-            countQuery = countQuery.leftJoin(recruitmentPost.field, field)
-                    .where(field.id.eq(condition.getFieldId()));
-        }
-
-        //태그
-        if (condition.isExistTags()) {
-            countQuery = countQuery.leftJoin(recruitmentTag)
-                    .on(recruitmentPost.id.eq(recruitmentTag.recruitmentPost.id))
-                    .leftJoin(recruitmentTag.tag, tag)
-                    .where(
-                            tag.type.eq(TagType.MEETEAM),
-                            tag.id.in(condition.getTagIds())
-                    );
-        }
-
-        //역할
-        if (condition.isExistRoles()) {
-            countQuery = countQuery.leftJoin(recruitmentRole)
-                    .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
-                    .leftJoin(recruitmentRole.role, role)
-                    .where(role.id.in(condition.getRoleIds()));
-            //역할 + 스킬
-            if (condition.isExistSkills()) {
-                countQuery = countQuery.leftJoin(recruitmentRoleSkill)
-                        .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
-                        .leftJoin(recruitmentRoleSkill.skill, skill)
-                        .where(skill.id.in(condition.getSkillIds()));
-            }
-        } else if (condition.isExistSkills()) {
-            countQuery = countQuery.leftJoin(recruitmentRole)
-                    .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
-                    .leftJoin(recruitmentRoleSkill)
-                    .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
-                    .leftJoin(recruitmentRoleSkill.skill, skill)
-                    .where(skill.id.in(condition.getSkillIds()));
-        }
-
+        countQuery = jpaUtils.joinWithFieldAndTagAndRoleAndSkill(countQuery, condition);
         //교내
         if (condition.getScope() == Scope.ON_CAMPUS) {
-            if (condition.isExistCourse()) {
-                countQuery = countQuery.leftJoin(recruitmentPost.course, course)
-                        .where(
-                                course.id.eq(condition.getCourseId()),
-                                course.university.eq(userDomain.getUniversity())
-                        );
-            }
-            if (condition.isExistProfessor()) {
-                countQuery = countQuery.leftJoin(recruitmentPost.professor, professor)
-                        .where(
-                                professor.id.eq(condition.getProfessorId()),
-                                professor.university.eq(userDomain.getUniversity())
-                        );
-            }
+            countQuery = jpaUtils.joinWithCourseAndProfessor(countQuery, condition, userDomain);
         }
 
         return countQuery;
     }
 
-    private JPAQuery<RecruitmentPostVo> joinWithFieldAndTagAndRoleAndSkill(JPAQuery<RecruitmentPostVo> query,
-                                                                           SearchCondition condition) {
-        //분야
-        if (condition.isExistField()) {
-            query = query.leftJoin(recruitmentPost.field, field)
-                    .where(field.id.eq(condition.getFieldId()));
-        }
-
-        //태그
-        if (condition.isExistTags()) {
-            query = query.leftJoin(recruitmentTag).on(recruitmentPost.id.eq(recruitmentTag.recruitmentPost.id))
-                    .leftJoin(recruitmentTag.tag, tag)
-                    .where(
-                            tag.type.eq(TagType.MEETEAM),
-                            tag.id.in(condition.getTagIds())
-                    );
-        }
-
-        //역할
-        if (condition.isExistRoles()) {
-            query = query.leftJoin(recruitmentRole)
-                    .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
-                    .leftJoin(recruitmentRole.role, role)
-                    .where(role.id.in(condition.getRoleIds()));
-            //역할 + 스킬
-            if (condition.isExistSkills()) {
-                query = query.leftJoin(recruitmentRoleSkill)
-                        .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
-                        .leftJoin(recruitmentRoleSkill.skill, skill)
-                        .where(skill.id.in(condition.getSkillIds()));
-            }
-        } else if (condition.isExistSkills()) {
-            query = query.leftJoin(recruitmentRole)
-                    .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
-                    .leftJoin(recruitmentRoleSkill)
-                    .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
-                    .leftJoin(recruitmentRoleSkill.skill, skill)
-                    .where(skill.id.in(condition.getSkillIds()));
-        }
-
-        return query;
-    }
-
-    private JPAQuery<RecruitmentPostVo> joinWithCourseAndProfessor(JPAQuery<RecruitmentPostVo> query,
-                                                                   SearchCondition condition, User userDomain) {
-        if (condition.isExistCourse()) {
-            query = query.leftJoin(recruitmentPost.course, course)
-                    .where(
-                            course.id.eq(condition.getCourseId()),
-                            course.university.eq(userDomain.getUniversity())
-                    );
-        }
-        if (condition.isExistProfessor()) {
-            query = query.leftJoin(recruitmentPost.professor, professor)
-                    .where(
-                            professor.id.eq(condition.getProfessorId()),
-                            professor.university.eq(userDomain.getUniversity())
-                    );
-        }
-        return query;
-    }
 
     //BooleanExpression
     private BooleanExpression isBookmark(User userDomain) {
@@ -260,5 +148,68 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
 
     private BooleanExpression isFalse() {
         return Expressions.asBoolean(false);
+    }
+
+    static class jpaUtils {
+        public static <T> JPAQuery<T> joinWithFieldAndTagAndRoleAndSkill(JPAQuery<T> query, SearchCondition condition) {
+            //분야
+            if (condition.isExistField()) {
+                query = query.leftJoin(recruitmentPost.field, field)
+                        .where(field.id.eq(condition.getFieldId()));
+            }
+
+            //태그
+            if (condition.isExistTags()) {
+                query = query.leftJoin(recruitmentTag).on(recruitmentPost.id.eq(recruitmentTag.recruitmentPost.id))
+                        .leftJoin(recruitmentTag.tag, tag)
+                        .where(
+                                tag.type.eq(TagType.MEETEAM),
+                                tag.id.in(condition.getTagIds())
+                        );
+            }
+
+            //역할
+            if (condition.isExistRoles()) {
+                query = query.leftJoin(recruitmentRole)
+                        .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
+                        .leftJoin(recruitmentRole.role, role)
+                        .where(role.id.in(condition.getRoleIds()));
+                //역할 + 스킬
+                if (condition.isExistSkills()) {
+                    query = query.leftJoin(recruitmentRoleSkill)
+                            .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
+                            .leftJoin(recruitmentRoleSkill.skill, skill)
+                            .where(skill.id.in(condition.getSkillIds()));
+                }
+            } else if (condition.isExistSkills()) {
+                query = query.leftJoin(recruitmentRole)
+                        .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
+                        .leftJoin(recruitmentRoleSkill)
+                        .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
+                        .leftJoin(recruitmentRoleSkill.skill, skill)
+                        .where(skill.id.in(condition.getSkillIds()));
+            }
+
+            return query;
+        }
+
+        public static <T> JPAQuery<T> joinWithCourseAndProfessor(JPAQuery<T> query,
+                                                                 SearchCondition condition, User userDomain) {
+            if (condition.isExistCourse()) {
+                query = query.leftJoin(recruitmentPost.course, course)
+                        .where(
+                                course.id.eq(condition.getCourseId()),
+                                course.university.eq(userDomain.getUniversity())
+                        );
+            }
+            if (condition.isExistProfessor()) {
+                query = query.leftJoin(recruitmentPost.professor, professor)
+                        .where(
+                                professor.id.eq(condition.getProfessorId()),
+                                professor.university.eq(userDomain.getUniversity())
+                        );
+            }
+            return query;
+        }
     }
 }
