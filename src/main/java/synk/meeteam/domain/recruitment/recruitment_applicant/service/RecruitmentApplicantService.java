@@ -57,7 +57,7 @@ public class RecruitmentApplicantService {
         recruitmentApplicantRepository.bulkApprove(applicantIds);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean isAppliedUser(RecruitmentPost recruitmentPost, User user) {
         RecruitmentApplicant recruitmentApplicant = recruitmentApplicantRepository.findByRecruitmentPostAndApplicant(
                 recruitmentPost, user).orElse(null);
