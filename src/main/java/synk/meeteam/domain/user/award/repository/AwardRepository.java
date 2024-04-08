@@ -6,7 +6,7 @@ import synk.meeteam.domain.user.award.entity.Award;
 
 public interface AwardRepository extends JpaRepository<Award, Long> {
 
-    void deleteAllByCreatedBy(Long id);
+    void deleteAllByCreatedBy(Long userId);
 
-    List<Award> findAllByCreatedBy(Long id);
+    List<Award> findAllByCreatedBy(Long userId);
 }
