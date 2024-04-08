@@ -39,10 +39,10 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
     @Override
     public Slice<GetApplicantDto> findByPostIdAndRoleId(Long postId, Long roleId, Pageable pageable) {
 
-        Predicate predicate = user.isUniversityMainEmail.eq(true);
+        Predicate isUniversityMainEmail = user.isUniversityMainEmail.eq(true);
 
         StringExpression getMainMail = new CaseBuilder()
-                .when(predicate)
+                .when(isUniversityMainEmail)
                 .then(recruitmentApplicant.applicant.universityEmail)
                 .otherwise(recruitmentApplicant.applicant.subEmail);
 
