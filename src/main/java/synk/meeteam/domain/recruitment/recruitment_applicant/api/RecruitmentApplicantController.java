@@ -21,6 +21,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApp
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRecruitmentRoleStatusResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.facade.RecruitmentApplicantFacade;
+import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
@@ -35,6 +36,7 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
 
     private final RecruitmentApplicantFacade recruitmentApplicantFacade;
 
+    private final RecruitmentApplicantService recruitmentApplicantService;
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
 
@@ -98,17 +100,8 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
     public ResponseEntity<List<GetApplicantResponseDto>> getApplicants(@PathVariable("id") Long postId,
                                                                        @RequestParam(value = "role", required = false) Long roleId,
                                                                        @AuthUser User user) {
-        GetApplicantResponseDto dto1 = new GetApplicantResponseDto(1L, "4OaVE421DSwR63xfKf6vxA==", "닉네임입니다1",
-                "프로필이미지입니다1",
-                "이름입니다", 4.4, "광운대학교", "소프트웨어학부", 2018, "백엔드개발자",
-                "전하는 말입니다.");
-
-        GetApplicantResponseDto dto2 = new GetApplicantResponseDto(2L, "4OaVE421DSwR63xfKf6vxA==", "닉네임입니다1",
-                "프로필이미지입니다1",
-                "이름입니다", 4.4, "광운대학교", "소프트웨어학부", 2018, "프론트개발자",
-                "전하는 말입니다.");
-
-        return ResponseEntity.ok().body(List.of(dto1, dto2));
+        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId);
+        return ResponseEntity.ok().body(responseDtos);
     }
 
 }
