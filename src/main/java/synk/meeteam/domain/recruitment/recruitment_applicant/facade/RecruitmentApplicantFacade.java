@@ -41,4 +41,13 @@ public class RecruitmentApplicantFacade {
         User user = userService.findById(recruitmentPost.getCreatedBy());
         mailService.sendApproveMails(postId, applicants, user.getName());
     }
+
+    @Transactional
+    public void rejectApplicants(Long postId, Long userId, List<Long> applicantIds) {
+
+        List<RecruitmentApplicant> applicants = recruitmentApplicantService.getAllApplicants(applicantIds);
+        recruitmentApplicantService.rejectApplicants(applicants, applicantIds, userId);
+
+        recruitmentPostService.incrementResponseCount(postId, userId, applicantIds.size());
+    }
 }

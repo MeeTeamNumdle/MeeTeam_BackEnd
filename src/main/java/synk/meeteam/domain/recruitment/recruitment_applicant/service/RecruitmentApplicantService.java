@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
@@ -56,10 +57,18 @@ public class RecruitmentApplicantService {
 
     @Transactional
     public void approveApplicants(List<RecruitmentApplicant> applicants, List<Long> applicantIds, Long userId) {
-        validateCanApprove(applicants, userId);
+        validateCanProcess(applicants, userId);
         validateApplicantCount(applicantIds.size(), applicants.size());
 
-        recruitmentApplicantRepository.bulkApprove(applicantIds);
+        recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.APPROVED);
+    }
+
+    @Transactional
+    public void rejectApplicants(List<RecruitmentApplicant> applicants, List<Long> applicantIds, Long userId) {
+        validateCanProcess(applicants, userId);
+        validateApplicantCount(applicantIds.size(), applicants.size());
+
+        recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.REJECTED);
     }
 
     @Transactional
@@ -84,7 +93,7 @@ public class RecruitmentApplicantService {
         return true;
     }
 
-    private void validateCanApprove(List<RecruitmentApplicant> applicants, Long userId) {
+    private void validateCanProcess(List<RecruitmentApplicant> applicants, Long userId) {
         // applicants 검증로직
         // 호출한 사용자가 구인글 작성자인지 확인
         // status가 다 NONE인지 확인
