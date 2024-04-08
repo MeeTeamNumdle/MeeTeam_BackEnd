@@ -53,7 +53,7 @@ public class RecruitmentApplicantService {
         validateCanProcess(applicants, userId);
         validateApplicantCount(applicantIds.size(), applicants.size());
 
-        recruitmentApplicantRepository.bulkProcess(applicantIds, RecruitStatus.APPROVED);
+        recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.APPROVED);
     }
 
     @Transactional
@@ -61,7 +61,7 @@ public class RecruitmentApplicantService {
         validateCanProcess(applicants, userId);
         validateApplicantCount(applicantIds.size(), applicants.size());
 
-        recruitmentApplicantRepository.bulkProcess(applicantIds, RecruitStatus.REJECTED);
+        recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.REJECTED);
     }
 
 

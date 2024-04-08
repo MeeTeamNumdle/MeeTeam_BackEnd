@@ -159,7 +159,7 @@ public class RecruitmentApplicantServiceTest {
         RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user2, role2);
 
-        doReturn(2L).when(recruitmentApplicantRepository).bulkProcess(any(), any());
+        doReturn(2L).when(recruitmentApplicantRepository).updateRecruitStatus(any(), any());
 
         // when, then
         recruitmentApplicantService.approveApplicants(List.of(applicant1, applicant2), List.of(userId1, userId2),
@@ -272,7 +272,7 @@ public class RecruitmentApplicantServiceTest {
         RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user2, role2);
 
-        doReturn(2L).when(recruitmentApplicantRepository).bulkProcess(any(), any());
+        doReturn(2L).when(recruitmentApplicantRepository).updateRecruitStatus(any(), any());
 
         // when, then
         recruitmentApplicantService.rejectApplicants(List.of(applicant1, applicant2), List.of(userId1, userId2),

@@ -113,7 +113,7 @@ public class RecruitmentApplicantRepositoryTest {
         // given
 
         // when
-        recruitmentApplicantRepository.bulkProcess(List.of(1L, 2L), RecruitStatus.APPROVED);
+        recruitmentApplicantRepository.updateRecruitStatus(List.of(1L, 2L), RecruitStatus.APPROVED);
 
         // then
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
@@ -130,7 +130,7 @@ public class RecruitmentApplicantRepositoryTest {
         // given
 
         // when
-        recruitmentApplicantRepository.bulkProcess(List.of(1L, 2L), RecruitStatus.REJECTED);
+        recruitmentApplicantRepository.updateRecruitStatus(List.of(1L, 2L), RecruitStatus.REJECTED);
 
         // then
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(

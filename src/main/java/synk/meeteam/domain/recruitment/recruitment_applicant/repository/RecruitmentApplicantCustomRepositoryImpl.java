@@ -15,7 +15,7 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public long bulkProcess(List<Long> applicantIds, RecruitStatus recruitStatus) {
+    public long updateRecruitStatus(List<Long> applicantIds, RecruitStatus recruitStatus) {
         return jpaQueryFactory.update(recruitmentApplicant)
                 .where(recruitmentApplicant.id.in(applicantIds))
                 .set(recruitmentApplicant.recruitStatus, recruitStatus)
