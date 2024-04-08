@@ -388,21 +388,21 @@ public class RecruitmentApplicantServiceTest {
 
         doReturn(List.of(dto1, dto2)).when(recruitmentApplicantRepository).findByPostIdAndRoleId(any(), any());
         doReturn("이미지입니다").when(s3Service).createPreSignedGetUrl(any(), any());
-        MockedStatic<Encryption> utilities = Mockito.mockStatic(Encryption.class);
-        utilities.when(() -> Encryption.encryptLong(any())).thenReturn("1234");
+        try (MockedStatic<Encryption> utilities = Mockito.mockStatic(Encryption.class)) {
+            utilities.when(() -> Encryption.encryptLong(any())).thenReturn("1234");
 
-        // when
-        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId);
+            // when
+            List<GetApplicantResponseDto> responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId);
 
-        // then
-        Assertions.assertThat(responseDtos.size()).isEqualTo(2);
+            // then
+            Assertions.assertThat(responseDtos.size()).isEqualTo(2);
 
-        Assertions.assertThat(responseDtos.get(0))
-                .extracting("nickname", "name", "applyRoleName")
-                .containsExactly("닉네임입니다1", "이름입니다1", "백엔드개발자");
-        Assertions.assertThat(responseDtos.get(1))
-                .extracting("nickname", "name", "applyRoleName")
-                .containsExactly("닉네임입니다2", "이름입니다2", "백엔드개발자");
-
+            Assertions.assertThat(responseDtos.get(0))
+                    .extracting("nickname", "name", "applyRoleName")
+                    .containsExactly("닉네임입니다1", "이름입니다1", "백엔드개발자");
+            Assertions.assertThat(responseDtos.get(1))
+                    .extracting("nickname", "name", "applyRoleName")
+                    .containsExactly("닉네임입니다2", "이름입니다2", "백엔드개발자");
+        }
     }
 }
