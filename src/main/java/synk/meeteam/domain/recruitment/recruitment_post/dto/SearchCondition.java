@@ -2,6 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import synk.meeteam.global.entity.Category;
@@ -10,6 +11,7 @@ import synk.meeteam.global.entity.Scope;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SearchCondition {
     private Long fieldId;
     private Scope scope;

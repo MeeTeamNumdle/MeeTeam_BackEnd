@@ -109,7 +109,8 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
 
         //태그
         if (condition.isExistTags()) {
-            countQuery = countQuery.leftJoin(recruitmentTag.recruitmentPost, recruitmentPost)
+            countQuery = countQuery.leftJoin(recruitmentTag)
+                    .on(recruitmentPost.id.eq(recruitmentTag.recruitmentPost.id))
                     .leftJoin(recruitmentTag.tag, tag)
                     .where(
                             tag.type.eq(TagType.MEETEAM),
@@ -170,7 +171,7 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
 
         //태그
         if (condition.isExistTags()) {
-            query = query.leftJoin(recruitmentTag.recruitmentPost, recruitmentPost)
+            query = query.leftJoin(recruitmentTag).on(recruitmentPost.id.eq(recruitmentTag.recruitmentPost.id))
                     .leftJoin(recruitmentTag.tag, tag)
                     .where(
                             tag.type.eq(TagType.MEETEAM),
