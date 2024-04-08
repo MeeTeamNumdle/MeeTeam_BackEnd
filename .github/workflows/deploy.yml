@@ -64,7 +64,7 @@ jobs:
           touch ./ApproveMail.html
           echo "$MAIL_APPROVE_TEMPLATE" > ./ApproveMail.html
         env:
-          APPLICATION_DEV: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
+          MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
         shell: bash
 
       - name: Gradle 권한 부여
