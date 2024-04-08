@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_FOUND_PORTFOLIO;
+import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.OVER_MAX_PIN_SIZE;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,8 +60,6 @@ public class PortfolioServiceTest {
     @Test
     void 포트폴리오핀설정_핀설정실패_조회되지않는아이디() {
         //given
-        doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByCreatedByAndIsPinTrue(anyLong());
         List<Long> pins = List.of(2L, 1L, 3L);
 
         //유저가 소유주가 아닌 경우 or
@@ -70,6 +69,16 @@ public class PortfolioServiceTest {
         assertThatThrownBy(() -> portfolioService.changePinPortfoliosByIds(1L, pins))
                 .isExactlyInstanceOf(PortfolioException.class)
                 .hasMessage(NOT_FOUND_PORTFOLIO.message());
+    }
+
+    @Test
+    void 포트폴리오핀설정_핀설정실패_8개를넘는포트폴리오() {
+        //given
+        List<Long> pins = List.of(2L, 1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L);
+        //when then
+        assertThatThrownBy(() -> portfolioService.changePinPortfoliosByIds(1L, pins))
+                .isExactlyInstanceOf(PortfolioException.class)
+                .hasMessage(OVER_MAX_PIN_SIZE.message());
     }
 
     @Test

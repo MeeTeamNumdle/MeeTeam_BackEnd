@@ -60,7 +60,7 @@ public class PortfolioRepositoryTest {
     }
 
     @Test
-    void 유저핀포트폴리오조회_조회성공() {
+    void 나의핀포트폴리오조회_조회성공() {
         //when
         List<Portfolio> userPortfolios = portfolioRepository.findAllByCreatedByAndIsPinTrueOrderByIds(1L,
                 List.of(1L, 2L));
@@ -70,15 +70,15 @@ public class PortfolioRepositoryTest {
     }
 
     @Test
-    void 유저포트폴리오조회_조회성공() {
+    void 나의포트폴리오모두조회_조회성공() {
         //given
         User user = userRepository.findById(1L).get();
         //when
         Slice<GetProfilePortfolioDto> userPortfolios = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
-                PageRequest.of(1, 12), user);
+                PageRequest.of(0, 12), user);
         //then
         assertThat(userPortfolios.hasNext()).isEqualTo(false);
         assertThat(userPortfolios.getSize()).isEqualTo(12);
-        assertThat(userPortfolios.getContent()).extracting("title").containsExactly("타이틀2", "타이틀1");
+        assertThat(userPortfolios.getContent()).extracting("title").containsExactly("타이틀3", "타이틀2", "타이틀1");
     }
 }

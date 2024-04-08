@@ -49,8 +49,7 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
                 .from(portfolio)
                 .leftJoin(portfolio.role, role)
                 .leftJoin(portfolio.field, field)
-                .where(portfolio.isPin.eq(true),
-                        portfolio.createdBy.eq(user.getId()))
+                .where(portfolio.createdBy.eq(user.getId()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(portfolio.createdAt.desc())
