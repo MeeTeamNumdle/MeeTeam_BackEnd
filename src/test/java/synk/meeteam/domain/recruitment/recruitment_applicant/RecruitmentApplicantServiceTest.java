@@ -380,10 +380,10 @@ public class RecruitmentApplicantServiceTest {
         Long roleId = null;
 
         GetApplicantResponseDto dto1 = new GetApplicantResponseDto(1L, "1", "닉네임입니다1",
-                "이미지입니다1", "이름입니다1", 4.3, "광운대학교", "소프트웨어학부", 2018,
+                "이미지입니다1", "이름입니다1", 4.3, "광운대학교", "소프트웨어학부", "qwer123@naver.com", 2018,
                 "백엔드개발자", "전하는 말입니다1");
         GetApplicantResponseDto dto2 = new GetApplicantResponseDto(2L, "2", "닉네임입니다2",
-                "이미지입니다2", "이름입니다2", 4.2, "광운대학교", "소프트웨어학부", 2018,
+                "이미지입니다2", "이름입니다2", 4.2, "광운대학교", "소프트웨어학부", "qwer456@naver.com", 2018,
                 "백엔드개발자", "전하는 말입니다2");
 
         doReturn(List.of(dto1, dto2)).when(recruitmentApplicantRepository).findByPostIdAndRoleId(any(), any());

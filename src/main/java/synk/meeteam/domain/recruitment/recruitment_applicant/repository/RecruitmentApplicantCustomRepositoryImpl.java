@@ -6,7 +6,10 @@ import static synk.meeteam.domain.recruitment.recruitment_applicant.entity.QRecr
 import static synk.meeteam.domain.recruitment.recruitment_post.entity.QRecruitmentPost.recruitmentPost;
 import static synk.meeteam.domain.user.user.entity.QUser.user;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +36,20 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
     @Override
     public List<GetApplicantResponseDto> findByPostIdAndRoleId(Long postId, Long roleId) {
 
-        // id, profileImg
+        Predicate predicate = user.isUniversityMainEmail.eq(true);
+
+        StringExpression getMainMail = new CaseBuilder()
+                .when(predicate)
+                .then(recruitmentApplicant.applicant.universityEmail)
+                .otherwise(recruitmentApplicant.applicant.subEmail);
+
         return jpaQueryFactory
                 .select(new QGetApplicantResponseDto(recruitmentApplicant.id,
                         recruitmentApplicant.applicant.id.stringValue(),
                         recruitmentApplicant.applicant.nickname, recruitmentApplicant.applicant.profileImgFileName,
                         recruitmentApplicant.applicant.name, recruitmentApplicant.applicant.evaluationScore,
                         recruitmentApplicant.applicant.university.name, recruitmentApplicant.applicant.department.name,
-                        recruitmentApplicant.applicant.admissionYear,
+                        getMainMail, recruitmentApplicant.applicant.admissionYear,
                         recruitmentApplicant.role.name, recruitmentApplicant.comment))
                 .from(recruitmentApplicant)
                 .leftJoin(recruitmentApplicant.applicant, user)

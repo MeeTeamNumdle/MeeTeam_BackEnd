@@ -24,6 +24,8 @@ public class GetApplicantResponseDto {
         String universityName;
         @Schema(description = "학과 이름", example = "소프트웨어학부")
         String departmentName;
+        @Schema(description = "이메일", example = "qwer123@naver.com")
+        String email;
         @Schema(description = "입학년도", example = "2018")
         int year;
         @Schema(description = "신청 역할", example = "백엔드개발자")
@@ -33,7 +35,8 @@ public class GetApplicantResponseDto {
 
         @QueryProjection
         public GetApplicantResponseDto(Long applicantId, String userId, String nickname, String profileImg, String name,
-                                       double score, String universityName, String departmentName, int year,
+                                       double score, String universityName, String departmentName, String email,
+                                       int year,
                                        String applyRoleName, String message) {
                 this.applicantId = applicantId;
                 this.userId = userId;
@@ -43,6 +46,7 @@ public class GetApplicantResponseDto {
                 this.score = score;
                 this.universityName = universityName;
                 this.departmentName = departmentName;
+                this.email = email;
                 this.year = year;
                 this.applyRoleName = applyRoleName;
                 this.message = message;
