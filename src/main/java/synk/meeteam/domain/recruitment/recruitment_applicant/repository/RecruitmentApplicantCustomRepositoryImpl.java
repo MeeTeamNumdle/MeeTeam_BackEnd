@@ -62,6 +62,8 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
                 .leftJoin(recruitmentApplicant.applicant.department, QDepartment.department)
                 .where(eqRole(roleId), recruitmentApplicant.recruitmentPost.id.eq(postId),
                         recruitmentApplicant.recruitStatus.eq(RecruitStatus.NONE))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
 
         return new SliceImpl<>(contents, pageable, hasNextPage(contents, pageable.getPageSize()));
