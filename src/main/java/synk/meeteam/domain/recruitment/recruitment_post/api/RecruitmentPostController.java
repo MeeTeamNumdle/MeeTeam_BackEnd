@@ -172,6 +172,13 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}/apply")
+    @Override
+    public ResponseEntity<Void> cancelApplyRecruitment(@PathVariable("id") Long postId, @AuthUser User user) {
+
+        return ResponseEntity.ok().build();
+    }
+
     @PatchMapping("/{id}/close")
     @Override
     public ResponseEntity<Void> closeRecruitment(@PathVariable("id") Long postId, @AuthUser User user) {
