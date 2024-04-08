@@ -13,10 +13,13 @@ import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 import synk.meeteam.domain.common.department.entity.QDepartment;
-import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
-import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.QGetApplicantResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.QGetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 
 @Repository
@@ -34,7 +37,7 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
     }
 
     @Override
-    public List<GetApplicantResponseDto> findByPostIdAndRoleId(Long postId, Long roleId) {
+    public Slice<GetApplicantDto> findByPostIdAndRoleId(Long postId, Long roleId, Pageable pageable) {
 
         Predicate predicate = user.isUniversityMainEmail.eq(true);
 
@@ -43,8 +46,8 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
                 .then(recruitmentApplicant.applicant.universityEmail)
                 .otherwise(recruitmentApplicant.applicant.subEmail);
 
-        return jpaQueryFactory
-                .select(new QGetApplicantResponseDto(recruitmentApplicant.id,
+        List<GetApplicantDto> contents = jpaQueryFactory
+                .select(new QGetApplicantDto(recruitmentApplicant.id,
                         recruitmentApplicant.applicant.id.stringValue(),
                         recruitmentApplicant.applicant.nickname, recruitmentApplicant.applicant.profileImgFileName,
                         recruitmentApplicant.applicant.name, recruitmentApplicant.applicant.evaluationScore,
@@ -60,6 +63,8 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
                 .where(eqRole(roleId), recruitmentApplicant.recruitmentPost.id.eq(postId),
                         recruitmentApplicant.recruitStatus.eq(RecruitStatus.NONE))
                 .fetch();
+
+        return new SliceImpl<>(contents, pageable, hasNextPage(contents, pageable.getPageSize()));
     }
 
     private BooleanExpression eqRole(Long roleId) {
@@ -67,5 +72,13 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
             return null;
         }
         return recruitmentApplicant.role.id.eq(roleId);
+    }
+
+    private boolean hasNextPage(List<GetApplicantDto> contents, int pageSize) {
+        if (contents.size() > pageSize) {
+            contents.remove(pageSize);
+            return true;
+        }
+        return false;
     }
 }
