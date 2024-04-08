@@ -186,7 +186,6 @@ public class User extends BaseTimeEntity {
 
     //프로필 정보 업데이트
     public void updateProfile(
-            String name,
             boolean isPublicName,
             String profileImgFileName,
             String subEmail,
@@ -201,7 +200,6 @@ public class User extends BaseTimeEntity {
             double maxGpa,
             Role role
     ) {
-        this.name = name;
         this.isPublicName = isPublicName;
         this.profileImgFileName = profileImgFileName;
         this.subEmail = subEmail;

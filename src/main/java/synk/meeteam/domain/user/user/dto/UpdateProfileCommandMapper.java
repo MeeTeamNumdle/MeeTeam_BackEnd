@@ -11,7 +11,6 @@ public interface UpdateProfileCommandMapper {
     @Mapping(source = "imageFileName", target = "pictureFileName")
     @Mapping(source = "introduction", target = "oneLineIntroduction")
     @Mapping(source = "aboutMe", target = "mainIntroduction")
-    @Mapping(source = "userName", target = "name")
     @Mapping(source = "phone", target = "phoneNumber")
     @Mapping(source = "isPhonePublic", target = "isPublicPhone")
     @Mapping(source = "isSubEmailPublic", target = "isPublicSubEmail")

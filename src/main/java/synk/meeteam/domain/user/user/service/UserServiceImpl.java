@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
 
         Role interestRole = roleRepository.findByIdOrElseThrowException(command.interestId());
         user.updateProfile(
-                command.name(),
                 command.isPublicName(),
                 command.pictureFileName(),
                 command.subEmail(),
