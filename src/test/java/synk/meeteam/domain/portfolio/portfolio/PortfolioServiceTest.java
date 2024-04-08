@@ -78,7 +78,7 @@ public class PortfolioServiceTest {
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
                 .findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(anyLong());
         //when
-        List<Portfolio> userPortfolio = portfolioService.getUserPinPortfolio(anyLong());
+        List<Portfolio> userPortfolio = portfolioService.getMyPinPortfolio(anyLong());
         //then
         assertThat(userPortfolio).extracting("title").containsExactly("타이틀1", "타이틀2");
     }
