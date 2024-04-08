@@ -77,9 +77,10 @@ public class PortfolioRepositoryTest {
     void 유저포트폴리오조회_조회성공() {
         //given
         User user = userRepository.findById(1L).get();
+        int page = 1;
         //when
         Slice<GetProfilePortfolioDto> userPortfolios = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
-                PageRequest.of(1, 12), user);
+                PageRequest.of(page - 1, 12), user);
         //then
         assertThat(userPortfolios.hasNext()).isEqualTo(false);
         assertThat(userPortfolios.getSize()).isEqualTo(12);
