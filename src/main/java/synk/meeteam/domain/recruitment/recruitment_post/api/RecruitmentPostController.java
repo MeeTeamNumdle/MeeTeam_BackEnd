@@ -31,6 +31,7 @@ import synk.meeteam.domain.common.university.entity.University;
 import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
+import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
 import synk.meeteam.domain.recruitment.recruitment_comment.entity.RecruitmentComment;
 import synk.meeteam.domain.recruitment.recruitment_comment.service.RecruitmentCommentService;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.RecruitmentPostMapper;
@@ -38,7 +39,6 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruitmentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ModifyCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetApplyInfoResponseDto;
@@ -76,6 +76,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentTagService recruitmentTagService;
     private final RecruitmentCommentService recruitmentCommentService;
+    private final RecruitmentApplicantService recruitmentApplicantService;
     private final BookmarkService bookmarkService;
     private final RoleService roleService;
     private final FieldService fieldService;
@@ -130,8 +131,11 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         List<GetCommentResponseDto> recruitmentCommentDtos = recruitmentCommentService.getRecruitmentComments(
                 recruitmentPost);
 
+        boolean isApplied = recruitmentApplicantService.isAppliedUser(recruitmentPost, user);
+
         return ResponseEntity.ok()
-                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isBookmarked, recruitmentRoles, writer,
+                .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isApplied, isBookmarked, recruitmentRoles,
+                        writer,
                         writerImgUrl,
                         recruitmentTags,
                         recruitmentCommentDtos, recruitmentPost.getCourse(), recruitmentPost.getProfessor()));
@@ -251,14 +255,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/{id}/comment")
+    @DeleteMapping("/{id}/comment/{comment-id}")
     @Override
     public ResponseEntity<Void> deleteComment(@PathVariable("id") Long postId,
-                                              @Valid @RequestBody DeleteCommentRequestDto requestDto,
+                                              @PathVariable("comment-id") Long commentId,
                                               @AuthUser User user) {
 
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
-        recruitmentCommentService.deleteComment(requestDto.commentId(), user.getId(), recruitmentPost);
+        recruitmentCommentService.deleteComment(commentId, user.getId(), recruitmentPost);
 
         return ResponseEntity.ok().build();
     }

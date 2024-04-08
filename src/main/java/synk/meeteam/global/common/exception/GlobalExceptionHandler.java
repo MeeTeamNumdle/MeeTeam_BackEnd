@@ -1,7 +1,8 @@
 package synk.meeteam.global.common.exception;
 
 import static synk.meeteam.global.common.exception.GlobalExceptionType.INVALID_INPUT_VALUE;
-import static synk.meeteam.global.common.exception.GlobalExceptionType.SERVER_ERROR;
+import static synk.meeteam.global.common.exception.GlobalExceptionType.P_100;
+import static synk.meeteam.global.common.exception.GlobalExceptionType.SS_100;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -81,12 +83,20 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
 
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ExceptionResponse> handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException e) {
+        ExceptionType exceptionType = SS_100;
+        log.error(String.format(LOG_FORMAT, e.getMessage()), e);
+        return ResponseEntity.status(exceptionType.httpStatus())
+                .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception e) {
         log.error(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ExceptionResponse.of(SERVER_ERROR.name(), SERVER_ERROR.message()));
+                .body(ExceptionResponse.of(P_100.name(), P_100.message()));
     }
 
 }

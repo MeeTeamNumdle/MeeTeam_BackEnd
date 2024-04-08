@@ -39,7 +39,6 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ApplyRecruit
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CourseTagDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.CreateRecruitmentPostRequestDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.request.DeleteCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.ModifyCommentRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.request.RecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.CreateRecruitmentPostResponseDto;
@@ -348,11 +347,10 @@ public class RecruitmentPostTest {
         // given
         Long postId = 1L;
         Long commentId = 0L;
-        DeleteCommentRequestDto requestDto = new DeleteCommentRequestDto(commentId);
-        HttpEntity<DeleteCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         // when
-        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment";
+        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment/" + commentId.toString();
         ResponseEntity<ExceptionResponse> ResponseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity,
                 ExceptionResponse.class);
 
@@ -367,11 +365,10 @@ public class RecruitmentPostTest {
         Long postId = 1L;
         Long commentId = 1L;
         headers.set(accessHeader, TOKEN_OTHER);
-        DeleteCommentRequestDto requestDto = new DeleteCommentRequestDto(commentId);
-        HttpEntity<DeleteCommentRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         // when
-        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment";
+        String url = RECRUITMENT_URL + "/" + postId.toString() + "/comment/" + commentId.toString();
         ResponseEntity<ExceptionResponse> ResponseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity,
                 ExceptionResponse.class);
 

@@ -8,6 +8,8 @@ import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 
 @Schema(name = "GetRecruitmentRoleResponseDto", description = "구인역할 조회 Dto")
 public record GetRecruitmentRoleResponseDto(
+        @Schema(description = "구인 역할 id", example = "1")
+        Long roleId,
         @Schema(description = "구인 역할 이름", example = "백엔드개발자")
         String roleName,
         @Schema(description = "구인 역할 스킬", example = "")
@@ -21,8 +23,10 @@ public record GetRecruitmentRoleResponseDto(
 
 ) {
     @Builder
-    public GetRecruitmentRoleResponseDto(String roleName, List<SkillDto> skills, long recruitCount, long applicantCount,
+    public GetRecruitmentRoleResponseDto(Long roleId, String roleName, List<SkillDto> skills, long recruitCount,
+                                         long applicantCount,
                                          long recruitedCount) {
+        this.roleId = roleId;
         this.roleName = roleName;
         this.skills = skills;
         this.recruitCount = recruitCount;
@@ -34,6 +38,7 @@ public record GetRecruitmentRoleResponseDto(
         List<SkillDto> skillDtos = recruitmentRole.getRecruitmentRoleSkills().stream().map(SkillDto::from).toList();
 
         return GetRecruitmentRoleResponseDto.builder()
+                .roleId(recruitmentRole.getRole().getId())
                 .roleName(recruitmentRole.getRole().getName())
                 .skills(skillDtos)
                 .recruitCount(recruitmentRole.getCount())

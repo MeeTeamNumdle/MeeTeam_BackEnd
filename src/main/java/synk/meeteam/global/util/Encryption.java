@@ -31,7 +31,7 @@ public class Encryption {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, keySpec);
             byte[] encrypted = cipher.doFinal(String.valueOf(value).getBytes());
-            return Base64.getEncoder().encodeToString(encrypted);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(encrypted);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,13 +39,19 @@ public class Encryption {
     }
 
     public static Long decryptLong(String encryptedValue) {
+        if (encryptedValue == null) {
+            return null;
+        }
+
         try {
+
+            byte[] decodedValue = Base64.getUrlDecoder().decode(encryptedValue);
             SecretKeySpec keySpec = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, keySpec);
-            byte[] decodedValue = Base64.getDecoder().decode(encryptedValue);
             byte[] decrypted = cipher.doFinal(decodedValue);
             return Long.parseLong(new String(decrypted));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

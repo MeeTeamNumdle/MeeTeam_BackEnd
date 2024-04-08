@@ -158,12 +158,11 @@ public class RecruitmentPost extends BaseEntity {
         }
     }
 
-    public RecruitmentPost closeRecruitmentPost(Long userId) {
+    public void closeRecruitmentPost(Long userId) {
         // 작성자인지 확인
         validateWriter(userId);
 
         this.isClosed = true;
-        return this;
     }
 
     public void updateRecruitmentPost(String title, String content, Scope scope, Category category,

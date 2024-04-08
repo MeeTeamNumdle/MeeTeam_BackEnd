@@ -10,11 +10,12 @@ public enum GlobalExceptionType implements ExceptionType {
      * 400
      */
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값에 유효하지 않은 입력 값이 있습니다."),
+    SS_100(HttpStatus.BAD_REQUEST, "SS-100"),
 
     /**
      * 500
      */
-    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
+    P_100(HttpStatus.INTERNAL_SERVER_ERROR, "P-100");
 
 
     private final HttpStatus status;
