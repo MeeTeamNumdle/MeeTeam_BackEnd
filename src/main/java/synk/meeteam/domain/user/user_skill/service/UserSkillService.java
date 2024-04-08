@@ -5,7 +5,7 @@ import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.user.user_skill.entity.UserSkill;
 
 public interface UserSkillService {
-    List<UserSkill> changeUserSkillsByIds(Long id, List<Long> skillIds);
+    List<UserSkill> changeUserSkillBySkill(Long userId, List<Long> skillIds);
 
     List<SkillDto> getUserSKill(Long userId);
 }
