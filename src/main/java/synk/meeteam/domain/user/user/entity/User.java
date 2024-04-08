@@ -160,8 +160,9 @@ public class User extends BaseTimeEntity {
         this.platformId = platformId;
     }
 
-    public User(Long id) {
+    public User(Long id, University university) {
         this.id = id;
+        this.university = university;
     }
 
     @Builder

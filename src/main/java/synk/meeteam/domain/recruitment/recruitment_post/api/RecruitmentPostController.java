@@ -240,9 +240,12 @@ public class RecruitmentPostController implements RecruitmentPostApi {
             @RequestParam(value = "skill", required = false) List<Long> skillIds,
             @RequestParam(value = "role", required = false) List<Long> roleIds,
             @RequestParam(value = "tag", required = false) List<Long> tagIds,
+            @RequestParam(value = "course", required = false) Long courseId,
+            @RequestParam(value = "professor", required = false) Long professorId,
             @RequestParam(value = "keyword", required = false) String keyword,
             @AuthUser User user) {
-        SearchCondition condition = getCondition(fieldId, scopeOrdinal, categoryOrdinal, skillIds, roleIds, tagIds);
+        SearchCondition condition = filterCondition(fieldId, scopeOrdinal, categoryOrdinal, skillIds, roleIds, tagIds,
+                courseId, professorId);
         PaginationSearchPostResponseDto result = recruitmentPostService.searchWithPageRecruitmentPost(
                 size, page, condition, keyword, user);
 
@@ -328,12 +331,17 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 .build();
     }
 
-    private SearchCondition getCondition(Long fieldId, Integer scopeOrdinal, Integer categoryOrdinal,
-                                         List<Long> skillIds,
-                                         List<Long> roleIds,
-                                         List<Long> tagIds) {
-        Scope scope = scopeOrdinal == null ? null : Scope.values()[scopeOrdinal - 1];
-        Category category = categoryOrdinal == null ? null : Category.values()[categoryOrdinal - 1];
-        return new SearchCondition(fieldId, scope, category, skillIds, tagIds, roleIds);
+    private SearchCondition filterCondition(Long fieldId, Integer scopeOrdinal, Integer categoryOrdinal,
+                                            List<Long> skillIds, List<Long> roleIds, List<Long> tagIds, Long courseId,
+                                            Long professorId) {
+        Scope scope = null;
+        Category category = null;
+        if (scopeOrdinal != null && scopeOrdinal > 1 && scopeOrdinal < Scope.values().length) {
+            scope = Scope.values()[scopeOrdinal - 1];
+        }
+        if (categoryOrdinal != null && categoryOrdinal > 1 && categoryOrdinal < Category.values().length) {
+            category = Category.values()[categoryOrdinal - 1];
+        }
+        return new SearchCondition(fieldId, scope, category, skillIds, tagIds, roleIds, courseId, professorId);
     }
 }
