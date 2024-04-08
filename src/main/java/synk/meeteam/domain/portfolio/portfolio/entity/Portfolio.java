@@ -30,6 +30,9 @@ import synk.meeteam.global.entity.BaseEntity;
 @AllArgsConstructor(access = AccessLevel.MODULE)
 @Builder
 public class Portfolio extends BaseEntity {
+
+    public static int MAX_PIN_SIZE = 8;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "portfolio_id")

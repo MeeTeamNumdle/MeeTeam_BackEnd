@@ -6,7 +6,7 @@ import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.user.user.entity.User;
 
 public interface PortfolioService {
-    List<Portfolio> changePinPortfoliosByIds(Long id, List<Long> portfolioIds);
+    List<Portfolio> changePinPortfoliosByIds(Long userId, List<Long> portfolioIds);
 
     List<Portfolio> getUserPinPortfolio(Long userId);
 

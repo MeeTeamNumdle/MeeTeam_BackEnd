@@ -44,10 +44,10 @@ public class PortfolioServiceTest {
     void 포트폴리오핀설정_핀설정성공_정상핀아이디목록() {
         //given
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(anyLong());
+                .findAllByCreatedByAndIsPinTrue(anyLong());
         List<Long> pins = List.of(2L, 1L);
         doReturn(PortfolioFixture.createPortfolioFixtures_2_1()).when(portfolioRepository)
-                .findAllByIdInAndCreatedByOrderByProceedStartAsc(eq(pins), anyLong());
+                .findAllByCreatedByAndIsPinTrueOrderByIds(anyLong(), eq(pins));
         //when
         List<Portfolio> portfolios = portfolioService.changePinPortfoliosByIds(1L, pins);
         //then
@@ -60,12 +60,12 @@ public class PortfolioServiceTest {
     void 포트폴리오핀설정_핀설정실패_조회되지않는아이디() {
         //given
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(anyLong());
+                .findAllByCreatedByAndIsPinTrue(anyLong());
         List<Long> pins = List.of(2L, 1L, 3L);
 
         //유저가 소유주가 아닌 경우 or
         doReturn(PortfolioFixture.createPortfolioFixtures_2_1()).when(portfolioRepository)
-                .findAllByIdInAndCreatedByOrderByProceedStartAsc(eq(pins), anyLong());
+                .findAllByCreatedByAndIsPinTrueOrderByIds(anyLong(), eq(pins));
         //when then
         assertThatThrownBy(() -> portfolioService.changePinPortfoliosByIds(1L, pins))
                 .isExactlyInstanceOf(PortfolioException.class)
