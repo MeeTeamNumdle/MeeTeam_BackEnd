@@ -31,7 +31,7 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
     }
 
     @Override
-    public List<GetApplicantResponseDto> findByRoleQuery(Long postId, Long roleId) {
+    public List<GetApplicantResponseDto> findByPostIdAndRoleId(Long postId, Long roleId) {
 
         // id, profileImg
         return jpaQueryFactory

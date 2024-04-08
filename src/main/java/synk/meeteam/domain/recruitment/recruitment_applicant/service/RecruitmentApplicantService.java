@@ -62,7 +62,8 @@ public class RecruitmentApplicantService {
 
     @Transactional
     public List<GetApplicantResponseDto> getAllByRole(Long postId, Long roleId) {
-        List<GetApplicantResponseDto> applicantDtos = recruitmentApplicantRepository.findByRoleQuery(postId, roleId);
+        List<GetApplicantResponseDto> applicantDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
+                roleId);
         applicantDtos.stream().forEach(applicant -> applicant.setEncryptedUserIdAndProfileImg(
                 Encryption.encryptLong(Long.parseLong(applicant.getUserId())),
                 s3Service.createPreSignedGetUrl(USER, applicant.getProfileImg())));

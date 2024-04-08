@@ -6,5 +6,5 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApp
 public interface RecruitmentApplicantCustomRepository {
     long bulkApprove(List<Long> applicantIds);
 
-    List<GetApplicantResponseDto> findByRoleQuery(Long postId, Long roleId);
+    List<GetApplicantResponseDto> findByPostIdAndRoleId(Long postId, Long roleId);
 }

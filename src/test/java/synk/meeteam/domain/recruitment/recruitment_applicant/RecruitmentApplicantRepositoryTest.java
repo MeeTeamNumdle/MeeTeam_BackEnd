@@ -132,7 +132,7 @@ public class RecruitmentApplicantRepositoryTest {
         Long postId = 1L;
 
         // when
-        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByRoleQuery(postId, null);
+        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId, null);
 
         // then
         Assertions.assertThat(responseDtos.size()).isEqualTo(2);
@@ -151,7 +151,8 @@ public class RecruitmentApplicantRepositoryTest {
         Long roleId = 2L;
 
         // when
-        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByRoleQuery(postId, roleId);
+        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
+                roleId);
 
         // then
         Assertions.assertThat(responseDtos.size()).isEqualTo(1);

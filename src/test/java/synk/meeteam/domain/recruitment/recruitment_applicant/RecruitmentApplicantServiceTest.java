@@ -272,7 +272,7 @@ public class RecruitmentApplicantServiceTest {
                 "이미지입니다2", "이름입니다2", 4.2, "광운대학교", "소프트웨어학부", 2018,
                 "백엔드개발자", "전하는 말입니다2");
 
-        doReturn(List.of(dto1, dto2)).when(recruitmentApplicantRepository).findByRoleQuery(any(), any());
+        doReturn(List.of(dto1, dto2)).when(recruitmentApplicantRepository).findByPostIdAndRoleId(any(), any());
         doReturn("이미지입니다").when(s3Service).createPreSignedGetUrl(any(), any());
         MockedStatic<Encryption> utilities = Mockito.mockStatic(Encryption.class);
         utilities.when(() -> Encryption.encryptLong(any())).thenReturn("1234");
