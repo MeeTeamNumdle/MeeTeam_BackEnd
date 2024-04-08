@@ -1,11 +1,17 @@
 package synk.meeteam.domain.recruitment.recruitment_applicant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.ALREADY_PROCESSED_APPLICANT;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_USER;
 
 import java.net.URI;
+import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.DatabaseCleanUp;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.ProcessApplicantRequestDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.request.SetLinkRequestDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantInfoResponseDto;
 import synk.meeteam.global.common.exception.ExceptionResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,6 +58,7 @@ public class RecruitmentApplicantTest {
         databaseCleanUp.clear();
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("data.sql"));
+        populator.addScript(new ClassPathResource("test-recruitment-applicant.sql"));
         populator.execute(dataSource);
     }
 
@@ -106,5 +115,95 @@ public class RecruitmentApplicantTest {
 
         // then
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void 신청자승인_성공() {
+        // given
+        Long postId = 1L;
+        Long userId1 = 1L;
+        Long userId2 = 2L;
+        ProcessApplicantRequestDto requestDto = new ProcessApplicantRequestDto(List.of(userId1, userId2));
+        HttpEntity<ProcessApplicantRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        ResponseEntity<Void> responseEntity = restTemplate.exchange(
+                URI.create(RECRUITMENT_URL + "/" + postId.toString() + "/approve"), HttpMethod.PATCH,
+                requestEntity, Void.class);
+
+        // then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        ResponseEntity<GetApplicantInfoResponseDto> validateResponseEntity = restTemplate.exchange(
+                URI.create(RECRUITMENT_URL + "/" + postId.toString() + "/info"), HttpMethod.GET,
+                requestEntity, GetApplicantInfoResponseDto.class);
+
+        assertEquals(HttpStatus.OK, validateResponseEntity.getStatusCode());
+        GetApplicantInfoResponseDto body = validateResponseEntity.getBody();
+        assertEquals(body.recruitmentStatus().get(0).approvedMemberCount(), 1);
+        assertEquals(body.recruitmentStatus().get(1).approvedMemberCount(), 1);
+
+    }
+
+    @Test
+    void 신청자거절_예외발생_작성자가아닌경우() {
+        // given
+        Long postId = 1L;
+        Long userId1 = 1L;
+        Long userId2 = 2L;
+        headers.set(accessHeader, TOKEN_OTHER);
+        ProcessApplicantRequestDto requestDto = new ProcessApplicantRequestDto(List.of(userId1, userId2));
+        HttpEntity<ProcessApplicantRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        ResponseEntity<ExceptionResponse> responseEntity = restTemplate.exchange(
+                URI.create(RECRUITMENT_URL + "/" + postId.toString() + "/reject"), HttpMethod.PATCH,
+                requestEntity, ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        ExceptionResponse body = responseEntity.getBody();
+        assertEquals(body.getMessage(), INVALID_USER.message());
+
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"3,4", "1,3", "2,4"})
+    void 신청자거절_예외발생_신청상태가NONE아닌경우(Long userId1, Long userId2) {
+        // given
+        Long postId = 1L;
+        ProcessApplicantRequestDto requestDto = new ProcessApplicantRequestDto(List.of(userId1, userId2));
+        HttpEntity<ProcessApplicantRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        ResponseEntity<ExceptionResponse> responseEntity = restTemplate.exchange(
+                URI.create(RECRUITMENT_URL + "/" + postId.toString() + "/reject"), HttpMethod.PATCH,
+                requestEntity, ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        ExceptionResponse body = responseEntity.getBody();
+        assertEquals(body.getMessage(), ALREADY_PROCESSED_APPLICANT.message());
+    }
+
+    @Test
+    void 신청자거절_예외발생_요청신청자와실제신청자가다를경우() {
+        // given
+        Long postId = 1L;
+        Long userId1 = 1L;
+        Long userId2 = 2L;
+        Long userId3 = 100L;
+        ProcessApplicantRequestDto requestDto = new ProcessApplicantRequestDto(List.of(userId1, userId2, userId3));
+        HttpEntity<ProcessApplicantRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+        // when
+        ResponseEntity<ExceptionResponse> responseEntity = restTemplate.exchange(
+                URI.create(RECRUITMENT_URL + "/" + postId.toString() + "/reject"), HttpMethod.PATCH,
+                requestEntity, ExceptionResponse.class);
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        ExceptionResponse body = responseEntity.getBody();
+        assertEquals(body.getMessage(), INVALID_REQUEST.message());
     }
 }

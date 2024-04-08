@@ -23,10 +23,10 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public long bulkApprove(List<Long> applicantIds) {
+    public long updateRecruitStatus(List<Long> applicantIds, RecruitStatus recruitStatus) {
         return jpaQueryFactory.update(recruitmentApplicant)
                 .where(recruitmentApplicant.id.in(applicantIds))
-                .set(recruitmentApplicant.recruitStatus, RecruitStatus.APPROVED)
+                .set(recruitmentApplicant.recruitStatus, recruitStatus)
                 .execute();
     }
 
