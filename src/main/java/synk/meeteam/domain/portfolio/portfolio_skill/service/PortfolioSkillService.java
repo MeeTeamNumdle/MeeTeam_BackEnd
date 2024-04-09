@@ -30,8 +30,9 @@ public class PortfolioSkillService {
         portfolioSkillRepository.saveAll(portfolioSkills);
     }
 
-    public List<PortfolioSkill> getPortfolioSkill(Portfolio portfolio) {
-        return portfolioSkillRepository.findAllByPortfolio(portfolio);
+    public List<Skill> getPortfolioSkill(Portfolio portfolio) {
+        List<PortfolioSkill> portfolioWithSkills = portfolioSkillRepository.findAllByPortfolioWithSkill(portfolio);
+        return portfolioWithSkills.stream().map(PortfolioSkill::getSkill).toList();
     }
 
 //    void editPortfolioSkill()
