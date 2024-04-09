@@ -11,6 +11,7 @@ import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.global.dto.SliceInfo;
+import synk.meeteam.global.entity.ProceedType;
 
 public class PortfolioFixture {
     public static List<Portfolio> createPortfolioFixtures_1_2() {
@@ -36,14 +37,36 @@ public class PortfolioFixture {
                 .description("디스크립션")
                 .proceedStart(start)
                 .proceedEnd(LocalDate.now())
+                .proceedType(ProceedType.ON_LINE)
                 .isPin(isPin)
                 .pinOrder(pinOrder)
-                .mainImageFileName("이미지")
+                .mainImageFileName("이미지.png")
+                .zipFileName("집.zip")
+                .fileOrder(List.of("집1", "집2"))
                 .role(role)
                 .field(field)
                 .build();
         portfolio.setCreatedBy(createdBy);
         return portfolio;
+    }
+
+    public static Portfolio createPortfolioFixture() {
+        return Portfolio.builder()
+                .id(1L)
+                .title("제목")
+                .content("컨텐츠")
+                .description("부연설명")
+                .proceedStart(LocalDate.of(24, 2, 1))
+                .proceedEnd(LocalDate.now())
+                .proceedType(ProceedType.ON_LINE)
+                .isPin(false)
+                .pinOrder(0)
+                .mainImageFileName("이미지.png")
+                .zipFileName("집.zip")
+                .fileOrder(List.of("집1", "집2"))
+                .role(new Role("개발자"))
+                .field(new Field(1L, "개발"))
+                .build();
     }
 
     public static Slice<GetProfilePortfolioDto> createSlicePortfolioDtos() {
