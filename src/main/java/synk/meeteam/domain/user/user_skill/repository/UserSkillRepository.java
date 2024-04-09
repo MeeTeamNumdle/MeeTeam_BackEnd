@@ -5,5 +5,5 @@ import synk.meeteam.domain.user.user_skill.entity.UserSkill;
 
 public interface UserSkillRepository extends JpaRepository<UserSkill, Long>, UserSkillCustomRepository {
 
-    void deleteAllByCreatedBy(Long id);
+    void deleteAllByCreatedBy(Long userId);
 }

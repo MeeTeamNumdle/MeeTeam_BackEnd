@@ -18,9 +18,9 @@ public class UserSkillServiceImpl implements UserSkillService {
     private final SkillRepository skillRepository;
 
     @Transactional
-    public List<UserSkill> changeUserSkillsByIds(Long id, List<Long> skillIds) {
+    public List<UserSkill> changeUserSkillBySkill(Long userId, List<Long> skillIds) {
         //기존 유저 스킬 모두 삭제
-        userSkillRepository.deleteAllByCreatedBy(id);
+        userSkillRepository.deleteAllByCreatedBy(userId);
         userSkillRepository.flush();
         //유저 스킬 목록 조회
         List<Skill> skills = skillRepository.findAllById(skillIds);

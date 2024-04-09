@@ -49,7 +49,7 @@ public class UserSkillServiceTest {
         doReturn(UserSkillFixture.createSkill()).when(skillRepository).findAllById(anyList());
 
         //when
-        List<UserSkill> userSkills = userSkillService.changeUserSkillsByIds(1L, List.of(1L, 2L));
+        List<UserSkill> userSkills = userSkillService.changeUserSkillBySkill(1L, List.of(1L, 2L));
 
         //then
         assertThat(userSkills)

@@ -18,9 +18,9 @@ public class AwardServiceImpl implements AwardService {
     private final AwardMapper awardMapper;
 
     @Transactional
-    public List<Award> changeAward(Long id, List<UpdateAwardDto> awardDtos) {
+    public List<Award> changeAward(Long userId, List<UpdateAwardDto> awardDtos) {
         //기존 수상내역 삭제
-        awardRepository.deleteAllByCreatedBy(id);
+        awardRepository.deleteAllByCreatedBy(userId);
         //수상내역 생성
         List<Award> awards = awardDtos.stream().map(awardMapper::toAward).toList();
         //수상내역 저장

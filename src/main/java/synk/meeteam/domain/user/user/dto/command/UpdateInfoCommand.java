@@ -1,7 +1,6 @@
 package synk.meeteam.domain.user.user.dto.command;
 
 public record UpdateInfoCommand(
-        String name,
         boolean isPublicName,
         String pictureFileName,
         String subEmail,

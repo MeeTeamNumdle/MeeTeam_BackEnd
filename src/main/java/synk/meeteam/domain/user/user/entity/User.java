@@ -186,13 +186,12 @@ public class User extends BaseTimeEntity {
 
     //프로필 정보 업데이트
     public void updateProfile(
-            String name,
             boolean isPublicName,
             String profileImgFileName,
             String subEmail,
             boolean isPublicSubEmail,
-            boolean isPublicSchoolEmail,
-            boolean isSchoolMain,
+            boolean isPublicUniversityEmail,
+            boolean isUniversityMainEmail,
             String phoneNumber,
             boolean isPublicPhone,
             String oneLineIntroduction,
@@ -201,13 +200,12 @@ public class User extends BaseTimeEntity {
             double maxGpa,
             Role role
     ) {
-        this.name = name;
         this.isPublicName = isPublicName;
         this.profileImgFileName = profileImgFileName;
         this.subEmail = subEmail;
         this.isPublicSubEmail = isPublicSubEmail;
-        this.isPublicUniversityEmail = isPublicSchoolEmail;
-        this.isUniversityMainEmail = isSchoolMain;
+        this.isPublicUniversityEmail = isPublicUniversityEmail;
+        this.isUniversityMainEmail = isUniversityMainEmail;
         this.phoneNumber = phoneNumber;
         this.isPublicPhone = isPublicPhone;
         this.oneLineIntroduction = oneLineIntroduction;
@@ -215,6 +213,11 @@ public class User extends BaseTimeEntity {
         this.gpa = gpa;
         this.maxGpa = maxGpa;
         this.interestRole = role;
+
+        if (subEmail == null && !isUniversityMainEmail) {
+            this.isUniversityMainEmail = true;
+        }
+
     }
 
     public String getEncryptUserId() {
