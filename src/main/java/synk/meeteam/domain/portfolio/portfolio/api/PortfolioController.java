@@ -42,6 +42,6 @@ public class PortfolioController implements PortfolioApi {
     @Override
     public ResponseEntity<Long> modifyPortfolio(@AuthUser User user, @PathVariable("id") Long portfolioId,
                                                 @RequestBody @Valid UpdatePortfolioRequestDto requestDto) {
-        return ResponseEntity.ok(1L);
+        return ResponseEntity.ok(portfolioFacade.editPortfolio(portfolioId, user, requestDto));
     }
 }
