@@ -13,14 +13,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
@@ -31,12 +30,6 @@ import synk.meeteam.global.entity.BaseTimeEntity;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Table(uniqueConstraints = {
-        @UniqueConstraint(
-                name = "RecruitmentApplicant_uk",
-                columnNames = {"recruitment_post_id", "applicant_id"}
-        )
-})
 public class RecruitmentApplicant extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +56,11 @@ public class RecruitmentApplicant extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private RecruitStatus recruitStatus;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ALIVE'")
+    private DeleteStatus deleteStatus = DeleteStatus.ALIVE;
+
     @Builder
     public RecruitmentApplicant(RecruitmentPost recruitmentPost, User applicant, Role role, String comment,
                                 RecruitStatus recruitStatus) {
@@ -71,6 +69,10 @@ public class RecruitmentApplicant extends BaseTimeEntity {
         this.role = role;
         this.comment = comment;
         this.recruitStatus = recruitStatus;
+    }
+
+    public void softDelete() {
+        this.deleteStatus = DeleteStatus.DELETED;
     }
 
     public void validateCanApprove(Long userId) {

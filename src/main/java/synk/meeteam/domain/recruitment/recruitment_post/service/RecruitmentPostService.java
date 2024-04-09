@@ -36,7 +36,12 @@ public class RecruitmentPostService {
 
     @Transactional
     public void incrementApplicantCount(RecruitmentPost recruitmentPost) {
-        recruitmentPost.addApplicantCount();
+        recruitmentPost.incrementApplicantCount();
+    }
+
+    @Transactional
+    public void decrementApplicantCount(RecruitmentPost recruitmentPost) {
+        recruitmentPost.decrementApplicantCount();
     }
 
     @Transactional
