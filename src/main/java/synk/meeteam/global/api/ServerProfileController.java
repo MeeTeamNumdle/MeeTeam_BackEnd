@@ -27,6 +27,8 @@ import synk.meeteam.security.AuthUser;
 @RequiredArgsConstructor
 public class ServerProfileController {
 
+    private static final String ZIP_NAME = "zip";
+
     private final Environment env;
     private final S3Service s3Service;
     private final PortfolioService portfolioService;
@@ -69,7 +71,7 @@ public class ServerProfileController {
         }
 
         PreSignedUrlVO zipUrl = s3Service.getUploadPreSignedUrl(PORTFOLIO, zipFileName,
-                requestDto.extension(), ServiceType.PORTFOLIOS);
+                ZIP_NAME, ServiceType.PORTFOLIOS);
         PreSignedUrlVO thumbNailUrl = s3Service.getUploadPreSignedUrl(PORTFOLIO, thumbNailFileName,
                 requestDto.extension(), ServiceType.THUMBNAIL_PORTFOLIO);
 
