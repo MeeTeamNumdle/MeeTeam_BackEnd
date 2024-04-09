@@ -30,10 +30,16 @@ public class PortfolioSkillService {
         portfolioSkillRepository.saveAll(portfolioSkills);
     }
 
+    @Transactional(readOnly = true)
     public List<Skill> getPortfolioSkill(Portfolio portfolio) {
         List<PortfolioSkill> portfolioWithSkills = portfolioSkillRepository.findAllByPortfolioWithSkill(portfolio);
         return portfolioWithSkills.stream().map(PortfolioSkill::getSkill).toList();
     }
 
-//    void editPortfolioSkill()
+    @Transactional
+    public void editPortfolioSkill(Portfolio portfolio, List<Long> skillIds) {
+        portfolioSkillRepository.deleteAllByPortfolio(portfolio);
+        portfolioSkillRepository.flush();
+        createPortfolioSkill(portfolio, skillIds);
+    }
 }
