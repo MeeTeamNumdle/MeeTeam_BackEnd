@@ -21,4 +21,8 @@ public class PortfolioLinkService {
                         portfolioLinkDto.description())).toList();
         portfolioLinkRepository.saveAll(portfolioLinks);
     }
+
+    public List<PortfolioLink> getPortfolioLink(Portfolio portfolio) {
+        return portfolioLinkRepository.findAllByPortfolio(portfolio);
+    }
 }
