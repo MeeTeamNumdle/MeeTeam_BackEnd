@@ -73,16 +73,14 @@ public class Portfolio extends BaseEntity {
 
     //포트폴리오 커버 이미지
     @NotNull
-    private String mainImageFileName;
-
-    //포트폴리오 모든슬라이드
-    private String slideZipFileName;
+    private String mainImageExtension;
 
     //핀인지 여부
     @ColumnDefault("0")
     private Boolean isPin;
 
     //핀 순서
+    @ColumnDefault("0")
     private int pinOrder;
 
     @Builder
