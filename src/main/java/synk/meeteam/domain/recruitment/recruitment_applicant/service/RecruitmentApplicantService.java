@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_applicant.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.SS_602;
 import static synk.meeteam.infra.s3.S3FileName.USER;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
@@ -32,12 +34,25 @@ public class RecruitmentApplicantService {
 
     @Transactional
     public void registerRecruitmentApplicant(RecruitmentApplicant recruitmentApplicant) {
+        // 이미 신청한 경우 검증로직
+        validateAlreadyApply(recruitmentApplicant);
+
         recruitmentApplicantRepository.save(recruitmentApplicant);
+    }
+
+    @Transactional
+    public void cancelRegisterRecruitmentApplicant(RecruitmentApplicant recruitmentApplicant) {
+        recruitmentApplicant.softDelete();
     }
 
     @Transactional(readOnly = true)
     public List<RecruitmentApplicant> getAllApplicants(List<Long> applicantIds) {
-        return recruitmentApplicantRepository.findAllInApplicantId(applicantIds);
+        return recruitmentApplicantRepository.findAllInApplicantId(applicantIds, DeleteStatus.ALIVE);
+    }
+
+    @Transactional(readOnly = true)
+    public RecruitmentApplicant getApplicant(RecruitmentPost recruitmentPost, User user) {
+        return recruitmentApplicantRepository.findByRecruitmentPostAndApplicantOrElseThrow(recruitmentPost, user);
     }
 
     @Transactional(readOnly = true)
@@ -93,8 +108,8 @@ public class RecruitmentApplicantService {
 
     @Transactional(readOnly = true)
     public boolean isAppliedUser(RecruitmentPost recruitmentPost, User user) {
-        RecruitmentApplicant recruitmentApplicant = recruitmentApplicantRepository.findByRecruitmentPostAndApplicant(
-                recruitmentPost, user).orElse(null);
+        RecruitmentApplicant recruitmentApplicant = recruitmentApplicantRepository.findByRecruitmentPostAndApplicantAndDeleteStatus(
+                recruitmentPost, user, DeleteStatus.ALIVE).orElse(null);
 
         if (recruitmentApplicant != null) {
             return false;
@@ -114,6 +129,15 @@ public class RecruitmentApplicantService {
     private void validateApplicantCount(int requestCount, int actualCount) {
         if (requestCount != actualCount) {
             throw new RecruitmentApplicantException(INVALID_REQUEST);
+        }
+    }
+
+    private void validateAlreadyApply(RecruitmentApplicant recruitmentApplicant) {
+        RecruitmentApplicant alreadyAppliedUser = recruitmentApplicantRepository.findByRecruitmentPostAndApplicantAndDeleteStatus(
+                        recruitmentApplicant.getRecruitmentPost(), recruitmentApplicant.getApplicant(), DeleteStatus.ALIVE)
+                .orElse(null);
+        if (alreadyAppliedUser != null) {
+            throw new RecruitmentApplicantException(SS_602);
         }
     }
 }
