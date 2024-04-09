@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
 import synk.meeteam.domain.user.award.dto.UpdateAwardDto;
@@ -17,6 +18,10 @@ public record UpdateProfileRequestDto(
         @NotBlank
         String nickname,
 
+        @Schema(description = "유저이름 공개여부", example = "true")
+        @NotNull
+        boolean isUserNamePublic,
+
         @Schema(description = "프로필사진 url")
         String imageFileName,
 
@@ -25,6 +30,7 @@ public record UpdateProfileRequestDto(
         String phone,
 
         @Schema(description = "전화번호 공개여부")
+        @NotNull
         boolean isPhonePublic,
 
         @Schema(description = "학교 이메일이 주 이메일인지", example = "true")
@@ -36,9 +42,11 @@ public record UpdateProfileRequestDto(
         String subEmail,
 
         @Schema(description = "보조이메일 공개 여부")
+        @NotNull
         boolean isSubEmailPublic,
 
         @Schema(description = "학교이메일 공개여부")
+        @NotNull
         boolean isUniversityEmailPublic,
 
         @Schema(description = "한줄소개", example = "고통을 즐기는 개발자")
