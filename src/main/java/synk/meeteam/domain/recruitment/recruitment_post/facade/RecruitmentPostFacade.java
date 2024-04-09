@@ -81,7 +81,7 @@ public class RecruitmentPostFacade {
                 recruitmentApplicant.getRole());
 
         recruitmentApplicantService.cancelRegisterRecruitmentApplicant(recruitmentApplicant);
-        recruitmentPostService.decrementApplicantCount(recruitmentApplicant.getRecruitmentPost());
+        recruitmentPostService.decrementApplicantCount(recruitmentPost);
         recruitmentRoleService.decrementApplicantCount(recruitmentRole);
     }
 
