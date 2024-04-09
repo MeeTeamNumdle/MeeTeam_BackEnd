@@ -127,6 +127,20 @@ public class Portfolio extends BaseEntity {
         this.pinOrder = pinOrder;
     }
 
+    public void updatePortfolio(String title, String description, String content, LocalDate proceedStart,
+                                LocalDate proceedEnd, ProceedType proceedType, Field field, Role role,
+                                List<String> fileOrder) {
+        this.title = title;
+        this.description = description;
+        this.content = content;
+        this.proceedStart = proceedStart;
+        this.proceedEnd = proceedEnd;
+        this.proceedType = proceedType;
+        this.field = field;
+        this.role = role;
+        this.fileOrder = fileOrder;
+    }
+
     public void putPin(int order) {
         isPin = true;
         pinOrder = order;
