@@ -1,12 +1,15 @@
 package synk.meeteam.domain.recruitment.recruitment_role.repository;
 
 import static synk.meeteam.domain.recruitment.recruitment_role.exception.RecruitmentRoleExceptionType.INVALID_RECRUITMENT_ROLE_ID;
+import static synk.meeteam.domain.recruitment.recruitment_role.exception.RecruitmentRoleExceptionType.SS_601;
 
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.exception.RecruitmentRoleException;
 
@@ -30,4 +33,11 @@ public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole
 
     @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentPost p JOIN FETCH r.role t WHERE p.id = :postId AND t.id IN :roleIds")
     List<RecruitmentRole> findAllByPostIdAndRoleIds(@Param("postId") Long postId, @Param("roleIds") List<Long> roleIds);
+
+    Optional<RecruitmentRole> findByRecruitmentPostAndRole(RecruitmentPost recruitmentPost, Role role);
+
+    default RecruitmentRole findByRecruitmentPostAndRoleOrElseThrow(RecruitmentPost recruitmentPost, Role role) {
+        return findByRecruitmentPostAndRole(recruitmentPost, role)
+                .orElseThrow(() -> new RecruitmentRoleException(SS_601));
+    }
 }
