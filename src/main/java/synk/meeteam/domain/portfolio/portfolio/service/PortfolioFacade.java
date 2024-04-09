@@ -10,6 +10,7 @@ import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.common.skill.entity.Skill;
 import synk.meeteam.domain.portfolio.portfolio.dto.command.PortfolioCommandMapper;
 import synk.meeteam.domain.portfolio.portfolio.dto.request.CreatePortfolioRequestDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.request.UpdatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.entity.PortfolioMapper;
@@ -73,6 +74,19 @@ public class PortfolioFacade {
                                         otherPortfolio.getMainImageFileName()))).toList(),
                 portfolio.isWriter(user.getId())
         );
+    }
+
+    @Transactional
+    public Long editPortfolio(Long portfolioId, User user, UpdatePortfolioRequestDto requestDto) {
+        Portfolio portfolio = portfolioService.getPortfolio(portfolioId);
+        if (!portfolio.isWriter(user.getId())) {
+            throw new PortfolioException(NOT_YOUR_PORTFOLIO);
+        }
+        portfolioService.editPortfolio(portfolio, user, commandMapper.toUpdatePortfolioCommand(requestDto));
+        portfolioSkillService.editPortfolioSkill(portfolio, requestDto.skills());
+        portfolioLinkService.editPortfolioLink(portfolio, requestDto.links());
+
+        return portfolioId;
     }
 
     private List<Portfolio> getUserPortfolio(Portfolio portfolio) {
