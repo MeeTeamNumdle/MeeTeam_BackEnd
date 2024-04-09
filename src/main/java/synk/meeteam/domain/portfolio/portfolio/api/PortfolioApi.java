@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public interface PortfolioApi {
             }
     )
     @Operation(summary = "포트폴리오 등록 API")
-    ResponseEntity<Long> postPortfolio(@RequestBody CreatePortfolioRequestDto requestDto);
+    ResponseEntity<Long> postPortfolio(@RequestBody @Valid CreatePortfolioRequestDto requestDto);
 
     @ApiResponses(
             value = {
