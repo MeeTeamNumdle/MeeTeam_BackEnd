@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +62,9 @@ public interface RecruitmentApplicantApi {
             }
     )
     @Operation(summary = "신청자 목록 조회 API")
-    ResponseEntity<List<GetApplicantResponseDto>> getApplicants(@PathVariable("id") Long postId,
-                                                                @RequestParam(value = "role", required = false) Long roleId,
-                                                                @AuthUser User user);
+    ResponseEntity<GetApplicantResponseDto> getApplicants(@PathVariable("id") Long postId,
+                                                          @RequestParam(value = "role", required = false) Long roleId,
+                                                          @RequestParam(name = "page", defaultValue = "1") int page,
+                                                          @RequestParam(name = "size", defaultValue = "12") int size,
+                                                          @AuthUser User user);
 }

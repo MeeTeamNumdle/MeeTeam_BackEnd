@@ -7,8 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
@@ -16,6 +20,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.exception.Recruitme
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.dto.SliceInfo;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.s3.service.S3Service;
 
@@ -72,14 +77,18 @@ public class RecruitmentApplicantService {
     }
 
     @Transactional
-    public List<GetApplicantResponseDto> getAllByRole(Long postId, Long roleId) {
-        List<GetApplicantResponseDto> applicantDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
-                roleId);
+    public GetApplicantResponseDto getAllByRole(Long postId, Long roleId, int page, int size) {
+        int pageNumber = page - 1;
+        Pageable pageable = PageRequest.of(pageNumber, size);
+
+        Slice<GetApplicantDto> applicantDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
+                roleId, pageable);
         applicantDtos.stream().forEach(applicant -> applicant.setEncryptedUserIdAndProfileImg(
                 Encryption.encryptLong(Long.parseLong(applicant.getUserId())),
                 s3Service.createPreSignedGetUrl(USER, applicant.getProfileImg())));
 
-        return applicantDtos;
+        SliceInfo pageInfo = new SliceInfo(page, size, applicantDtos.hasNext());
+        return new GetApplicantResponseDto(applicantDtos.getContent(), pageInfo);
     }
 
     @Transactional(readOnly = true)

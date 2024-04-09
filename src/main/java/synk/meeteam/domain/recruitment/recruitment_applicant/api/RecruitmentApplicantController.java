@@ -97,10 +97,13 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<List<GetApplicantResponseDto>> getApplicants(@PathVariable("id") Long postId,
-                                                                       @RequestParam(value = "role", required = false) Long roleId,
-                                                                       @AuthUser User user) {
-        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId);
+    public ResponseEntity<GetApplicantResponseDto> getApplicants(@PathVariable("id") Long postId,
+                                                                 @RequestParam(value = "role", required = false) Long roleId,
+                                                                 @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                 @RequestParam(name = "size", defaultValue = "8") int size,
+                                                                 @AuthUser User user) {
+
+        GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, page, size);
         return ResponseEntity.ok().body(responseDtos);
     }
 

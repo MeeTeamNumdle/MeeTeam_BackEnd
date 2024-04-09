@@ -6,14 +6,20 @@ import static synk.meeteam.domain.recruitment.recruitment_applicant.entity.QRecr
 import static synk.meeteam.domain.recruitment.recruitment_post.entity.QRecruitmentPost.recruitmentPost;
 import static synk.meeteam.domain.user.user.entity.QUser.user;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 import synk.meeteam.domain.common.department.entity.QDepartment;
-import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
-import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.QGetApplicantResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.QGetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 
 @Repository
@@ -31,16 +37,22 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
     }
 
     @Override
-    public List<GetApplicantResponseDto> findByPostIdAndRoleId(Long postId, Long roleId) {
+    public Slice<GetApplicantDto> findByPostIdAndRoleId(Long postId, Long roleId, Pageable pageable) {
 
-        // id, profileImg
-        return jpaQueryFactory
-                .select(new QGetApplicantResponseDto(recruitmentApplicant.id,
+        Predicate isUniversityMainEmail = user.isUniversityMainEmail.eq(true);
+
+        StringExpression getMainMail = new CaseBuilder()
+                .when(isUniversityMainEmail)
+                .then(recruitmentApplicant.applicant.universityEmail)
+                .otherwise(recruitmentApplicant.applicant.subEmail);
+
+        List<GetApplicantDto> contents = jpaQueryFactory
+                .select(new QGetApplicantDto(recruitmentApplicant.id,
                         recruitmentApplicant.applicant.id.stringValue(),
                         recruitmentApplicant.applicant.nickname, recruitmentApplicant.applicant.profileImgFileName,
                         recruitmentApplicant.applicant.name, recruitmentApplicant.applicant.evaluationScore,
                         recruitmentApplicant.applicant.university.name, recruitmentApplicant.applicant.department.name,
-                        recruitmentApplicant.applicant.admissionYear,
+                        getMainMail, recruitmentApplicant.applicant.admissionYear,
                         recruitmentApplicant.role.name, recruitmentApplicant.comment))
                 .from(recruitmentApplicant)
                 .leftJoin(recruitmentApplicant.applicant, user)
@@ -50,7 +62,11 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
                 .leftJoin(recruitmentApplicant.applicant.department, QDepartment.department)
                 .where(eqRole(roleId), recruitmentApplicant.recruitmentPost.id.eq(postId),
                         recruitmentApplicant.recruitStatus.eq(RecruitStatus.NONE))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
+
+        return new SliceImpl<>(contents, pageable, hasNextPage(contents, pageable.getPageSize()));
     }
 
     private BooleanExpression eqRole(Long roleId) {
@@ -58,5 +74,13 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
             return null;
         }
         return recruitmentApplicant.role.id.eq(roleId);
+    }
+
+    private boolean hasNextPage(List<GetApplicantDto> contents, int pageSize) {
+        if (contents.size() > pageSize) {
+            contents.remove(pageSize);
+            return true;
+        }
+        return false;
     }
 }
