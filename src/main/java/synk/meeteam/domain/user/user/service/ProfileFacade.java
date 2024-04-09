@@ -53,10 +53,10 @@ public class ProfileFacade {
         userService.changeUserInfo(user, updateProfileCommandMapper.toUpdateProfileCommand(profileDto));
 
         //유저 링크 덮어쓰기
-        userLinkService.changeUserLinks(user.getId(), profileDto.links());
+        userLinkService.changeUserLink(user.getId(), profileDto.links());
 
         //유저 스킬 덮어쓰기
-        userSkillService.changeUserSkillsByIds(user.getId(), profileDto.skills());
+        userSkillService.changeUserSkillBySkill(user.getId(), profileDto.skills());
 
         //수상 활동 내역 덮어쓰기
         awardService.changeAward(user.getId(), profileDto.awards());
@@ -88,7 +88,7 @@ public class ProfileFacade {
     }
 
     private List<GetProfilePortfolioDto> getProfilePortfolios(Long userId, String encryptedId) {
-        List<Portfolio> portfolios = portfolioService.getUserPinPortfolio(userId);
+        List<Portfolio> portfolios = portfolioService.getMyPinPortfolio(userId);
 
         return portfolios.stream().map((portfolio) -> {
             String imageUrl = s3Service.createPreSignedGetUrl(

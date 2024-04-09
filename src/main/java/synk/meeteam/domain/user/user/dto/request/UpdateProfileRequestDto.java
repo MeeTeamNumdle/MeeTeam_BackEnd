@@ -1,6 +1,7 @@
 package synk.meeteam.domain.user.user.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -11,17 +12,12 @@ import synk.meeteam.domain.user.user_link.dto.UpdateUserLinkDto;
 @Schema(name = "UpdateProfileResponseDto", description = "유저 정보 저장 요청 Dto")
 public record UpdateProfileRequestDto(
 
-        @Schema(description = "이름", example = "부겸")
-        @NotBlank
-        String userName,
-
         @Schema(description = "닉네임", example = "goder")
         @Pattern(regexp = "^[a-zA-Z0-9가-힣._]*$", message = "닉네임은 영어, 숫자, 한글, '_', '.' 문자만 가능합니다.")
         @NotBlank
         String nickname,
 
         @Schema(description = "프로필사진 url")
-        @NotBlank
         String imageFileName,
 
         @Schema(description = "전화정보", example = "010-1234-5678")
@@ -36,6 +32,7 @@ public record UpdateProfileRequestDto(
 
         @Schema(description = "보조 이메일")
         @Email
+        @Nullable
         String subEmail,
 
         @Schema(description = "보조이메일 공개 여부")

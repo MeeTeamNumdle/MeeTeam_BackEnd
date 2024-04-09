@@ -41,9 +41,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void changeUserInfo(User user, UpdateInfoCommand command) {
 
-        Role interestRole = roleRepository.findByIdOrElseThrowException(command.interestId());
+        Role interestRole = roleRepository.findById(command.interestId()).orElse(null);
         user.updateProfile(
-                command.name(),
                 command.isPublicName(),
                 command.pictureFileName(),
                 command.subEmail(),

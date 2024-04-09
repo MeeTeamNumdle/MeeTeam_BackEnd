@@ -46,7 +46,7 @@ public class UserLinkServiceTest {
         doReturn(UserLinkFixture.createUserLinkFixture()).when(userLinkRepository).saveAll(Mockito.<UserLink>anyList());
 
         //when
-        List<UserLink> userLinks = userLinkService.changeUserLinks(1L, UserLinkFixture.createUserLinkDtoFixture());
+        List<UserLink> userLinks = userLinkService.changeUserLink(1L, UserLinkFixture.createUserLinkDtoFixture());
 
         //then
         assertThat(userLinks).extracting("url").containsExactly("링크1", "링크2");

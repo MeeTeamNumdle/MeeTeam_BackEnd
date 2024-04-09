@@ -41,7 +41,6 @@ public class UserFixture {
 
     public static UpdateProfileRequestDto createEditProfileDto() {
         return new UpdateProfileRequestDto(
-                "부겸",
                 "goder",
                 "imageUrl",
                 "010-1234-5678",
