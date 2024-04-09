@@ -41,7 +41,7 @@ public class PortfolioController implements PortfolioApi {
     @PutMapping("/{id}")
     @Override
     public ResponseEntity<Long> modifyPortfolio(@AuthUser User user, @PathVariable("id") Long portfolioId,
-                                                @RequestBody UpdatePortfolioRequestDto requestDto) {
+                                                @RequestBody @Valid UpdatePortfolioRequestDto requestDto) {
         return ResponseEntity.ok(1L);
     }
 }

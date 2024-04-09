@@ -43,5 +43,5 @@ public interface PortfolioApi {
     @Operation(summary = "포트폴리오 수정 API")
     ResponseEntity<Long> modifyPortfolio(@AuthUser User user,
                                          @PathVariable Long portfolioId,
-                                         @RequestBody UpdatePortfolioRequestDto requestDto);
+                                         @RequestBody @Valid UpdatePortfolioRequestDto requestDto);
 }
