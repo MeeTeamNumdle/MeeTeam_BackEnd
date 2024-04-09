@@ -18,5 +18,5 @@ public interface PortfolioService {
 
     Portfolio getPortfolio(Long portfolioId);
 
-    Portfolio editPortfolio(User user, Long portfolioId, UpdatePortfolioCommand command);
+    Portfolio editPortfolio(Portfolio portfolio, User user, UpdatePortfolioCommand command);
 }

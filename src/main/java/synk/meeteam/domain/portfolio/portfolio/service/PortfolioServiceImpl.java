@@ -21,8 +21,6 @@ import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResp
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
-import synk.meeteam.domain.portfolio.portfolio_link.repository.PortfolioLinkRepository;
-import synk.meeteam.domain.portfolio.portfolio_skill.repository.PortfolioSkillRepository;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.SliceInfo;
 
@@ -30,8 +28,6 @@ import synk.meeteam.global.dto.SliceInfo;
 @RequiredArgsConstructor
 public class PortfolioServiceImpl implements PortfolioService {
     private final PortfolioRepository portfolioRepository;
-    private final PortfolioSkillRepository portfolioSkillRepository;
-    private final PortfolioLinkRepository portfolioLinkRepository;
     private final FieldRepository fieldRepository;
     private final RoleRepository roleRepository;
 
@@ -108,7 +104,20 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Portfolio editPortfolio(User user, Long portfolioId, UpdatePortfolioCommand command) {
-        return null;
+    public Portfolio editPortfolio(Portfolio portfolio, User user, UpdatePortfolioCommand command) {
+        Field field = fieldRepository.findByIdOrElseThrowException(command.fieldId());
+        Role role = roleRepository.findByIdOrElseThrowException(command.roleId());
+        portfolio.updatePortfolio(
+                command.title(),
+                command.description(),
+                command.content(),
+                command.proceedStart(),
+                command.proceedEnd(),
+                command.proceedType(),
+                field,
+                role,
+                command.fileOrder()
+        );
+        return portfolio;
     }
 }
