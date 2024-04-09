@@ -3,7 +3,10 @@ package synk.meeteam.domain.portfolio.portfolio.entity;
 import static jakarta.persistence.FetchType.LAZY;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +26,8 @@ import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.global.entity.BaseEntity;
+import synk.meeteam.global.entity.ProceedType;
+import synk.meeteam.global.util.StringListConverter;
 
 @Getter
 @Setter
@@ -61,6 +67,13 @@ public class Portfolio extends BaseEntity {
     @NotNull
     private LocalDate proceedEnd;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private ProceedType proceedType;
+
+    @NotNull
+    @Convert(converter = StringListConverter.class)
+    private List<String> fileOrder;
     //분야
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "field_id")
@@ -73,7 +86,10 @@ public class Portfolio extends BaseEntity {
 
     //포트폴리오 커버 이미지
     @NotNull
-    private String mainImageExtension;
+    private String mainImageFileName;
+
+    @NotNull
+    private String zipFileName;
 
     //핀인지 여부
     @ColumnDefault("0")
@@ -82,6 +98,25 @@ public class Portfolio extends BaseEntity {
     //핀 순서
     @ColumnDefault("0")
     private int pinOrder;
+
+    @Builder
+    public Portfolio(String title, String description, String content, LocalDate proceedStart, LocalDate proceedEnd,
+                     ProceedType proceedType, Field field, Role role, String mainImageFileName, String zipFileName,
+                     List<String> fileOrder) {
+        this.title = title;
+        this.description = description;
+        this.content = content;
+        this.proceedStart = proceedStart;
+        this.proceedEnd = proceedEnd;
+        this.proceedType = proceedType;
+        this.field = field;
+        this.role = role;
+        this.mainImageFileName = mainImageFileName;
+        this.zipFileName = zipFileName;
+        this.fileOrder = fileOrder;
+        this.isPin = false;
+        this.pinOrder = 0;
+    }
 
     @Builder
     public Portfolio(Long id, String title, String description, Boolean isPin, int pinOrder) {
