@@ -57,7 +57,7 @@ public class ServerProfileController {
 
     @GetMapping("/portfolio/pre-signed-url")
     public ResponseEntity<List<PreSignedUrlVO>> getPreSignedUrl(@AuthUser User user,
-                                                                @RequestParam(name = "portfolio") Long portfolioId,
+                                                                @RequestParam(name = "portfolio", required = false) Long portfolioId,
                                                                 @RequestBody @Valid PreSignedUrlRequestDto requestDto) {
 
         String zipFileName = null;
