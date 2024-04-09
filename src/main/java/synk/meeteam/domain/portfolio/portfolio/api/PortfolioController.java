@@ -1,5 +1,6 @@
 package synk.meeteam.domain.portfolio.portfolio.api;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.request.CreatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.request.UpdatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponseDto;
+import synk.meeteam.domain.portfolio.portfolio.service.PortfolioFacade;
 import synk.meeteam.domain.portfolio.portfolio_link.dto.PortfolioLinkDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.security.AuthUser;
@@ -25,10 +27,13 @@ import synk.meeteam.security.AuthUser;
 @RequestMapping("/portfolio")
 public class PortfolioController implements PortfolioApi {
 
+    private final PortfolioFacade portfolioFacade;
+
     @PostMapping
     @Override
-    public ResponseEntity<Long> postPortfolio(@RequestBody CreatePortfolioRequestDto requestDto) {
-        return ResponseEntity.ok(1L);
+    public ResponseEntity<Long> postPortfolio(@RequestBody @Valid CreatePortfolioRequestDto requestDto) {
+        Long portfolioId = portfolioFacade.postPortfolio(requestDto);
+        return ResponseEntity.ok(portfolioId);
     }
 
     @GetMapping("/{id}")
