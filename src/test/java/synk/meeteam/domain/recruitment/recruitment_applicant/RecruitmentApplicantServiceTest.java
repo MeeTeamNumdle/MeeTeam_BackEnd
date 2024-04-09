@@ -16,9 +16,12 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.common.role.RoleFixture;
 import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
@@ -379,28 +382,34 @@ public class RecruitmentApplicantServiceTest {
         Long postId = 1L;
         Long roleId = null;
 
-        GetApplicantResponseDto dto1 = new GetApplicantResponseDto(1L, "1", "닉네임입니다1",
-                "이미지입니다1", "이름입니다1", 4.3, "광운대학교", "소프트웨어학부", 2018,
+        GetApplicantDto dto1 = new GetApplicantDto(1L, "1", "닉네임입니다1",
+                "이미지입니다1", "이름입니다1", 4.3, "광운대학교", "소프트웨어학부", "qwer123@naver.com", 2018,
                 "백엔드개발자", "전하는 말입니다1");
-        GetApplicantResponseDto dto2 = new GetApplicantResponseDto(2L, "2", "닉네임입니다2",
-                "이미지입니다2", "이름입니다2", 4.2, "광운대학교", "소프트웨어학부", 2018,
+        GetApplicantDto dto2 = new GetApplicantDto(2L, "2", "닉네임입니다2",
+                "이미지입니다2", "이름입니다2", 4.2, "광운대학교", "소프트웨어학부", "qwer456@naver.com", 2018,
                 "백엔드개발자", "전하는 말입니다2");
 
-        doReturn(List.of(dto1, dto2)).when(recruitmentApplicantRepository).findByPostIdAndRoleId(any(), any());
+        doReturn(new SliceImpl<>(
+                List.of(dto1, dto2),
+                PageRequest.of(1, 12),
+                false
+        )).when(recruitmentApplicantRepository).findByPostIdAndRoleId(any(), any(), any());
+
         doReturn("이미지입니다").when(s3Service).createPreSignedGetUrl(any(), any());
+
         try (MockedStatic<Encryption> utilities = Mockito.mockStatic(Encryption.class)) {
             utilities.when(() -> Encryption.encryptLong(any())).thenReturn("1234");
 
             // when
-            List<GetApplicantResponseDto> responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId);
+            GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, 1, 12);
 
             // then
-            Assertions.assertThat(responseDtos.size()).isEqualTo(2);
+            Assertions.assertThat(responseDtos.applicants().size()).isEqualTo(2);
 
-            Assertions.assertThat(responseDtos.get(0))
+            Assertions.assertThat(responseDtos.applicants().get(0))
                     .extracting("nickname", "name", "applyRoleName")
                     .containsExactly("닉네임입니다1", "이름입니다1", "백엔드개발자");
-            Assertions.assertThat(responseDtos.get(1))
+            Assertions.assertThat(responseDtos.applicants().get(1))
                     .extracting("nickname", "name", "applyRoleName")
                     .containsExactly("닉네임입니다2", "이름입니다2", "백엔드개발자");
         }

@@ -8,6 +8,7 @@ import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.Re
 import java.net.URI;
 import java.util.List;
 import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,6 +61,15 @@ public class RecruitmentApplicantTest {
         populator.addScript(new ClassPathResource("data.sql"));
         populator.addScript(new ClassPathResource("test-recruitment-applicant.sql"));
         populator.execute(dataSource);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        databaseCleanUp.clear();
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(new ClassPathResource("data.sql"));
+        populator.execute(dataSource);
+
     }
 
 
