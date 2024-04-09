@@ -14,7 +14,6 @@ import org.springframework.test.context.jdbc.Sql;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
-import synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
@@ -85,7 +84,7 @@ public class RecruitmentApplicantRepositoryTest {
 
         // when
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
-                List.of(1L, 2L), DeleteStatus.ALIVE);
+                List.of(1L, 2L));
 
         // then
         Assertions.assertThat(recruitmentApplicants.size()).isEqualTo(2);
@@ -100,7 +99,7 @@ public class RecruitmentApplicantRepositoryTest {
 
         // then
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
-                List.of(1L, 2L), DeleteStatus.ALIVE);
+                List.of(1L, 2L));
         recruitmentApplicants.stream()
                 .forEach(applicant -> {
                     Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.APPROVED);
@@ -117,7 +116,7 @@ public class RecruitmentApplicantRepositoryTest {
 
         // then
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
-                List.of(1L, 2L), DeleteStatus.ALIVE);
+                List.of(1L, 2L));
         recruitmentApplicants.stream()
                 .forEach(applicant -> {
                     Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.REJECTED);

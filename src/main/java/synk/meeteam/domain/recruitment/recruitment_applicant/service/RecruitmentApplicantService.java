@@ -47,7 +47,7 @@ public class RecruitmentApplicantService {
 
     @Transactional(readOnly = true)
     public List<RecruitmentApplicant> getAllApplicants(List<Long> applicantIds) {
-        return recruitmentApplicantRepository.findAllInApplicantId(applicantIds, DeleteStatus.ALIVE);
+        return recruitmentApplicantRepository.findAllInApplicantId(applicantIds);
     }
 
     @Transactional(readOnly = true)

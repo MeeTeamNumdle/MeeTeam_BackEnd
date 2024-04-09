@@ -16,9 +16,8 @@ import synk.meeteam.domain.user.user.entity.User;
 public interface RecruitmentApplicantRepository extends JpaRepository<RecruitmentApplicant, Long>,
         RecruitmentApplicantCustomRepository {
 
-    @Query("SELECT a FROM RecruitmentApplicant a JOIN FETCH a.recruitmentPost WHERE a.id IN :ids AND a.deleteStatus = :deleteStatus")
-    List<RecruitmentApplicant> findAllInApplicantId(@Param("ids") List<Long> applicantIds,
-                                                    @Param("deleteStatus") DeleteStatus deleteStatus);
+    @Query("SELECT a FROM RecruitmentApplicant a JOIN FETCH a.recruitmentPost WHERE a.id IN :ids AND a.deleteStatus = synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus.ALIVE")
+    List<RecruitmentApplicant> findAllInApplicantId(@Param("ids") List<Long> applicantIds);
 
     Optional<RecruitmentApplicant> findByRecruitmentPostAndApplicantAndDeleteStatus(RecruitmentPost recruitmentPost,
                                                                                     User user,
