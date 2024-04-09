@@ -61,8 +61,12 @@ public class RecruitmentRole {
         this.count = count;
     }
 
-    public void addApplicantCount() {
+    public void incrementApplicantCount() {
         this.applicantCount += 1;
+    }
+
+    public void decrementApplicantCount() {
+        this.applicantCount -= 1;
     }
 
     public void incrementRecruitedCount(long recruitedCount, Long userId) {

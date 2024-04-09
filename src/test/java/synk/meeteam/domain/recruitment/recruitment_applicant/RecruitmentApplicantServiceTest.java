@@ -5,9 +5,11 @@ import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.ALREADY_PROCESSED_APPLICANT;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_USER;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.SS_602;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +49,7 @@ public class RecruitmentApplicantServiceTest {
     private S3Service s3Service;
 
     @Test
-    void 신청자저장_신청자정보반환_정상경우() {
+    void 구인신청_성공() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
         User user = UserFixture.createUser();
@@ -63,6 +65,45 @@ public class RecruitmentApplicantServiceTest {
 
         // then
     }
+
+    @Test
+    void 구인신청_예외발생_이미신청한경우() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        User user = UserFixture.createUser();
+        Role role = RoleFixture.createRole("백엔드개발자");
+        RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user, role);
+
+        doReturn(Optional.ofNullable(recruitmentApplicant))
+                .when(recruitmentApplicantRepository)
+                .findByRecruitmentPostAndApplicantAndDeleteStatus(any(), any(), any());
+
+        // when, then
+        Assertions.assertThatThrownBy(
+                        () -> recruitmentApplicantService.registerRecruitmentApplicant(recruitmentApplicant))
+                .isInstanceOf(RecruitmentApplicantException.class)
+                .hasMessageContaining(SS_602.message());
+
+        // then
+    }
+
+    @Test
+    void 구인신청취소_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        User user = UserFixture.createUser();
+        Role role = RoleFixture.createRole("백엔드개발자");
+        RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user, role);
+
+        doReturn(recruitmentApplicant)
+                .when(recruitmentApplicantRepository).save(recruitmentApplicant);
+
+        // when, then
+        recruitmentApplicantService.cancelRegisterRecruitmentApplicant(recruitmentApplicant);
+    }
+
 
     @Test
     void 역할id목록조회_성공() {

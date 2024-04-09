@@ -148,8 +148,12 @@ public class RecruitmentPost extends BaseEntity {
         return ((double) responseCount / applicantCount) * 100;
     }
 
-    public void addApplicantCount() {
+    public void incrementApplicantCount() {
         this.applicantCount += 1;
+    }
+
+    public void decrementApplicantCount() {
+        this.applicantCount -= 1;
     }
 
     private void validateWriter(Long userId) {

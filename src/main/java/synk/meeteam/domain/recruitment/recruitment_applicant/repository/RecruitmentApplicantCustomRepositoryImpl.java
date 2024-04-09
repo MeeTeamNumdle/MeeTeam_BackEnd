@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import synk.meeteam.domain.common.department.entity.QDepartment;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.QGetApplicantDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 
 @Repository
@@ -60,8 +61,10 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
                 .leftJoin(recruitmentApplicant.role, role)
                 .leftJoin(recruitmentApplicant.applicant.university, university)
                 .leftJoin(recruitmentApplicant.applicant.department, QDepartment.department)
-                .where(eqRole(roleId), recruitmentApplicant.recruitmentPost.id.eq(postId),
-                        recruitmentApplicant.recruitStatus.eq(RecruitStatus.NONE))
+                .where(eqRole(roleId),
+                        recruitmentApplicant.recruitmentPost.id.eq(postId),
+                        recruitmentApplicant.recruitStatus.eq(RecruitStatus.NONE),
+                        recruitmentApplicant.deleteStatus.eq(DeleteStatus.ALIVE))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
