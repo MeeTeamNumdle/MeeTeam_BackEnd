@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import synk.meeteam.domain.portfolio.portfolio.dto.request.CreatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.request.UpdatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponseDto;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.security.AuthUser;
 
 @Tag(name = "Portfolio", description = "포트폴리오 관련 API")
 public interface PortfolioApi {
@@ -35,6 +37,7 @@ public interface PortfolioApi {
             }
     )
     @Operation(summary = "포트폴리오 수정 API")
-    ResponseEntity<Long> modifyPortfolio(@PathVariable Long portfolioId,
+    ResponseEntity<Long> modifyPortfolio(@AuthUser User user,
+                                         @PathVariable Long portfolioId,
                                          @RequestBody UpdatePortfolioRequestDto requestDto);
 }

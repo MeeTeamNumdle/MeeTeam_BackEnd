@@ -3,6 +3,7 @@ package synk.meeteam.domain.portfolio.portfolio.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
+import synk.meeteam.domain.portfolio.portfolio_link.dto.PortfolioLinkDto;
 
 public record UpdatePortfolioRequestDto(
         @Schema(description = "제목", example = "Meeteam")
@@ -31,6 +32,9 @@ public record UpdatePortfolioRequestDto(
         @Schema(description = "종료일", example = "2024-03-15")
         LocalDate endDate,
         @Schema(description = "진행방식", example = "온라인")
-        String proceedType
+        String proceedType,
+        @Schema(description = "스킬", example = "[1,2,3]")
+        List<Long> skills,
+        List<PortfolioLinkDto> links
 ) {
 }

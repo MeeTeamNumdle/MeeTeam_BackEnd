@@ -3,6 +3,7 @@ package synk.meeteam.domain.portfolio.portfolio.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
+import synk.meeteam.domain.portfolio.portfolio_link.dto.PortfolioLinkDto;
 
 public record CreatePortfolioRequestDto(
         @Schema(description = "제목", example = "Meeteam")
@@ -20,8 +21,6 @@ public record CreatePortfolioRequestDto(
                 + "밋팀(Meeteam)은 나 자신을 의미하는 Me, 팀을 의미하는 Team, 만남을 의미하는 Meet이 합쳐진 단어입니다.\n"
                 + "대학생들의 보다 원활한 팀프로젝트를 위해 기획하게 되었으며, 그 외에 포토폴리오로서의 기능까지 생각하고 있습니다!\n")
         String content,
-        @Schema(description = "zip 파일 순서", example = "[\"이미지1.png\",\"이미지2.jpg\"]")
-        List<String> fileOrder,
         @Schema(description = "분야", example = "1")
         Long field,
         @Schema(description = "역할", example = "1")
@@ -31,6 +30,13 @@ public record CreatePortfolioRequestDto(
         @Schema(description = "종료일", example = "2024-03-15")
         LocalDate endDate,
         @Schema(description = "진행방식", example = "온라인")
-        String proceedType
+        String proceedType,
+        String mainImageFileName,
+        String zipFileName,
+        @Schema(description = "zip 파일 순서", example = "[\"이미지1.png\",\"이미지2.jpg\"]")
+        List<String> fileOrder,
+        @Schema(description = "스킬", example = "[1,2,3]")
+        List<Long> skills,
+        List<PortfolioLinkDto> links
 ) {
 }

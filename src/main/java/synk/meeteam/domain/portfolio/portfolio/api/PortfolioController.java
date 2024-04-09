@@ -17,6 +17,8 @@ import synk.meeteam.domain.portfolio.portfolio.dto.request.CreatePortfolioReques
 import synk.meeteam.domain.portfolio.portfolio.dto.request.UpdatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio_link.dto.PortfolioLinkDto;
+import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.security.AuthUser;
 
 @RestController
 @RequiredArgsConstructor
@@ -98,14 +100,15 @@ public class PortfolioController implements PortfolioApi {
                                         true,
                                         4
                                 )
-                        )
+                        ),
+                        true
                 )
         );
     }
 
     @PutMapping("/{id}")
     @Override
-    public ResponseEntity<Long> modifyPortfolio(@PathVariable("id") Long portfolioId,
+    public ResponseEntity<Long> modifyPortfolio(@AuthUser User user, @PathVariable("id") Long portfolioId,
                                                 @RequestBody UpdatePortfolioRequestDto requestDto) {
         return ResponseEntity.ok(1L);
     }
