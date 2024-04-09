@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
@@ -62,28 +63,6 @@ public class RecruitmentApplicantRepositoryTest {
     }
 
     @Test
-    void 신청자저장_예외발생_이미신청한경우() {
-        // given
-        Long postId = 2L;
-        Role role = roleRepository.findByIdOrElseThrowException(1L);
-        Role newRole = roleRepository.findByIdOrElseThrowException(2L);
-
-        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
-        User user = userRepository.findByIdOrElseThrow(1L);
-
-        RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
-                recruitmentPost, user, role);
-        recruitmentApplicantRepository.saveAndFlush(recruitmentApplicant);
-
-        // when, then
-        RecruitmentApplicant newRecruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
-                recruitmentPost, user, newRole);
-        Assertions.assertThatThrownBy(() -> {
-            recruitmentApplicantRepository.saveAndFlush(newRecruitmentApplicant);
-        }).isInstanceOf(DataIntegrityViolationException.class);
-    }
-
-    @Test
     void 신청자저장_예외발생_Role이null인경우() {
         // given
         Role role = null;
@@ -106,7 +85,7 @@ public class RecruitmentApplicantRepositoryTest {
 
         // when
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
-                List.of(1L, 2L));
+                List.of(1L, 2L), DeleteStatus.ALIVE);
 
         // then
         Assertions.assertThat(recruitmentApplicants.size()).isEqualTo(2);
@@ -121,7 +100,7 @@ public class RecruitmentApplicantRepositoryTest {
 
         // then
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
-                List.of(1L, 2L));
+                List.of(1L, 2L), DeleteStatus.ALIVE);
         recruitmentApplicants.stream()
                 .forEach(applicant -> {
                     Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.APPROVED);
@@ -138,7 +117,7 @@ public class RecruitmentApplicantRepositoryTest {
 
         // then
         List<RecruitmentApplicant> recruitmentApplicants = recruitmentApplicantRepository.findAllInApplicantId(
-                List.of(1L, 2L));
+                List.of(1L, 2L), DeleteStatus.ALIVE);
         recruitmentApplicants.stream()
                 .forEach(applicant -> {
                     Assertions.assertThat(applicant.getRecruitStatus()).isEqualTo(RecruitStatus.REJECTED);
