@@ -7,4 +7,6 @@ import synk.meeteam.domain.portfolio.portfolio_link.entity.PortfolioLink;
 
 public interface PortfolioLinkRepository extends JpaRepository<PortfolioLink, Long> {
     List<PortfolioLink> findAllByPortfolio(Portfolio portfolio);
+
+    void deleteAllByPortfolio(Portfolio portfolio);
 }

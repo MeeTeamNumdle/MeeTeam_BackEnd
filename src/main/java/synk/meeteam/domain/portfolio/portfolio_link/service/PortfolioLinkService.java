@@ -22,7 +22,15 @@ public class PortfolioLinkService {
         portfolioLinkRepository.saveAll(portfolioLinks);
     }
 
+    @Transactional(readOnly = true)
     public List<PortfolioLink> getPortfolioLink(Portfolio portfolio) {
         return portfolioLinkRepository.findAllByPortfolio(portfolio);
+    }
+
+    @Transactional
+    public void editPortfolioLink(Portfolio portfolio, List<PortfolioLinkDto> portfolioLinkDtos) {
+        portfolioLinkRepository.deleteAllByPortfolio(portfolio);
+        portfolioLinkRepository.flush();
+        createPortfolioLink(portfolio, portfolioLinkDtos);
     }
 }
