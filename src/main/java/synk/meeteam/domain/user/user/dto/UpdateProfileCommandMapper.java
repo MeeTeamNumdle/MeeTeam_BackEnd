@@ -16,5 +16,6 @@ public interface UpdateProfileCommandMapper {
     @Mapping(source = "isSubEmailPublic", target = "isPublicSubEmail")
     @Mapping(source = "isUniversityEmailPublic", target = "isPublicUniversityEmail")
     @Mapping(source = "isUniversityMain", target = "isUniversityMainEmail")
+    @Mapping(source = "isUserNamePublic", target = "isPublicName")
     UpdateInfoCommand toUpdateProfileCommand(UpdateProfileRequestDto updateProfileRequestDto);
 }
