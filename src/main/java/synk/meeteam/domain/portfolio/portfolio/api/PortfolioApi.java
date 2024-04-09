@@ -19,6 +19,7 @@ public interface PortfolioApi {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "포트폴리오 등록 성공"),
+                    @ApiResponse(responseCode = "400", description = "미입력 데이터 존재"),
             }
     )
     @Operation(summary = "포트폴리오 등록 API")
@@ -26,7 +27,9 @@ public interface PortfolioApi {
 
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "포트폴리오 등록 성공"),
+                    @ApiResponse(responseCode = "200", description = "포트폴리오 조회 성공"),
+                    @ApiResponse(responseCode = "400", description = "포트폴리오가 존재하지 않습니다"),
+                    @ApiResponse(responseCode = "403", description = "본인의 포트폴리오가 아닙니다"),
             }
     )
     @Operation(summary = "포트폴리오 조회 API")
@@ -34,7 +37,7 @@ public interface PortfolioApi {
 
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "포트폴리오 등록 성공"),
+                    @ApiResponse(responseCode = "200", description = "포트폴리오 수정 성공"),
             }
     )
     @Operation(summary = "포트폴리오 수정 API")
