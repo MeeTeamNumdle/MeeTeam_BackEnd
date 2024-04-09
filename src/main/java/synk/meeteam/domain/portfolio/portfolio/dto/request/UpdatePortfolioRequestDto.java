@@ -22,10 +22,10 @@ public record UpdatePortfolioRequestDto(
         String content,
         @Schema(description = "zip 파일 순서", example = "[\"이미지1.png\",\"이미지2.jpg\"]")
         List<String> fileOrder,
-        @Schema(description = "분야", example = "개발")
-        String field,
-        @Schema(description = "역할", example = "프론트엔드 개발자")
-        String role,
+        @Schema(description = "분야", example = "1")
+        Long field,
+        @Schema(description = "역할", example = "1")
+        Long role,
         @Schema(description = "시작일", example = "2023-11-02")
         LocalDate startDate,
         @Schema(description = "종료일", example = "2024-03-15")
