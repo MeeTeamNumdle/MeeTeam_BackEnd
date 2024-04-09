@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignReques
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+import synk.meeteam.global.entity.ServiceType;
 import synk.meeteam.infra.s3.config.S3Config;
 import synk.meeteam.infra.s3.service.vo.PreSignedUrlVO;
 
@@ -51,9 +52,16 @@ public class S3Service {
         return presignedGetObjectRequest.url().toExternalForm();
     }
 
-    public PreSignedUrlVO getUploadPreSignedUrl(final String prefix) {
-        String uuidFileName = generateZipFileName();
-        String key = prefix + uuidFileName;
+    public PreSignedUrlVO getUploadPreSignedUrl(final String prefix, final String fileName, final String extension,
+                                                ServiceType serviceType) {
+        String actualFileName = fileName;
+
+        if (actualFileName == null) {
+            actualFileName = generateZipFileName();
+        }
+        actualFileName = actualFileName + "." + extension;
+
+        String key = prefix + actualFileName;
 
         S3Presigner preSigner = s3Config.getS3Presigner();
 
@@ -71,11 +79,11 @@ public class S3Service {
         log.info("Presigned URL: [{}]", presignedPutObjectRequest.url().toString());
         log.info("HTTP method: [{}]", presignedPutObjectRequest.httpRequest().method());
 
-        return PreSignedUrlVO.of(uuidFileName, presignedPutObjectRequest.url().toExternalForm());
+        return PreSignedUrlVO.of(serviceType, actualFileName, presignedPutObjectRequest.url().toExternalForm());
     }
 
     private String generateZipFileName() {
-        return UUID.randomUUID() + ".zip";
+        return UUID.randomUUID().toString();
     }
 
 }
