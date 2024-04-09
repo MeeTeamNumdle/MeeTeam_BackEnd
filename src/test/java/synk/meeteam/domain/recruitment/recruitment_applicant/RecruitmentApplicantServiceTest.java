@@ -88,6 +88,22 @@ public class RecruitmentApplicantServiceTest {
         // then
     }
 
+    @Test
+    void 구인신청취소_성공() {
+        // given
+        RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost("정상제목");
+        User user = UserFixture.createUser();
+        Role role = RoleFixture.createRole("백엔드개발자");
+        RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
+                recruitmentPost, user, role);
+
+        doReturn(recruitmentApplicant)
+                .when(recruitmentApplicantRepository).save(recruitmentApplicant);
+
+        // when, then
+        recruitmentApplicantService.cancelRegisterRecruitmentApplicant(recruitmentApplicant);
+    }
+
 
     @Test
     void 역할id목록조회_성공() {
