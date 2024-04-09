@@ -40,8 +40,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void changeUserInfo(User user, UpdateInfoCommand command) {
-
-        Role interestRole = roleRepository.findById(command.interestId()).orElse(null);
+        Role interestRole = null;
+        if (command.interestId() != null) {
+            interestRole = roleRepository.findById(command.interestId()).orElse(null);
+        }
         user.updateProfile(
                 command.isPublicName(),
                 command.pictureFileName(),
