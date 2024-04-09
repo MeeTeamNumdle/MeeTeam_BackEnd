@@ -104,7 +104,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     @Override
     public Portfolio getPortfolio(Long portfolioId) {
-        return portfolioRepository.findByIdOrElseThrow(portfolioId);
+        return portfolioRepository.findByIdWithFieldAndRoleOrElseThrow(portfolioId);
     }
 
     @Override
