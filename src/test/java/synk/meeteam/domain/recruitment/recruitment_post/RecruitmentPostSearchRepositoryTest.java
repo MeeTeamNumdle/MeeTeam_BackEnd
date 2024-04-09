@@ -21,10 +21,9 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.Scope;
 
-@Sql({"classpath:test-search-post.sql"})
-@ActiveProfiles("test")
-
 @DataJpaTest
+@ActiveProfiles("test")
+@Sql({"classpath:test-search-post.sql"})
 public class RecruitmentPostSearchRepositoryTest {
 
     @Autowired

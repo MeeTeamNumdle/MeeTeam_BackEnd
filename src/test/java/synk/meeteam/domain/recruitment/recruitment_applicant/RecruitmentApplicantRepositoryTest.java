@@ -6,11 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
-import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
@@ -146,16 +149,19 @@ public class RecruitmentApplicantRepositoryTest {
     void 신청자목록조회_NONE신청자목록조회_role설정하지않은경우() {
         // given
         Long postId = 1L;
-
+        int page = 1;
+        Pageable pageable = PageRequest.of(page - 1, 8);
         // when
-        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId, null);
+
+        Slice<GetApplicantDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId, null,
+                pageable);
 
         // then
-        Assertions.assertThat(responseDtos.size()).isEqualTo(2);
-        Assertions.assertThat(responseDtos.get(0))
+        Assertions.assertThat(responseDtos.getContent().size()).isEqualTo(2);
+        Assertions.assertThat(responseDtos.getContent().get(0))
                 .extracting("nickname", "name", "applyRoleName", "message")
                 .containsExactly("송민규짱짱맨", "송민규", "소프트웨어 엔지니어", "나 잘할 수 있음");
-        Assertions.assertThat(responseDtos.get(1))
+        Assertions.assertThat(responseDtos.getContent().get(1))
                 .extracting("nickname", "name", "applyRoleName", "message")
                 .containsExactly("나부겸짱짱맨", "나부겸", "웹 개발자", "나 잘할 수 있여");
     }
@@ -165,14 +171,16 @@ public class RecruitmentApplicantRepositoryTest {
         // given
         Long postId = 1L;
         Long roleId = 2L;
+        int page = 1;
+        Pageable pageable = PageRequest.of(page - 1, 8);
 
         // when
-        List<GetApplicantResponseDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
-                roleId);
+        Slice<GetApplicantDto> responseDtos = recruitmentApplicantRepository.findByPostIdAndRoleId(postId,
+                roleId, pageable);
 
         // then
-        Assertions.assertThat(responseDtos.size()).isEqualTo(1);
-        Assertions.assertThat(responseDtos.get(0))
+        Assertions.assertThat(responseDtos.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(responseDtos.getContent().get(0))
                 .extracting("nickname", "name", "applyRoleName", "message")
                 .containsExactly("나부겸짱짱맨", "나부겸", "웹 개발자", "나 잘할 수 있여");
     }
