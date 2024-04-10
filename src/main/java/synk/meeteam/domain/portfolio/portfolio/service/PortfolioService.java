@@ -11,4 +11,6 @@ public interface PortfolioService {
     List<Portfolio> getMyPinPortfolio(Long userId);
 
     GetUserPortfolioResponseDto getMyAllPortfolio(int page, int size, User user);
+
+    Portfolio getPortfolio(Long portfolioId, User user);
 }

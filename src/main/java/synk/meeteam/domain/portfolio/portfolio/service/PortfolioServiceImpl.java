@@ -2,6 +2,7 @@ package synk.meeteam.domain.portfolio.portfolio.service;
 
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_FOUND_PORTFOLIO;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.OVER_MAX_PIN_SIZE;
+import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.SS_110;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -64,5 +65,16 @@ public class PortfolioServiceImpl implements PortfolioService {
                 pageable, user);
         SliceInfo pageInfo = new SliceInfo(page, size, userPortfolioDtos.hasNext());
         return new GetUserPortfolioResponseDto(userPortfolioDtos.getContent(), pageInfo);
+    }
+
+    @Override
+    public Portfolio getPortfolio(Long portfolioId, User user) {
+        Portfolio portfolio = portfolioRepository.findByIdOrElseThrow(portfolioId);
+
+        if (!portfolio.getCreatedBy().equals(user.getId())) {
+            throw new PortfolioException(SS_110);
+        }
+
+        return portfolio;
     }
 }
