@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.common.course.entity.Course;
 import synk.meeteam.domain.common.course.entity.Professor;
+import synk.meeteam.domain.common.course.service.CourseService;
+import synk.meeteam.domain.common.course.service.ProfessorService;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.service.FieldService;
 import synk.meeteam.domain.common.role.entity.Role;
@@ -82,6 +84,9 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private final FieldService fieldService;
     private final SkillService skillService;
     private final UserService userService;
+    private final CourseService courseService;
+    private final ProfessorService professorService;
+
     private final S3Service s3Service;
 
     private final RecruitmentPostMapper recruitmentPostMapper;
@@ -93,8 +98,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         Field field = fieldService.findById(DEVELOP_ID);
 
-        Course course = getCourse(requestDto.courseTag().courseTagName(), user.getUniversity());
-        Professor professor = getProfessor(requestDto.courseTag().courseProfessor(), user.getUniversity());
+        Course course = null;
+        Professor professor = null;
+        if (requestDto.courseTag().isCourse()) {
+            course = courseService.getOrCreateCourse(requestDto.courseTag().courseTagName(),
+                    user.getUniversity());
+            professor = professorService.getOrCreateProfessor(requestDto.courseTag().courseProfessor(),
+                    user.getUniversity());
+        }
 
         RecruitmentPost recruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field, course,
                 professor, requestDto.courseTag().isCourse());
@@ -194,8 +205,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         Field field = fieldService.findById(DEVELOP_ID);
 
-        Course course = getCourse(requestDto.courseTag().courseTagName(), user.getUniversity());
-        Professor professor = getProfessor(requestDto.courseTag().courseProfessor(), user.getUniversity());
+        Course course = null;
+        Professor professor = null;
+        if (requestDto.courseTag().isCourse()) {
+            course = courseService.getOrCreateCourse(requestDto.courseTag().courseTagName(),
+                    user.getUniversity());
+            professor = professorService.getOrCreateProfessor(requestDto.courseTag().courseProfessor(),
+                    user.getUniversity());
+        }
 
         RecruitmentPost srcRecruitmentPost = recruitmentPostMapper.toRecruitmentEntity(requestDto, field, course,
                 professor, requestDto.courseTag()
