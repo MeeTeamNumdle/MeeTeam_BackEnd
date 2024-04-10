@@ -39,6 +39,8 @@ public record GetPortfolioResponseDto(
         String proceedType,
         List<SkillDto> skills,
         List<PortfolioLinkDto> links,
-        List<GetProfilePortfolioDto> otherPortfolios
+        List<GetProfilePortfolioDto> otherPortfolios,
+        @Schema(description = "작성자여부", example = "true")
+        boolean isWriter
 ) {
 }

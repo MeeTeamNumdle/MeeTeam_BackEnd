@@ -9,6 +9,7 @@ import static org.mockito.Mockito.doReturn;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_FOUND_PORTFOLIO;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.OVER_MAX_PIN_SIZE;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import synk.meeteam.domain.common.field.entity.Field;
+import synk.meeteam.domain.common.field.repository.FieldRepository;
+import synk.meeteam.domain.common.role.RoleFixture;
+import synk.meeteam.domain.common.role.repository.RoleRepository;
+import synk.meeteam.domain.portfolio.portfolio.dto.command.CreatePortfolioCommand;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
@@ -24,6 +30,7 @@ import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioServiceImpl;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.entity.ProceedType;
 
 @ExtendWith(MockitoExtension.class)
 public class PortfolioServiceTest {
@@ -35,6 +42,12 @@ public class PortfolioServiceTest {
 
     @Mock
     private PortfolioRepository portfolioRepository;
+
+    @Mock
+    private FieldRepository fieldRepository;
+
+    @Mock
+    private RoleRepository roleRepository;
 
     @BeforeEach
     void setup() {
@@ -107,4 +120,26 @@ public class PortfolioServiceTest {
         assertThat(userAllPortfolios.pageInfo().size()).isEqualTo(12);
         assertThat(userAllPortfolios.pageInfo().hasNextPage()).isEqualTo(false);
     }
+
+    @Test
+    void 포트폴리오등록_등록성공() {
+        //given
+        doReturn(RoleFixture.createRole("개발자")).when(roleRepository).findByIdOrElseThrowException(anyLong());
+        doReturn(new Field(1L, "개발")).when(fieldRepository).findByIdOrElseThrowException(anyLong());
+        doReturn(PortfolioFixture.createPortfolioFixture()).when(portfolioRepository).saveAndFlush(any());
+        //when
+        Portfolio portfolio = portfolioService.postPortfolio(new CreatePortfolioCommand(
+                "제목",
+                "부연설명",
+                "컨텐츠",
+                1L, 1L, LocalDate.now(), LocalDate.now(), ProceedType.ON_LINE, "이미지1.png", "이미지.zip",
+                List.of("이미지1.png", "이미지2.png")
+        ));
+        //then
+        assertThat(portfolio.getId()).isNotNull();
+        assertThat(portfolio.getTitle()).isEqualTo("제목");
+        assertThat(portfolio.getDescription()).isEqualTo("부연설명");
+    }
+
+
 }
