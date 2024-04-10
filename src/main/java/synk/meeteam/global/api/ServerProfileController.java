@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,16 +50,18 @@ public class ServerProfileController {
 
     @GetMapping("/profile/pre-signed-url")
     public ResponseEntity<PreSignedUrlVO> getPreSignedUrl(@AuthUser User user,
-                                                          @RequestBody @Valid PreSignedUrlRequestDto requestDto) {
+                                                          @RequestParam(name = "file-name") PreSignedUrlRequestDto requestDto) {
+        String extension = StringUtils.getFilenameExtension(requestDto.fileName());
 
         return ResponseEntity.ok().body(s3Service.getUploadPreSignedUrl(USER, Encryption.encryptLong(user.getId()),
-                requestDto.extension(), ServiceType.PROFILE));
+                extension, ServiceType.PROFILE));
     }
 
     @GetMapping("/portfolio/pre-signed-url")
     public ResponseEntity<List<PreSignedUrlVO>> getPreSignedUrl(@AuthUser User user,
                                                                 @RequestParam(name = "portfolio", required = false) Long portfolioId,
                                                                 @RequestBody @Valid PreSignedUrlRequestDto requestDto) {
+        String extension = StringUtils.getFilenameExtension(requestDto.fileName());
 
         String zipFileName = null;
         String thumbNailFileName = null;
@@ -73,7 +76,7 @@ public class ServerProfileController {
         PreSignedUrlVO zipUrl = s3Service.getUploadPreSignedUrl(PORTFOLIO, zipFileName,
                 ZIP_NAME, ServiceType.PORTFOLIOS);
         PreSignedUrlVO thumbNailUrl = s3Service.getUploadPreSignedUrl(PORTFOLIO, thumbNailFileName,
-                requestDto.extension(), ServiceType.THUMBNAIL_PORTFOLIO);
+                extension, ServiceType.THUMBNAIL_PORTFOLIO);
 
         return ResponseEntity.ok().body(List.of(zipUrl, thumbNailUrl));
 

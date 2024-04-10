@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record PreSignedUrlRequestDto(
         @NotNull
-        String extension
+        String fileName
 ) {
 }
