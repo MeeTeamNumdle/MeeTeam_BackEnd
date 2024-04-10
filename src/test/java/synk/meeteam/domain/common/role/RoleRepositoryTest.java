@@ -52,7 +52,7 @@ public class RoleRepositoryTest {
 
         //then
         assertThat(roles).extracting("name").containsExactlyInAnyOrder(
-                "웹 개발자", "서버 개발자", "자바 개발자", "파이썬 개발자", "데이터 엔지니어"
+                "C,C++ 개발자", "DevOps / 시스템 관리자", "Node.js 개발자", "데이터 엔지니어", "머신러닝 엔지니어"
         );
         assertThat(roles.size()).isEqualTo(5);
     }

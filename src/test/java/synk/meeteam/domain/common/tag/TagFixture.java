@@ -17,7 +17,7 @@ public class TagFixture {
                 .build();
     }
 
-    public static Tag createCoureNanmeTag(String name) {
+    public static Tag createCoureNameTag(String name) {
         return Tag.builder()
                 .name(name)
                 .type(TagType.COURSE)
@@ -37,17 +37,6 @@ public class TagFixture {
         return tagDtos;
     }
 
-    public static List<SearchTagDto> createCourseTagDtos() {
-        List<SearchTagDto> tagDtos = new ArrayList<>();
-        tagDtos.add(new SearchTagDto(1L, "응용소프트웨어실습"));
-        return tagDtos;
-    }
-
-    public static List<SearchTagDto> createProfessorTagDtos() {
-        List<SearchTagDto> tagDtos = new ArrayList<>();
-        tagDtos.add(new SearchTagDto(2L, "문승현"));
-        return tagDtos;
-    }
 
     public static List<TagDto> createRecruitmentTags(Tag tag) {
 
