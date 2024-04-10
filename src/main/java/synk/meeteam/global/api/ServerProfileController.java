@@ -41,12 +41,6 @@ public class ServerProfileController {
         return ResponseEntity.ok(env.getActiveProfiles()[0]);
     }
 
-    @Operation(summary = "프론트에서 필요없는 API 입니다.")
-    @GetMapping("/presigned-get-test")
-    public ResponseEntity<String> getPreSignedGetUrl() {
-        return ResponseEntity.ok().body(s3Service.createPreSignedGetUrl("test-folder/", "test1.png"));
-    }
-
     // THUMBNAIL_PORTFOLIO
 
     @PostMapping("/profile/pre-signed-url")
