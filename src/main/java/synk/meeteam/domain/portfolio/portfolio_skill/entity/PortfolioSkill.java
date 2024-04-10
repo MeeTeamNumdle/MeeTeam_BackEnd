@@ -35,5 +35,8 @@ public class PortfolioSkill extends BaseTimeEntity {
     @JoinColumn(name = "skill_id")
     private Skill skill;
 
-
+    public PortfolioSkill(Portfolio portfolio, Skill skill) {
+        this.portfolio = portfolio;
+        this.skill = skill;
+    }
 }

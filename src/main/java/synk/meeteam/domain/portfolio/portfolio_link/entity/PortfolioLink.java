@@ -10,16 +10,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
-import synk.meeteam.global.entity.BaseEntity;
+import synk.meeteam.global.entity.BaseTimeEntity;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PortfolioLink extends BaseEntity {
+public class PortfolioLink extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "portfolio_skill_id")
+    @Column(name = "portfolio_link_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)
@@ -28,4 +31,11 @@ public class PortfolioLink extends BaseEntity {
 
     private String url;
     private String description;
+
+    @Builder
+    public PortfolioLink(Portfolio portfolio, String url, String description) {
+        this.portfolio = portfolio;
+        this.url = url;
+        this.description = description;
+    }
 }

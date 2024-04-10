@@ -11,7 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.common.field.entity.Field;
+import synk.meeteam.domain.common.field.repository.FieldRepository;
+import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.command.CreatePortfolioCommand;
+import synk.meeteam.domain.portfolio.portfolio.dto.command.UpdatePortfolioCommand;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
@@ -23,6 +29,8 @@ import synk.meeteam.global.dto.SliceInfo;
 @RequiredArgsConstructor
 public class PortfolioServiceImpl implements PortfolioService {
     private final PortfolioRepository portfolioRepository;
+    private final FieldRepository fieldRepository;
+    private final RoleRepository roleRepository;
 
     @Transactional
     public List<Portfolio> changePinPortfoliosByIds(Long userId, List<Long> portfolioIds) {
@@ -68,6 +76,52 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
+    @Transactional
+    public Portfolio postPortfolio(CreatePortfolioCommand command) {
+        Field field = fieldRepository.findByIdOrElseThrowException(command.fieldId());
+        Role role = roleRepository.findByIdOrElseThrowException(command.roleId());
+        Portfolio portfolio = Portfolio.builder()
+                .title(command.title())
+                .description(command.description())
+                .content(command.content())
+                .proceedStart(command.proceedStart())
+                .proceedEnd(command.proceedEnd())
+                .proceedType(command.proceedType())
+                .mainImageFileName(command.mainImageFileName())
+                .zipFileName(command.zipFileName())
+                .fileOrder(command.fileOrder())
+                .field(field)
+                .role(role)
+                .isPin(false)
+                .pinOrder(0)
+                .build();
+
+        return portfolioRepository.saveAndFlush(portfolio);
+    }
+
+    @Override
+    public Portfolio editPortfolio(Portfolio portfolio, User user, UpdatePortfolioCommand command) {
+        Field field = fieldRepository.findByIdOrElseThrowException(command.fieldId());
+        Role role = roleRepository.findByIdOrElseThrowException(command.roleId());
+        portfolio.updatePortfolio(
+                command.title(),
+                command.description(),
+                command.content(),
+                command.proceedStart(),
+                command.proceedEnd(),
+                command.proceedType(),
+                field,
+                role,
+                command.fileOrder()
+        );
+        return portfolio;
+    }
+  
+    @Override
+    public Portfolio getPortfolio(Long portfolioId) {
+        return portfolioRepository.findByIdWithFieldAndRoleOrElseThrow(portfolioId);
+    }
+
     public Portfolio getPortfolio(Long portfolioId, User user) {
         Portfolio portfolio = portfolioRepository.findByIdOrElseThrow(portfolioId);
 
