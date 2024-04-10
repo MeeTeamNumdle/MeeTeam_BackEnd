@@ -21,7 +21,7 @@ public class RoleRepositoryCustomImpl implements RoleRepositoryCustom {
                 .from(role)
                 .where(role.name.startsWith(keyword))
                 .limit(limit)
-                .orderBy(role.name.length().asc().nullsLast())
+                .orderBy(role.name.asc().nullsLast())
                 .fetch();
     }
 }

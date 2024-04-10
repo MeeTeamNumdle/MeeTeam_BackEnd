@@ -14,6 +14,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import synk.meeteam.domain.common.tag.TagFixture;
 import synk.meeteam.domain.common.tag.entity.Tag;
+import synk.meeteam.domain.common.tag.entity.TagType;
 import synk.meeteam.domain.common.tag.repository.TagRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
@@ -78,7 +79,7 @@ public class RecruitmentTagRepositoryTest {
     void 구인태그저장_예외발생_name글자수가15자넘는경우() {
         // given
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(1L).orElse(null);
-        Tag tag = TagFixture.createCoureNanmeTag(NAME_EXCEED_15);
+        Tag tag = TagFixture.createTag(NAME_EXCEED_15, TagType.MEETEAM);
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
         // when, then

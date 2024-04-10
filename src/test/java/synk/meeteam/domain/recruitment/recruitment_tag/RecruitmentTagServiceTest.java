@@ -42,7 +42,7 @@ public class RecruitmentTagServiceTest {
     void 구인태그조회및저장_생성된구인태그반환_새로운태그입력일경우() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
-        Tag tag = TagFixture.createCoureNanmeTag("이름");
+        Tag tag = TagFixture.createCoureNameTag("이름");
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
         doReturn(Optional.ofNullable(null)).when(tagRepository).findByName(tag.getName());
@@ -62,7 +62,7 @@ public class RecruitmentTagServiceTest {
     void 구인태그조회및저장_기존에저장된구인태그반환_이미존재하는태그입력일경우() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
-        Tag tag = TagFixture.createCoureNanmeTag("이름");
+        Tag tag = TagFixture.createCoureNameTag("이름");
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
         doReturn(Optional.ofNullable(tag)).when(tagRepository).findByName(tag.getName());
@@ -81,7 +81,7 @@ public class RecruitmentTagServiceTest {
     void 구인태그조회및저장_예외발생_recruitmentPost가null인경우() {
         // given
         RecruitmentPost recruitmentPost = null;
-        Tag tag = TagFixture.createCoureNanmeTag("이름");
+        Tag tag = TagFixture.createCoureNameTag("이름");
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
         doReturn(Optional.ofNullable(tag)).when(tagRepository).findByName(tag.getName());
@@ -96,7 +96,7 @@ public class RecruitmentTagServiceTest {
     void 구인태그조회및저장_예외발생_name글자수가15자넘는경우() {
         // given
         RecruitmentPost recruitmentPost = RecruitmentPostFixture.createRecruitmentPost(TITLE);
-        Tag tag = TagFixture.createCoureNanmeTag(NAME_EXCEED_15);
+        Tag tag = TagFixture.createCoureNameTag(NAME_EXCEED_15);
         RecruitmentTag recruitmentTag = RecruitmentTagFixture.createRecruitmentTag(recruitmentPost, tag);
 
         doReturn(Optional.ofNullable(null)).when(tagRepository).findByName(tag.getName());
