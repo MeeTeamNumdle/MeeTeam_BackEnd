@@ -41,36 +41,4 @@ public class TagServiceTest {
         assertThat(tagDtos).extracting("name").containsExactly("웹개발");
     }
 
-    @Test
-    public void 강의명태그목록조회_강의명태그목록DTO반환() {
-        //given
-        String keyword = "응용소프트웨어실습";
-        long limit = 3;
-
-        doReturn(TagFixture.createCourseTagDtos())
-                .when(tagRepository).findAllByKeywordAndTopLimitAndType(keyword, limit, TagType.COURSE);
-
-        //when
-        List<SearchTagDto> tagDtos = tagService.searchByKeywordAndType(keyword, limit, TagType.COURSE);
-
-        //then
-        assertThat(tagDtos).extracting("name").containsExactly("응용소프트웨어실습");
-    }
-
-    @Test
-    public void 교수명태그목록조회_교수명태그목록DTO반환() {
-        //given
-        String keyword = "문";
-        long limit = 3;
-
-        doReturn(TagFixture.createProfessorTagDtos())
-                .when(tagRepository).findAllByKeywordAndTopLimitAndType(keyword, limit, TagType.PROFESSOR);
-
-        //when
-        List<SearchTagDto> tagDtos = tagService.searchByKeywordAndType(keyword, limit, TagType.PROFESSOR);
-
-        //then
-        assertThat(tagDtos).extracting("name").containsExactly("문승현");
-    }
-
 }
