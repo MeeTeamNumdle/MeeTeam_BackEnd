@@ -25,4 +25,5 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long>, Por
     default Portfolio findByIdWithFieldAndRoleOrElseThrow(Long portfolioId) {
         return findByIdWithFieldAndRole(portfolioId).orElseThrow(() -> new PortfolioException(NOT_FOUND_PORTFOLIO));
     }
+
 }

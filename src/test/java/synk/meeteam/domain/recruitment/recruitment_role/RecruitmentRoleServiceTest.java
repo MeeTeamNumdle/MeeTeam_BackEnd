@@ -85,7 +85,7 @@ public class RecruitmentRoleServiceTest {
         long cur = recruitmentRole.getApplicantCount();
 
         // when
-        recruitmentRoleService.addApplicantCount(recruitmentRole);
+        recruitmentRoleService.incrementApplicantCount(recruitmentRole);
 
         // then
         Assertions.assertThat(recruitmentRole.getApplicantCount()).isEqualTo(cur + 1);

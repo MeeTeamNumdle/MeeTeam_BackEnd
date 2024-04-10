@@ -2,6 +2,7 @@ package synk.meeteam.domain.portfolio.portfolio.service;
 
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_FOUND_PORTFOLIO;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.OVER_MAX_PIN_SIZE;
+import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.SS_110;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -99,11 +100,6 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Portfolio getPortfolio(Long portfolioId) {
-        return portfolioRepository.findByIdWithFieldAndRoleOrElseThrow(portfolioId);
-    }
-
-    @Override
     public Portfolio editPortfolio(Portfolio portfolio, User user, UpdatePortfolioCommand command) {
         Field field = fieldRepository.findByIdOrElseThrowException(command.fieldId());
         Role role = roleRepository.findByIdOrElseThrowException(command.roleId());
@@ -118,6 +114,21 @@ public class PortfolioServiceImpl implements PortfolioService {
                 role,
                 command.fileOrder()
         );
+        return portfolio;
+    }
+  
+    @Override
+    public Portfolio getPortfolio(Long portfolioId) {
+        return portfolioRepository.findByIdWithFieldAndRoleOrElseThrow(portfolioId);
+    }
+
+    public Portfolio getPortfolio(Long portfolioId, User user) {
+        Portfolio portfolio = portfolioRepository.findByIdOrElseThrow(portfolioId);
+
+        if (!portfolio.getCreatedBy().equals(user.getId())) {
+            throw new PortfolioException(SS_110);
+        }
+
         return portfolio;
     }
 }

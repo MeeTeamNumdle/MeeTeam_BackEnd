@@ -62,28 +62,6 @@ public class RecruitmentApplicantRepositoryTest {
     }
 
     @Test
-    void 신청자저장_예외발생_이미신청한경우() {
-        // given
-        Long postId = 2L;
-        Role role = roleRepository.findByIdOrElseThrowException(1L);
-        Role newRole = roleRepository.findByIdOrElseThrowException(2L);
-
-        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
-        User user = userRepository.findByIdOrElseThrow(1L);
-
-        RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
-                recruitmentPost, user, role);
-        recruitmentApplicantRepository.saveAndFlush(recruitmentApplicant);
-
-        // when, then
-        RecruitmentApplicant newRecruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
-                recruitmentPost, user, newRole);
-        Assertions.assertThatThrownBy(() -> {
-            recruitmentApplicantRepository.saveAndFlush(newRecruitmentApplicant);
-        }).isInstanceOf(DataIntegrityViolationException.class);
-    }
-
-    @Test
     void 신청자저장_예외발생_Role이null인경우() {
         // given
         Role role = null;

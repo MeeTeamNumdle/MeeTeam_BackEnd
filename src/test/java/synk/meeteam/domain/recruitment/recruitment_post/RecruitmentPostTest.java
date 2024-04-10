@@ -2,6 +2,7 @@ package synk.meeteam.domain.recruitment.recruitment_post;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.SS_602;
 import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_COMMENT;
 import static synk.meeteam.domain.recruitment.recruitment_comment.exception.RecruitmentCommentExceptionType.INVALID_USER;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE_EXCEED_40;
@@ -225,7 +226,7 @@ public class RecruitmentPostTest {
                 requestEntity, ExceptionResponse.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, twiceResponseEntity.getStatusCode());
-        assertEquals(INVALID_INPUT_VALUE.name(), twiceResponseEntity.getBody().getName());
+        assertEquals(SS_602.name(), twiceResponseEntity.getBody().getName());
     }
 
     @Test

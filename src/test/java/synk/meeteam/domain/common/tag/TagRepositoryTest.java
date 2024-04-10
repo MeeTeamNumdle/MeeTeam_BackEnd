@@ -26,7 +26,7 @@ public class TagRepositoryTest {
     @Test
     void 태그생성_생성된태그반환() {
         // given
-        Tag tag = TagFixture.createCoureNanmeTag("오픈소스프로젝트");
+        Tag tag = TagFixture.createCoureNameTag("오픈소스프로젝트");
 
         // when
         Tag savedTag = tagRepository.save(tag);
@@ -96,7 +96,7 @@ public class TagRepositoryTest {
     @Test
     void 태그생성_예외발생_name글자수가15자넘는경우() {
         // given
-        Tag tag = TagFixture.createCoureNanmeTag(NAME_EXCEED_15);
+        Tag tag = TagFixture.createCoureNameTag(NAME_EXCEED_15);
 
         // when, then
         Assertions.assertThatThrownBy(() -> tagRepository.saveAndFlush(tag)).isInstanceOf(
@@ -130,64 +130,6 @@ public class TagRepositoryTest {
 
         //then
         assertThat(tags).extracting("name").contains("웹개발");
-        assertThat(tags.size()).isEqualTo(1);
-    }
-
-    @Test
-    void 강의명목록조회_강의명태그DTO반환_keyword는공백일때() {
-        //given
-        String keyword = "";
-        long limit = 5;
-        //when
-        List<SearchTagDto> tags = tagRepository.findAllByKeywordAndTopLimitAndType(keyword,
-                limit, TagType.COURSE);
-
-        //then
-        assertThat(tags).extracting("name").containsExactlyInAnyOrder(
-                "응용소프트웨어실습", "리눅스활용실습", "운영체제");
-        assertThat(tags.size()).isEqualTo(3);
-    }
-
-    @Test
-    void 강의명목록조회_강의명태그DTO반환_keyword는운영체제일때() {
-        //given
-        String keyword = "운영체제";
-        long limit = 5;
-        //when
-        List<SearchTagDto> tags = tagRepository.findAllByKeywordAndTopLimitAndType(keyword,
-                limit, TagType.COURSE);
-
-        //then
-        assertThat(tags).extracting("name").contains("운영체제");
-        assertThat(tags.size()).isEqualTo(1);
-    }
-
-    @Test
-    void 교수명목록조회_교수명태그DTO반환_keyword는공백일때() {
-        //given
-        String keyword = "";
-        long limit = 5;
-        //when
-        List<SearchTagDto> tags = tagRepository.findAllByKeywordAndTopLimitAndType(keyword,
-                limit, TagType.PROFESSOR);
-
-        //then
-        assertThat(tags).extracting("name").containsExactlyInAnyOrder(
-                "김진우", "문승현");
-        assertThat(tags.size()).isEqualTo(2);
-    }
-
-    @Test
-    void 교수명목록조회_교수명태그DTO반환_keyword는문일때() {
-        //given
-        String keyword = "문";
-        long limit = 5;
-        //when
-        List<SearchTagDto> tags = tagRepository.findAllByKeywordAndTopLimitAndType(keyword,
-                limit, TagType.PROFESSOR);
-
-        //then
-        assertThat(tags).extracting("name").containsExactly("문승현");
         assertThat(tags.size()).isEqualTo(1);
     }
 

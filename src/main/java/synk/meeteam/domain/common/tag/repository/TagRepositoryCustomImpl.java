@@ -36,7 +36,7 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
                 .from(tag)
                 .where(tag.name.startsWith(keyword).and(tag.type.eq(type)))
                 .limit(limit)
-                .orderBy(tag.name.length().asc().nullsLast())
+                .orderBy(tag.name.asc().nullsLast())
                 .fetch();
     }
 }

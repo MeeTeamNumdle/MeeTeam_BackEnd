@@ -28,26 +28,5 @@ public class TagController implements TagApi {
         return ResponseEntity.ok(tags);
     }
 
-    @GetMapping("/search/course")
-    @Override
-    public ResponseEntity<List<SearchTagDto>> searchCourse(
-            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
-            @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
-
-        List<SearchTagDto> course = tagService.searchByKeywordAndType(keyword, limit, TagType.COURSE);
-
-        return ResponseEntity.ok(course);
-    }
-
-    @GetMapping("/search/professor")
-    @Override
-    public ResponseEntity<List<SearchTagDto>> searchProfessor(
-            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
-            @RequestParam(name = "limit", required = false, defaultValue = "5") long limit) {
-        List<SearchTagDto> professors = tagService.searchByKeywordAndType(keyword, limit, TagType.PROFESSOR);
-
-        return ResponseEntity.ok(professors);
-    }
-
 
 }

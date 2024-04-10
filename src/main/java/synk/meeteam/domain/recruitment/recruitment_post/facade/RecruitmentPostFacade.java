@@ -70,7 +70,19 @@ public class RecruitmentPostFacade {
 
         recruitmentPostService.incrementApplicantCount(recruitmentApplicant.getRecruitmentPost());
 
-        recruitmentRoleService.addApplicantCount(recruitmentRole);
+        recruitmentRoleService.incrementApplicantCount(recruitmentRole);
+    }
+
+    @Transactional
+    public void cancelApplyRecruitment(Long postId, User user) {
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        RecruitmentApplicant recruitmentApplicant = recruitmentApplicantService.getApplicant(recruitmentPost, user);
+        RecruitmentRole recruitmentRole = recruitmentRoleService.findApplyRecruitmentRole(recruitmentPost,
+                recruitmentApplicant.getRole());
+
+        recruitmentApplicantService.cancelRegisterRecruitmentApplicant(recruitmentApplicant);
+        recruitmentPostService.decrementApplicantCount(recruitmentPost);
+        recruitmentRoleService.decrementApplicantCount(recruitmentRole);
     }
 
     @Transactional
