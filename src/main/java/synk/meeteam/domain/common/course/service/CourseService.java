@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.course.dto.SearchCourseDto;
 import synk.meeteam.domain.common.course.entity.Course;
 import synk.meeteam.domain.common.course.repository.CourseRepository;
+import synk.meeteam.domain.common.university.entity.University;
 
 @Service
 @RequiredArgsConstructor
@@ -21,5 +22,23 @@ public class CourseService {
     @Transactional(readOnly = true)
     public List<SearchCourseDto> searchByKeyword(String keyword, long limit) {
         return courseRepository.findAllByKeywordAndTopLimit(keyword, limit);
+    }
+
+    @Transactional
+    public Course getOrCreateCourse(String courseName, University university) {
+        Course course = courseRepository.findByNameAndUniversity(courseName, university).orElse(null);
+        if (course == null) {
+            course = createCourse(courseName, university);
+            courseRepository.save(course);
+        }
+
+        return course;
+    }
+
+    private Course createCourse(String courseName, University university) {
+        return Course.builder()
+                .name(courseName)
+                .university(university)
+                .build();
     }
 }
