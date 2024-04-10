@@ -97,9 +97,6 @@ public class RecruitmentApplicantServiceTest {
         RecruitmentApplicant recruitmentApplicant = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user, role);
 
-        doReturn(recruitmentApplicant)
-                .when(recruitmentApplicantRepository).save(recruitmentApplicant);
-
         // when, then
         recruitmentApplicantService.cancelRegisterRecruitmentApplicant(recruitmentApplicant);
     }
