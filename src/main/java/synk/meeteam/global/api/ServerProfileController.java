@@ -62,7 +62,7 @@ public class ServerProfileController {
         if (portfolioId != null) {
             // 수정의 경우
             Portfolio portfolio = portfolioService.getPortfolio(portfolioId, user);
-            zipFileName = portfolio.getSlideZipFileName();
+            zipFileName = portfolio.getZipFileName();
             thumbNailFileName = portfolio.getMainImageFileName();
         }
 
