@@ -21,7 +21,7 @@ public class ProfessorCustomRepositoryImpl implements ProfessorCustomRepository 
                 .from(professor)
                 .where(professor.name.startsWith(keyword))
                 .limit(limit)
-                .orderBy(professor.name.length().asc().nullsLast())
+                .orderBy(professor.name.asc().nullsLast())
                 .fetch();
     }
 }

@@ -20,7 +20,7 @@ public class SkillRepositoryCustomImpl implements SkillRepositoryCustom {
                 .from(skill)
                 .where(skill.name.startsWith(keyword))
                 .limit(limit)
-                .orderBy(skill.name.length().asc().nullsLast())
+                .orderBy(skill.name.asc().nullsLast())
                 .fetch();
     }
 

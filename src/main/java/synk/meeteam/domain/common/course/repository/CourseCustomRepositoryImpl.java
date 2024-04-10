@@ -22,7 +22,7 @@ public class CourseCustomRepositoryImpl implements CourseCustomRepository {
                 .from(course)
                 .where(course.name.startsWith(keyword))
                 .limit(limit)
-                .orderBy(course.name.length().asc().nullsLast())
+                .orderBy(course.name.asc().nullsLast())
                 .fetch();
     }
 }
