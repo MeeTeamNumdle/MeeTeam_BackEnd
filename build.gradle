@@ -20,6 +20,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -102,6 +103,8 @@ dependencies {
     // 메일 서비스를 위함
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    // discord web hook
+    implementation('com.github.napstr:logback-discord-appender:1.0.0')
 }
 
 tasks.named('test') {
