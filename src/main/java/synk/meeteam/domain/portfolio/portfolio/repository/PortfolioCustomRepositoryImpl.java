@@ -7,6 +7,7 @@ import static synk.meeteam.domain.portfolio.portfolio.entity.QPortfolio.portfoli
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,9 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
 
     @Override
     public List<Portfolio> findAllByCreatedByAndIsPinTrueOrderByIds(Long userId, List<Long> portfolioIds) {
+        if (portfolioIds.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         return queryFactory
                 .selectFrom(portfolio)
@@ -52,7 +56,7 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
                 .where(portfolio.createdBy.eq(user.getId()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
-                .orderBy(portfolio.createdAt.desc())
+                .orderBy(portfolio.createdAt.desc(), portfolio.id.desc())
                 .fetch();
         return new SliceImpl<>(contents, pageable, hasNextPage(contents, pageable.getPageSize()));
     }
@@ -66,10 +70,6 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
     }
 
     NumberExpression<Integer> orderPortfolios(List<Long> ids) {
-        if (ids == null || ids.isEmpty()) {
-            return null;
-        }
-
         // 포트폴리오 ID의 위치를 기준으로 순서를 정의합니다.
         CaseBuilder caseBuilder = new CaseBuilder();
 

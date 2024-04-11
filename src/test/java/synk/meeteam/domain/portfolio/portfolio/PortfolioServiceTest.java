@@ -98,7 +98,7 @@ public class PortfolioServiceTest {
     void 포트폴리오목록조회_목록조회성공() {
         //given
         doReturn(PortfolioFixture.createPortfolioFixtures_1_2()).when(portfolioRepository)
-                .findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(anyLong());
+                .findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(anyLong());
         //when
         List<Portfolio> userPortfolio = portfolioService.getMyPinPortfolio(anyLong());
         //then
