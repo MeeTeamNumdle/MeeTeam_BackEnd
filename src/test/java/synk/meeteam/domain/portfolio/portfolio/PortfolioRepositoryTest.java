@@ -55,7 +55,7 @@ public class PortfolioRepositoryTest {
     }
 
     @Test
-    void 특정유저의핀포트폴리오목록조회_특정유저의핀포트폴리오목록반환() {
+    void 나의핀포트폴리오목록조회_나의의핀포트폴리오목록반환() {
         //when
         List<Portfolio> portfolios = portfolioRepository.findAllByCreatedByAndIsPinTrue(1L);
         //then
@@ -63,7 +63,7 @@ public class PortfolioRepositoryTest {
     }
 
     @Test
-    void 나의핀포트폴리오조회_조회성공() {
+    void 나의핀포트폴리오핀순서로조회_조회성공() {
         //when
         List<Portfolio> userPortfolios = portfolioRepository.findAllByCreatedByAndIsPinTrueOrderByIds(1L,
                 List.of(1L, 2L));
