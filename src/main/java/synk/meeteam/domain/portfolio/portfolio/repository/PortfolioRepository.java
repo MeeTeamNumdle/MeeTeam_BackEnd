@@ -13,7 +13,7 @@ import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long>, PortfolioCustomRepository {
     List<Portfolio> findAllByCreatedByAndIsPinTrue(Long userId);
 
-    List<Portfolio> findAllByIsPinTrueAndCreatedByOrderByProceedStartAsc(Long id);
+    List<Portfolio> findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(Long id);
 
     @Query("SELECT p FROM Portfolio p LEFT JOIN FETCH p.role LEFT JOIN FETCH p.field where p.id=:id")
     Optional<Portfolio> findByIdWithFieldAndRole(@Param("id") Long portfolioId);
