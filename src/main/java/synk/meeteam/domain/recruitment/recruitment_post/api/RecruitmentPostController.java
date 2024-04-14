@@ -354,10 +354,10 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                                             Long professorId) {
         Scope scope = null;
         Category category = null;
-        if (scopeOrdinal != null && scopeOrdinal > 1 && scopeOrdinal < Scope.values().length) {
+        if (scopeOrdinal != null && scopeOrdinal >= 1 && scopeOrdinal <= Scope.values().length) {
             scope = Scope.values()[scopeOrdinal - 1];
         }
-        if (categoryOrdinal != null && categoryOrdinal > 1 && categoryOrdinal < Category.values().length) {
+        if (categoryOrdinal != null && categoryOrdinal >= 1 && categoryOrdinal <= Category.values().length) {
             category = Category.values()[categoryOrdinal - 1];
         }
         return new SearchCondition(fieldId, scope, category, skillIds, tagIds, roleIds, courseId, professorId);
