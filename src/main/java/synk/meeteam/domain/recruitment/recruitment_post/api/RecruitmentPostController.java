@@ -146,7 +146,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         return ResponseEntity.ok()
                 .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isApplied, isBookmarked, recruitmentRoles,
-                        writer,
+                        writer, user,
                         writerImgUrl,
                         recruitmentTags,
                         recruitmentCommentDtos, recruitmentPost.getCourse(), recruitmentPost.getProfessor()));

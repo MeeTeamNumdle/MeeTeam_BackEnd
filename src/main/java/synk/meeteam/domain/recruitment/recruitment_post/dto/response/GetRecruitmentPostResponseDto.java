@@ -66,12 +66,12 @@ public record GetRecruitmentPostResponseDto(
 ) {
     public static GetRecruitmentPostResponseDto from(RecruitmentPost recruitmentPost, boolean isApplied,
                                                      boolean isBookmarked,
-                                                     List<RecruitmentRole> recruitmentRoles, User writer,
+                                                     List<RecruitmentRole> recruitmentRoles, User writer, User user,
                                                      String writerProfileImg,
                                                      List<TagDto> recruitmentTags,
                                                      List<GetCommentResponseDto> recruitmentCommentDtos,
                                                      Course course, Professor professor) {
-        boolean isWriter = writer.getId().equals(recruitmentPost.getCreatedBy());
+        boolean isWriter = user.getId().equals(writer.getId());
         List<GetRecruitmentRoleResponseDto> getRecruitmentRoleDtos = recruitmentRoles.stream()
                 .map(GetRecruitmentRoleResponseDto::from)
                 .toList();
