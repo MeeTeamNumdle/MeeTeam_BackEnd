@@ -231,6 +231,14 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    @Override
+    public ResponseEntity<Void> deleteRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user) {
+        recruitmentPostService.deleteRecruitmentPost(postId, user.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{id}/bookmark")
     @Override
     public ResponseEntity<Void> bookmarkRecruitmentPost(@PathVariable("id") Long postId,

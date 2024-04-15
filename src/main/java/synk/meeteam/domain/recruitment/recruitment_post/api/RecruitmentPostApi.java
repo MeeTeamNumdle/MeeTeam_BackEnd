@@ -110,6 +110,17 @@ public interface RecruitmentPostApi {
 
     @ApiResponses(
             value = {
+                    @ApiResponse(responseCode = "200", description = "구인글 삭제 성공"
+                            , content = {
+                            @Content(mediaType = APPLICATION_JSON_VALUE)
+                    })
+            }
+    )
+    @Operation(summary = "구인글 삭제 API", tags = {"recruitment"})
+    ResponseEntity<Void> deleteRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
                     @ApiResponse(responseCode = "200", description = "북마크 성공"
                             , content = {
                             @Content(mediaType = APPLICATION_JSON_VALUE)
