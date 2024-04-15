@@ -125,7 +125,8 @@ public class RecruitmentPost extends BaseEntity {
     public RecruitmentPost(String title, String content, Scope scope, Category category, Field field,
                            ProceedType proceedType, LocalDate proceedingStart, LocalDate proceedingEnd,
                            LocalDate deadline,
-                           long bookmarkCount, String kakaoLink, boolean isClosed, Meeteam meeteam) {
+                           long bookmarkCount, String kakaoLink, boolean isClosed, Meeteam meeteam,
+                           Course course, Professor professor) {
         this.title = title;
         this.content = content;
         this.scope = scope;
@@ -139,6 +140,8 @@ public class RecruitmentPost extends BaseEntity {
         this.kakaoLink = kakaoLink;
         this.isClosed = isClosed;
         this.meeteam = meeteam;
+        this.course = course;
+        this.professor = professor;
     }
 
     public double getResponseRate() {
