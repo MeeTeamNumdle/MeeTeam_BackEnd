@@ -15,7 +15,7 @@ import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.repository.FieldRepository;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
 import synk.meeteam.domain.user.user.entity.User;
@@ -78,7 +78,7 @@ public class PortfolioRepositoryTest {
         User user = userRepository.findById(1L).get();
         int page = 1;
         //when
-        Slice<GetProfilePortfolioDto> userPortfolios = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
+        Slice<SimplePortfolioDto> userPortfolios = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
                 PageRequest.of(page - 1, 12), user);
         //then
         assertThat(userPortfolios.hasNext()).isEqualTo(false);

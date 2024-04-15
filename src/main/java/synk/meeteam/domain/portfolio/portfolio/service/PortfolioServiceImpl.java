@@ -15,7 +15,7 @@ import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.repository.FieldRepository;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.command.CreatePortfolioCommand;
 import synk.meeteam.domain.portfolio.portfolio.dto.command.UpdatePortfolioCommand;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
@@ -69,7 +69,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     public GetUserPortfolioResponseDto getMyAllPortfolio(int page, int size, User user) {
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size);
-        Slice<GetProfilePortfolioDto> userPortfolioDtos = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
+        Slice<SimplePortfolioDto> userPortfolioDtos = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
                 pageable, user);
         SliceInfo pageInfo = new SliceInfo(page, size, userPortfolioDtos.hasNext());
         return new GetUserPortfolioResponseDto(userPortfolioDtos.getContent(), pageInfo);

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class GetProfilePortfolioDto {
+public class SimplePortfolioDto {
     @Schema(description = "포트폴리오 id", example = "1")
     private Long id;
     @Schema(description = "제목", example = "Meeteam")
@@ -26,9 +26,9 @@ public class GetProfilePortfolioDto {
 
     @Builder
     @QueryProjection
-    public GetProfilePortfolioDto(Long id, String title, String mainImageUrl, String field, String role,
-                                  boolean isPinned,
-                                  int pinOrder) {
+    public SimplePortfolioDto(Long id, String title, String mainImageUrl, String field, String role,
+                              boolean isPinned,
+                              int pinOrder) {
         this.id = id;
         this.title = title;
         this.mainImageUrl = mainImageUrl;

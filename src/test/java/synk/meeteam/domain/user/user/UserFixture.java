@@ -6,7 +6,7 @@ import java.util.List;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.common.university.entity.University;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
 import synk.meeteam.domain.user.award.dto.UpdateAwardDto;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
@@ -81,7 +81,7 @@ public class UserFixture {
                 4.3,
                 2019,
                 List.of(
-                        new GetProfilePortfolioDto(1L, "Meeteam 팀을 만나다", "https://~", "개발", "백엔드개발자", true, 1)
+                        new SimplePortfolioDto(1L, "Meeteam 팀을 만나다", "https://~", "개발", "백엔드개발자", true, 1)
                 ),
                 List.of(
                         new GetProfileUserLinkDto("https://~~", "Link"),
