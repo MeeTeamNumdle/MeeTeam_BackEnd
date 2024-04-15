@@ -32,6 +32,7 @@ import synk.meeteam.domain.recruitment.bookmark.exception.BookmarkException;
 import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 import synk.meeteam.global.entity.BaseEntity;
 import synk.meeteam.global.entity.Category;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.entity.Scope;
 
@@ -121,6 +122,11 @@ public class RecruitmentPost extends BaseEntity {
     @JoinColumn(name = "professor_id")
     private Professor professor;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ALIVE'")
+    private DeleteStatus deleteStatus = DeleteStatus.ALIVE;
+
     @Builder
     public RecruitmentPost(String title, String content, Scope scope, Category category, Field field,
                            ProceedType proceedType, LocalDate proceedingStart, LocalDate proceedingEnd,
@@ -192,6 +198,11 @@ public class RecruitmentPost extends BaseEntity {
         this.meeteam = meeteam;
         this.applicantCount = applicantCount;
         this.responseCount = responseCount;
+    }
+
+    public void softDelete(Long userId) {
+        validateWriter(userId);
+        this.deleteStatus = DeleteStatus.DELETED;
     }
 
     public RecruitmentPost setLink(String kakaoLink, Long userId) {
