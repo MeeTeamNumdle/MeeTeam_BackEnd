@@ -26,6 +26,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostS
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -38,6 +39,8 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
     private final RecruitmentApplicantService recruitmentApplicantService;
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
+
+    private final UserService userService;
 
     @PutMapping("/{id}/link")
     @Override
@@ -68,7 +71,16 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
 
         return ResponseEntity.ok()
                 .body(new GetApplicantInfoResponseDto(recruitmentPost.getTitle(), recruitmentPost.getKakaoLink(),
-                        roleStatusResponseDtos, roleDtos));
+                        user.isFirstApplicantAccess(),roleStatusResponseDtos,
+                        roleDtos));
+    }
+
+    @PatchMapping("/{id}/access")
+    @Override
+    public ResponseEntity<Void> processFirstAccess(@PathVariable("id") Long postId, @AuthUser User user) {
+        userService.processFirstAccess(user);
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/approve")
