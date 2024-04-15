@@ -156,6 +156,12 @@ public class User extends BaseTimeEntity {
     @ColumnDefault("0")
     private long scoreProfessionalism = 0;
 
+    @ColumnDefault("0")
+    private boolean isFirstProfileAccess = false;
+
+    @ColumnDefault("0")
+    private boolean isFirstApplicantAccess = false;
+
     public User(String platformId) {
         this.platformId = platformId;
     }
