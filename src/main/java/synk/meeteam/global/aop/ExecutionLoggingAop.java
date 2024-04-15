@@ -6,11 +6,14 @@ import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import synk.meeteam.security.CustomAuthUser;
 
 @Aspect
 @Component
@@ -23,11 +26,18 @@ public class ExecutionLoggingAop {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         RequestMethod httpMethod = RequestMethod.valueOf(request.getMethod());
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = 0L;
+        if (!authentication.getPrincipal().equals("anonymousUser")) {
+            CustomAuthUser customAuthUser = (CustomAuthUser) authentication.getPrincipal();
+            userId = customAuthUser.getUser().getId();
+        }
+
         String className = pjp.getSignature().getDeclaringType().getSimpleName();
         String methodName = pjp.getSignature().getName();
         String task = className + "." + methodName;
 
-        log.info("[Call Method] " + httpMethod.toString() + ": " + task);
+        log.info("[Call Method] " + httpMethod.toString() + ": " + task + " | Request userId=" + userId.toString());
 
         Object[] paramArgs = pjp.getArgs();
         for (Object object : paramArgs) {
