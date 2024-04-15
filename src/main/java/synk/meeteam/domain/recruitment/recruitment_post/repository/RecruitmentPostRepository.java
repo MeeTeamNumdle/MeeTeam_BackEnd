@@ -7,7 +7,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 
 public interface RecruitmentPostRepository extends JpaRepository<RecruitmentPost, Long>,
-        RecruitmentPostSearchRepository {
+        RecruitmentPostSearchRepository, RecruitmentManagementRepository {
 
     default RecruitmentPost findByIdOrElseThrow(Long postId) {
         return findById(postId).orElseThrow(() -> new RecruitmentPostException(NOT_FOUND_POST));
