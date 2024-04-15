@@ -29,7 +29,7 @@ public class ProfessorService {
         Professor professor = professorRepository.findByNameAndUniversity(professorName, university).orElse(null);
         if (professor == null) {
             professor = createProfessor(professorName, university);
-            professorRepository.save(professor);
+            return professorRepository.save(professor);
         }
 
         return professor;

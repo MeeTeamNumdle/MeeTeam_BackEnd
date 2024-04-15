@@ -29,7 +29,7 @@ public class CourseService {
         Course course = courseRepository.findByNameAndUniversity(courseName, university).orElse(null);
         if (course == null) {
             course = createCourse(courseName, university);
-            courseRepository.save(course);
+            return courseRepository.save(course);
         }
 
         return course;
