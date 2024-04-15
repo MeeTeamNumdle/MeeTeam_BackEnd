@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 @Slf4j
-@Profile("debug")
+@Profile("stg")
 @Configuration
 @RequiredArgsConstructor
 public class SshDataSourceConfig {

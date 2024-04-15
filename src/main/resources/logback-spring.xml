@@ -16,7 +16,7 @@
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
-    <springProfile name="debug">
+    <springProfile name="stg">
         <include resource="console-appender.xml"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
