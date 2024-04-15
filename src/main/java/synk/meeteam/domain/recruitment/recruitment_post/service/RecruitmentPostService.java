@@ -17,6 +17,9 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.PageInfo;
 import synk.meeteam.global.dto.PageNationDto;
 import synk.meeteam.global.entity.Scope;
+import synk.meeteam.global.util.Encryption;
+import synk.meeteam.infra.s3.S3FileName;
+import synk.meeteam.infra.s3.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class RecruitmentPostService {
 
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final SimpleRecruitmentPostMapper simpleRecruitmentPostMapper;
+    private final S3Service s3Service;
 
     @Transactional
     public RecruitmentPost writeRecruitmentPost(RecruitmentPost recruitmentPost) {
@@ -93,7 +97,11 @@ public class RecruitmentPostService {
                 .findBySearchConditionAndKeyword(PageRequest.of(page - 1, size), condition, keyword, user);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
         List<SimpleRecruitmentPostDto> contents = postVos.stream()
-                .map(simpleRecruitmentPostMapper::toSimpleRecruitmentPostDto).toList();
+                .map((postVo) -> {
+                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
+                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
+                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
+                }).toList();
 
         return new PaginationSearchPostResponseDto(contents, pageInfo);
     }
@@ -120,7 +128,11 @@ public class RecruitmentPostService {
                 user, isClosed);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
         List<SimpleRecruitmentPostDto> contents = postVos.stream()
-                .map(simpleRecruitmentPostMapper::toSimpleRecruitmentPostDto).toList();
+                .map((postVo) -> {
+                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
+                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
+                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
+                }).toList();
         return new PageNationDto<>(contents, pageInfo);
     }
 
@@ -130,7 +142,11 @@ public class RecruitmentPostService {
                 user, isClosed);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
         List<SimpleRecruitmentPostDto> contents = postVos.stream()
-                .map(simpleRecruitmentPostMapper::toSimpleRecruitmentPostDto).toList();
+                .map((postVo) -> {
+                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
+                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
+                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
+                }).toList();
         return new PageNationDto<>(contents, pageInfo);
     }
 
@@ -140,7 +156,11 @@ public class RecruitmentPostService {
                 user, isClosed);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
         List<SimpleRecruitmentPostDto> contents = postVos.stream()
-                .map(simpleRecruitmentPostMapper::toSimpleRecruitmentPostDto).toList();
+                .map((postVo) -> {
+                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
+                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
+                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
+                }).toList();
         return new PageNationDto<>(contents, pageInfo);
     }
 }
