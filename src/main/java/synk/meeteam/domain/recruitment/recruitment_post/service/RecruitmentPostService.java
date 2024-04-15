@@ -15,6 +15,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPo
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.dto.PageNationDto;
 import synk.meeteam.global.entity.Scope;
 
 @Service
@@ -111,5 +112,35 @@ public class RecruitmentPostService {
     public void incrementResponseCount(Long postId, Long userId, long responseCount) {
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
         recruitmentPost.incrementResponseCount(userId, responseCount);
+    }
+
+    @Transactional
+    public PageNationDto<SimpleRecruitmentPostDto> getBookmarkPost(int size, int page, User user, Boolean isClosed) {
+        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyBookmarkPost(PageRequest.of(page - 1, size),
+                user, isClosed);
+        PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
+        List<SimpleRecruitmentPostDto> contents = postVos.stream()
+                .map(simpleRecruitmentPostMapper::toSimpleRecruitmentPostDto).toList();
+        return new PageNationDto<>(contents, pageInfo);
+    }
+
+    @Transactional
+    public PageNationDto<SimpleRecruitmentPostDto> getAppliedPost(int size, int page, User user, Boolean isClosed) {
+        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyAppliedPost(PageRequest.of(page - 1, size),
+                user, isClosed);
+        PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
+        List<SimpleRecruitmentPostDto> contents = postVos.stream()
+                .map(simpleRecruitmentPostMapper::toSimpleRecruitmentPostDto).toList();
+        return new PageNationDto<>(contents, pageInfo);
+    }
+
+    @Transactional
+    public PageNationDto<SimpleRecruitmentPostDto> getMyPost(int size, int page, User user, Boolean isClosed) {
+        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyPost(PageRequest.of(page - 1, size),
+                user, isClosed);
+        PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
+        List<SimpleRecruitmentPostDto> contents = postVos.stream()
+                .map(simpleRecruitmentPostMapper::toSimpleRecruitmentPostDto).toList();
+        return new PageNationDto<>(contents, pageInfo);
     }
 }
