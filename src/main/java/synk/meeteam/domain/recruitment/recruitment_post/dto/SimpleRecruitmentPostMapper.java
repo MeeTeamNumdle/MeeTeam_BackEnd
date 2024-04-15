@@ -2,12 +2,12 @@ package synk.meeteam.domain.recruitment.recruitment_post.dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SearchRecruitmentPostDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SimpleRecruitmentPostDto;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 
 @Mapper(componentModel = "spring")
-public interface SearchRecruitmentPostMapper {
+public interface SimpleRecruitmentPostMapper {
     @Mapping(target = "category", expression = "java(recruitmentPostVo.getCategory().getName())")
     @Mapping(target = "scope", expression = "java(recruitmentPostVo.getScope().getName())")
-    SearchRecruitmentPostDto toSearchRecruitmentPostDto(RecruitmentPostVo recruitmentPostVo);
+    SimpleRecruitmentPostDto toSimpleRecruitmentPostDto(RecruitmentPostVo recruitmentPostVo);
 }
