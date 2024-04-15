@@ -14,11 +14,6 @@ import synk.meeteam.domain.common.university.entity.University;
 public class CourseService {
     private final CourseRepository courseRepository;
 
-    @Transactional
-    public Course createCourse(Course courses) {
-        return courseRepository.save(courses);
-    }
-
     @Transactional(readOnly = true)
     public List<SearchCourseDto> searchByKeyword(String keyword, long limit) {
         return courseRepository.findAllByKeywordAndTopLimit(keyword, limit);
