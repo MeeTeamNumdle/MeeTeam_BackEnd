@@ -29,8 +29,6 @@ public class RecruitmentPostFacade {
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentRoleSkillService recruitmentRoleSkillService;
     private final RecruitmentTagService recruitmentTagService;
-    private final CourseService courseService;
-    private final ProfessorService professorService;
     private final RecruitmentApplicantService recruitmentApplicantService;
     private final BookmarkService bookmarkService;
 
@@ -43,8 +41,6 @@ public class RecruitmentPostFacade {
         recruitmentRoleService.createRecruitmentRoles(recruitmentRoles);
         recruitmentRoleSkillService.createRecruitmentRoleSkills(recruitmentRoleSkills);
         recruitmentTagService.createRecruitmentTags(recruitmentTags);
-        courseService.createCourse(course);
-        professorService.createProfessor(professor);
 
         return newRecruitmentPost.getId();
     }
