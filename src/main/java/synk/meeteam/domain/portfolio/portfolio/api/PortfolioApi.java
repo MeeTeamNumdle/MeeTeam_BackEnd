@@ -15,7 +15,7 @@ import synk.meeteam.domain.portfolio.portfolio.dto.request.CreatePortfolioReques
 import synk.meeteam.domain.portfolio.portfolio.dto.request.UpdatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.dto.PageNationDto;
+import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.security.AuthUser;
 
 @Tag(name = "Portfolio", description = "포트폴리오 관련 API")
@@ -55,7 +55,7 @@ public interface PortfolioApi {
             }
     )
     @Operation(summary = "내 포트폴리오 목록 조회 API")
-    ResponseEntity<PageNationDto<SimplePortfolioDto>> getMyPortfolios(
+    ResponseEntity<PaginationPortfolioDto<SimplePortfolioDto>> getMyPortfolios(
             @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
             @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
             @AuthUser User user);

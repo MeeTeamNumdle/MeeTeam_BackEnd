@@ -20,7 +20,7 @@ import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponse
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioFacade;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.PageInfo;
-import synk.meeteam.global.dto.PageNationDto;
+import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -53,11 +53,11 @@ public class PortfolioController implements PortfolioApi {
 
     @GetMapping
     @Override
-    public ResponseEntity<PageNationDto<SimplePortfolioDto>> getMyPortfolios(
+    public ResponseEntity<PaginationPortfolioDto<SimplePortfolioDto>> getMyPortfolios(
             @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
             @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
             @AuthUser User user) {
-        return ResponseEntity.ok().body(new PageNationDto<>(
+        return ResponseEntity.ok().body(new PaginationPortfolioDto<>(
                 List.of(
                         new SimplePortfolioDto(
                                 1L,
