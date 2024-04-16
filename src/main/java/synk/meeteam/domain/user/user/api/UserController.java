@@ -66,6 +66,6 @@ public class UserController implements UserApi {
     public ResponseEntity<GetUserPortfolioResponseDto> getUserPortfolio(
             @AuthUser User user, @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "12") int size) {
-        return ResponseEntity.ok(portfolioService.getMyAllPortfolio(page, size, user));
+        return ResponseEntity.ok(portfolioService.getSliceMyAllPortfolio(page, size, user));
     }
 }

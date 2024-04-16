@@ -2,7 +2,6 @@ package synk.meeteam.domain.portfolio.portfolio.api;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +17,8 @@ import synk.meeteam.domain.portfolio.portfolio.dto.request.CreatePortfolioReques
 import synk.meeteam.domain.portfolio.portfolio.dto.request.UpdatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioFacade;
+import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.dto.PageInfo;
 import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.security.AuthUser;
 
@@ -29,6 +28,7 @@ import synk.meeteam.security.AuthUser;
 public class PortfolioController implements PortfolioApi {
 
     private final PortfolioFacade portfolioFacade;
+    private final PortfolioService portfolioService;
 
     @PostMapping
     @Override
@@ -57,19 +57,6 @@ public class PortfolioController implements PortfolioApi {
             @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
             @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
             @AuthUser User user) {
-        return ResponseEntity.ok().body(new PaginationPortfolioDto<>(
-                List.of(
-                        new SimplePortfolioDto(
-                                1L,
-                                "Meeteam",
-                                "https://image.png",
-                                "개발",
-                                "역할",
-                                true,
-                                1
-                        )
-                ),
-                new PageInfo(1, 24, 1L, 1)
-        ));
+        return ResponseEntity.ok().body(portfolioService.getPageMyAllPortfolio(page, size, user));
     }
 }
