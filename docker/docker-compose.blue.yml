@@ -12,3 +12,5 @@ services:
     container_name: spring-blue
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - /home/ubuntu/app/log:/log

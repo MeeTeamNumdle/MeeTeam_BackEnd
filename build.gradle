@@ -106,9 +106,13 @@ dependencies {
     // discord web hook
     implementation('com.github.napstr:logback-discord-appender:1.0.0')
 
+    // aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
     // ssh 터널링 세팅
     implementation 'com.github.mwiede:jsch:0.2.17'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 }
 
 tasks.named('test') {
