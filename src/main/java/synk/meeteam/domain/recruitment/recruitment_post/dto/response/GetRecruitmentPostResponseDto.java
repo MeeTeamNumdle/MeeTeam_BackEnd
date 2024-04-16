@@ -71,7 +71,10 @@ public record GetRecruitmentPostResponseDto(
                                                      List<TagDto> recruitmentTags,
                                                      List<GetCommentResponseDto> recruitmentCommentDtos,
                                                      Course course, Professor professor) {
-        boolean isWriter = user.getId().equals(writer.getId());
+        boolean isWriter = false;
+        if(user != null){
+            isWriter = user.getId().equals(writer.getId());
+        }
         List<GetRecruitmentRoleResponseDto> getRecruitmentRoleDtos = recruitmentRoles.stream()
                 .map(GetRecruitmentRoleResponseDto::from)
                 .toList();
