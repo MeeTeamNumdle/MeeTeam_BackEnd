@@ -23,6 +23,7 @@ import synk.meeteam.infra.s3.service.vo.PreSignedUrlVO;
 public class S3Service {
 
     private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 1L;
+    private static final Long PRE_SIGNED_URL_LOGO_EXPIRE_MINUTE = 10080L;
     private final S3Config s3Config;
     @Value("${aws-property.s3-bucket-name}")
     private String bucketName;
@@ -41,7 +42,7 @@ public class S3Service {
                 .build();
 
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(PRE_SIGNED_URL_EXPIRE_MINUTE))
+                .signatureDuration(Duration.ofMinutes(PRE_SIGNED_URL_LOGO_EXPIRE_MINUTE))
                 .getObjectRequest(getObjectRequest)
                 .build();
 
