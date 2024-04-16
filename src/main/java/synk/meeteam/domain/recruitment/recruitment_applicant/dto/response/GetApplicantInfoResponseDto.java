@@ -9,6 +9,8 @@ public record GetApplicantInfoResponseDto(
         String title,
         @Schema(description = "오픈카톡방 링크", example = "https://open.kakao.com/o/gLmqdijg")
         String link,
+        @Schema(description = "처음 접속 여부", example = "true")
+        boolean isFirstAccess,
         List<GetRecruitmentRoleStatusResponseDto> recruitmentStatus,
         List<GetRoleDto> roles
 ) {

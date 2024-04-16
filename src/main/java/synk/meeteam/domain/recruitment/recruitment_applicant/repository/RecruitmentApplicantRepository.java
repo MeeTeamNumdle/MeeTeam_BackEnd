@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
@@ -16,7 +16,7 @@ import synk.meeteam.domain.user.user.entity.User;
 public interface RecruitmentApplicantRepository extends JpaRepository<RecruitmentApplicant, Long>,
         RecruitmentApplicantCustomRepository {
 
-    @Query("SELECT a FROM RecruitmentApplicant a JOIN FETCH a.recruitmentPost WHERE a.id IN :ids AND a.deleteStatus = synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus.ALIVE")
+    @Query("SELECT a FROM RecruitmentApplicant a JOIN FETCH a.recruitmentPost WHERE a.id IN :ids AND a.deleteStatus = synk.meeteam.global.entity.DeleteStatus.ALIVE")
     List<RecruitmentApplicant> findAllInApplicantId(@Param("ids") List<Long> applicantIds);
 
     Optional<RecruitmentApplicant> findByRecruitmentPostAndApplicantAndDeleteStatus(RecruitmentPost recruitmentPost,

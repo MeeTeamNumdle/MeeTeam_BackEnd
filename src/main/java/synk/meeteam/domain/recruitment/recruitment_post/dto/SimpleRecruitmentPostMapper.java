@@ -9,5 +9,8 @@ import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.Recruitmen
 public interface SimpleRecruitmentPostMapper {
     @Mapping(target = "category", expression = "java(recruitmentPostVo.getCategory().getName())")
     @Mapping(target = "scope", expression = "java(recruitmentPostVo.getScope().getName())")
-    SimpleRecruitmentPostDto toSimpleRecruitmentPostDto(RecruitmentPostVo recruitmentPostVo);
+    @Mapping(target = "writerProfileImg", source = "writerProfileImg")
+    @Mapping(target = "writerId", source = "writerId")
+    SimpleRecruitmentPostDto toSimpleRecruitmentPostDto(RecruitmentPostVo recruitmentPostVo, String writerId,
+                                                        String writerProfileImg);
 }

@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SimpleRecruitmentPostDto;
 import synk.meeteam.domain.user.user.entity.User;
@@ -21,6 +23,8 @@ public interface PostManagementApi {
     @Operation(summary = "북마크한 구인글 조회")
     @SecurityRequirement(name = "Authorization")
     PaginationDto<SimpleRecruitmentPostDto> getBookmarkPost(@AuthUser User user,
+                                                            @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
+                                                            @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                             @RequestParam(value = "is-closed", required = false) Boolean isClosed);
 
     @ApiResponses(
@@ -31,6 +35,8 @@ public interface PostManagementApi {
     @Operation(summary = "내가 신청한 구인글 조회")
     @SecurityRequirement(name = "Authorization")
     PaginationDto<SimpleRecruitmentPostDto> getAppliedPost(@AuthUser User user,
+                                                           @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
+                                                           @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                            @RequestParam(value = "is-closed", required = false) Boolean isClosed);
 
     @ApiResponses(
@@ -41,5 +47,7 @@ public interface PostManagementApi {
     @Operation(summary = "내가 작성한 구인글 조회")
     @SecurityRequirement(name = "Authorization")
     PaginationDto<SimpleRecruitmentPostDto> getMyPost(@AuthUser User user,
+                                                      @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
+                                                      @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                       @RequestParam(value = "is-closed", required = false) Boolean isClosed);
 }

@@ -13,4 +13,6 @@ public interface UserService {
     User findById(Long userId);
 
     User findByEncryptedId(String encryptedId);
+
+    void processFirstAccess(User user);
 }
