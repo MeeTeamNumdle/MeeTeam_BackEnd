@@ -30,6 +30,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.QRecruitme
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.QUser;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.entity.Scope;
 
 @Repository
@@ -74,7 +75,8 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                         scopeEq(condition.getScope()),
                         writerUniversityEq(writer, userDomain, condition.getScope()),
                         categoryEq(condition.getCategory()),
-                        titleStartWith(keyword)
+                        titleStartWith(keyword),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
 
         query = jpaUtils.joinWithFieldAndTagAndRoleAndSkill(query, condition);
@@ -100,7 +102,8 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                         scopeEq(condition.getScope()),
                         writerUniversityEq(writer, userDomain, condition.getScope()),
                         categoryEq(condition.getCategory()),
-                        titleStartWith(keyword)
+                        titleStartWith(keyword),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
 
         countQuery = jpaUtils.joinWithFieldAndTagAndRoleAndSkill(countQuery, condition);
