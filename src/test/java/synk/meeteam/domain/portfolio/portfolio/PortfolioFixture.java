@@ -7,7 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.role.entity.Role;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.global.dto.SliceInfo;
@@ -69,11 +69,11 @@ public class PortfolioFixture {
                 .build();
     }
 
-    public static Slice<GetProfilePortfolioDto> createSlicePortfolioDtos() {
+    public static Slice<SimplePortfolioDto> createSlicePortfolioDtos() {
         return new SliceImpl<>(
                 List.of(
-                        new GetProfilePortfolioDto(1L, "타이틀1", "이미지url", "개발", "개발자", true, 1),
-                        new GetProfilePortfolioDto(2L, "타이틀2", "이미지url", "개발", "개발자", true, 2)
+                        new SimplePortfolioDto(1L, "타이틀1", "이미지url", "개발", "개발자", true, 1),
+                        new SimplePortfolioDto(2L, "타이틀2", "이미지url", "개발", "개발자", true, 2)
                 ),
                 PageRequest.of(1, 12),
                 false
@@ -83,8 +83,8 @@ public class PortfolioFixture {
     public static GetUserPortfolioResponseDto createUserAllPortfolios() {
         return new GetUserPortfolioResponseDto(
                 List.of(
-                        new GetProfilePortfolioDto(1L, "타이틀1", "이미지url", "개발", "개발자", true, 1),
-                        new GetProfilePortfolioDto(2L, "타이틀2", "이미지url", "개발", "개발자", true, 2)
+                        new SimplePortfolioDto(1L, "타이틀1", "이미지url", "개발", "개발자", true, 1),
+                        new SimplePortfolioDto(2L, "타이틀2", "이미지url", "개발", "개발자", true, 2)
                 ),
                 new SliceInfo(1, 12, false)
         );

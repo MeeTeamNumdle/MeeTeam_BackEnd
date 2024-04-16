@@ -14,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
-import synk.meeteam.domain.portfolio.portfolio.dto.QGetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.QSimplePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.user.user.entity.User;
 
@@ -39,9 +39,9 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
     }
 
     @Override
-    public Slice<GetProfilePortfolioDto> findUserPortfoliosByUserOrderByCreatedAtDesc(Pageable pageable, User user) {
-        List<GetProfilePortfolioDto> contents = queryFactory
-                .select(new QGetProfilePortfolioDto(
+    public Slice<SimplePortfolioDto> findUserPortfoliosByUserOrderByCreatedAtDesc(Pageable pageable, User user) {
+        List<SimplePortfolioDto> contents = queryFactory
+                .select(new QSimplePortfolioDto(
                         portfolio.id,
                         portfolio.title,
                         portfolio.mainImageFileName,
@@ -61,7 +61,7 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
         return new SliceImpl<>(contents, pageable, hasNextPage(contents, pageable.getPageSize()));
     }
 
-    private boolean hasNextPage(List<GetProfilePortfolioDto> contents, int pageSize) {
+    private boolean hasNextPage(List<SimplePortfolioDto> contents, int pageSize) {
         if (contents.size() > pageSize) {
             contents.remove(pageSize);
             return true;

@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileEmailDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfilePhoneDto;
@@ -32,7 +32,7 @@ public interface ProfileMapper {
             String imageUrl,
             List<GetProfileUserLinkDto> links,
             List<GetProfileAwardDto> awards,
-            List<GetProfilePortfolioDto> portfolios,
+            List<SimplePortfolioDto> portfolios,
             List<SkillDto> skills
     );
 

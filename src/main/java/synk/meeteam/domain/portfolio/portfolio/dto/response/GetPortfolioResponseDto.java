@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio_link.dto.PortfolioLinkDto;
 
 public record GetPortfolioResponseDto(
@@ -39,7 +39,7 @@ public record GetPortfolioResponseDto(
         String proceedType,
         List<SkillDto> skills,
         List<PortfolioLinkDto> links,
-        List<GetProfilePortfolioDto> otherPortfolios,
+        List<SimplePortfolioDto> otherPortfolios,
         @Schema(description = "작성자여부", example = "true")
         boolean isWriter
 ) {

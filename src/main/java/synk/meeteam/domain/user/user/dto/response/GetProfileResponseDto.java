@@ -3,7 +3,7 @@ package synk.meeteam.domain.user.user.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
 import synk.meeteam.domain.user.user_link.dto.GetProfileUserLinkDto;
 
@@ -35,7 +35,7 @@ public record GetProfileResponseDto(
         Double gpa,
         @Schema(description = "입학년도", example = "2019")
         int year,
-        List<GetProfilePortfolioDto> portfolios,
+        List<SimplePortfolioDto> portfolios,
         List<GetProfileUserLinkDto> links,
         List<GetProfileAwardDto> awards,
         List<SkillDto> skills

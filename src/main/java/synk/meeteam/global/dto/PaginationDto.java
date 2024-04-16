@@ -2,7 +2,7 @@ package synk.meeteam.global.dto;
 
 import java.util.List;
 
-public record PageNationDto<T>(
+public record PaginationDto<T>(
         List<T> data,
         PageInfo pageInfo
 ) {

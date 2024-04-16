@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.entity.PortfolioMapper;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
@@ -71,7 +71,7 @@ public class ProfileFacade {
         String profileImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, user.getProfileImgFileName());
         List<GetProfileUserLinkDto> links = getProfileLinks(user.getId());
         List<GetProfileAwardDto> awards = getProfileAwards(user.getId());
-        List<GetProfilePortfolioDto> portfolios = getProfilePortfolios(user.getId(), encryptedId);
+        List<SimplePortfolioDto> portfolios = getProfilePortfolios(user.getId(), encryptedId);
         List<SkillDto> skills = userSkillService.getUserSKill(user.getId());
         return profileMapper.toGetProfileResponseDto(user, profileImgUrl, links, awards,
                 portfolios, skills);
@@ -87,7 +87,7 @@ public class ProfileFacade {
         return awards.stream().map(awardMapper::toGetProfileAwardDto).toList();
     }
 
-    private List<GetProfilePortfolioDto> getProfilePortfolios(Long userId, String encryptedId) {
+    private List<SimplePortfolioDto> getProfilePortfolios(Long userId, String encryptedId) {
         List<Portfolio> portfolios = portfolioService.getMyPinPortfolio(userId);
 
         return portfolios.stream().map((portfolio) -> {

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SimpleRecruitmentPostDto;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.dto.PageNationDto;
+import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.dto.PaginationDto;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -22,7 +23,7 @@ public class PostManagementController implements PostManagementApi {
 
     @GetMapping("/bookmark")
     @Override
-    public PageNationDto<SimpleRecruitmentPostDto> getBookmarkPost(@AuthUser User user,
+    public PaginationDto<SimpleRecruitmentPostDto> getBookmarkPost(@AuthUser User user,
                                                                    @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
                                                                    @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                                    @RequestParam(value = "is-closed", required = false) Boolean isClosed) {
@@ -31,7 +32,7 @@ public class PostManagementController implements PostManagementApi {
 
     @GetMapping("/applied")
     @Override
-    public PageNationDto<SimpleRecruitmentPostDto> getAppliedPost(@AuthUser User user,
+    public PaginationDto<SimpleRecruitmentPostDto> getAppliedPost(@AuthUser User user,
                                                                   @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
                                                                   @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                                   @RequestParam(value = "is-closed", required = false) Boolean isClosed) {
@@ -40,7 +41,7 @@ public class PostManagementController implements PostManagementApi {
 
     @GetMapping("/myPost")
     @Override
-    public PageNationDto<SimpleRecruitmentPostDto> getMyPost(@AuthUser User user,
+    public PaginationDto<SimpleRecruitmentPostDto> getMyPost(@AuthUser User user,
                                                              @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
                                                              @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                              @RequestParam(value = "is-closed", required = false) Boolean isClosed) {

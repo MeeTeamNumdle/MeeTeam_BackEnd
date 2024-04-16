@@ -15,7 +15,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPo
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.PageInfo;
-import synk.meeteam.global.dto.PageNationDto;
+import synk.meeteam.global.dto.PaginationDto;
 import synk.meeteam.global.entity.Scope;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.s3.S3FileName;
@@ -129,7 +129,7 @@ public class RecruitmentPostService {
     }
 
     @Transactional
-    public PageNationDto<SimpleRecruitmentPostDto> getBookmarkPost(int size, int page, User user, Boolean isClosed) {
+    public PaginationDto<SimpleRecruitmentPostDto> getBookmarkPost(int size, int page, User user, Boolean isClosed) {
         Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyBookmarkPost(PageRequest.of(page - 1, size),
                 user, isClosed);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
@@ -139,11 +139,11 @@ public class RecruitmentPostService {
                     String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
                     return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
                 }).toList();
-        return new PageNationDto<>(contents, pageInfo);
+        return new PaginationDto<>(contents, pageInfo);
     }
 
     @Transactional
-    public PageNationDto<SimpleRecruitmentPostDto> getAppliedPost(int size, int page, User user, Boolean isClosed) {
+    public PaginationDto<SimpleRecruitmentPostDto> getAppliedPost(int size, int page, User user, Boolean isClosed) {
         Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyAppliedPost(PageRequest.of(page - 1, size),
                 user, isClosed);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
@@ -153,11 +153,11 @@ public class RecruitmentPostService {
                     String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
                     return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
                 }).toList();
-        return new PageNationDto<>(contents, pageInfo);
+        return new PaginationDto<>(contents, pageInfo);
     }
 
     @Transactional
-    public PageNationDto<SimpleRecruitmentPostDto> getMyPost(int size, int page, User user, Boolean isClosed) {
+    public PaginationDto<SimpleRecruitmentPostDto> getMyPost(int size, int page, User user, Boolean isClosed) {
         Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyPost(PageRequest.of(page - 1, size),
                 user, isClosed);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
@@ -167,6 +167,6 @@ public class RecruitmentPostService {
                     String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
                     return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
                 }).toList();
-        return new PageNationDto<>(contents, pageInfo);
+        return new PaginationDto<>(contents, pageInfo);
     }
 }
