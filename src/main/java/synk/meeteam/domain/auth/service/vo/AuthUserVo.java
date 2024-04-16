@@ -14,7 +14,7 @@ public record AuthUserVo(Long userId, String email, String universityName, Strin
         return AuthUserVo.builder()
                 .userId(user.getId())
                 .email(user.getUniversityEmail())
-                .universityName(user.getUniversity().getName())
+                .universityName(user.getUniversity() == null ? null : user.getUniversity().getName())
                 .nickname(user.getNickname())
                 .pictureUrl(user.getProfileImgFileName())
                 .platformType(platformType)
