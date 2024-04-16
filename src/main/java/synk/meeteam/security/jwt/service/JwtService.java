@@ -77,7 +77,7 @@ public class JwtService {
         updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
 
         return authUserResponseMapper.ofLogin(vo.authType(), vo.authority(), Encryption.encryptLong(vo.userId()),
-                vo.nickname(), vo.pictureUrl(), accessToken, refreshToken);
+                vo.nickname(), vo.pictureUrl(), vo.universityName(), accessToken, refreshToken);
     }
 
     @Transactional
