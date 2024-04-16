@@ -59,8 +59,7 @@ public class AuthController implements AuthApi {
                 .saveUserOrLogin(requestDto.authorizationCode(), requestDto);
 
         if (vo.authority() == Authority.GUEST) {
-            AuthUserResponseDto.create responseDTO = authUserResponseMapper.ofCreate(vo.authType(), vo.authority(),
-                    vo.universityName(), vo.platformId());
+            AuthUserResponseDto.create responseDTO = authUserResponseMapper.ofCreate(vo.authType(), vo.authority(), vo.platformId());
             return ResponseEntity.ok(responseDTO);
         }
 
@@ -75,7 +74,7 @@ public class AuthController implements AuthApi {
     ) {
         String email = universityService.getEmail(requestDto.universityId(), requestDto.emailId());
         authServiceProvider.getAuthService(requestDto.platformType()).updateUniversityInfo(requestDto, email);
-        mailService.sendMail(requestDto.platformId(), email);
+        mailService.sendVerifyMail(requestDto.platformId(), email);
 
         return ResponseEntity.ok().build();
     }

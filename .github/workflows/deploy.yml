@@ -55,9 +55,14 @@ jobs:
           cd ./templates
           touch ./ApproveMail.html
           echo "$MAIL_APPROVE_TEMPLATE" > ./ApproveMail.html
+          
+          touch ./UniversityAuthMail.html
+          echo "$MAIL_VERIFY_TEMPLATE" > ./UniversityAuthMail.html
+
         env:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
+          $MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
         shell: bash
 
       - name: Gradle 권한 부여
