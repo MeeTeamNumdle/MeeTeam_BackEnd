@@ -126,7 +126,7 @@ public class UserControllerTest {
         //given
         final String url = "/user/portfolios";
         doReturn(PortfolioFixture.createUserAllPortfolios()).when(portfolioService)
-                .getMyAllPortfolio(eq(1), eq(12), any());
+                .getSliceMyAllPortfolio(eq(1), eq(12), any());
         //when
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)

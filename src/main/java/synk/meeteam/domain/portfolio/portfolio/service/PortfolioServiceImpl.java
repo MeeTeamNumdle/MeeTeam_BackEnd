@@ -6,6 +6,7 @@ import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExcepti
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,7 +24,11 @@ import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.global.dto.SliceInfo;
+import synk.meeteam.infra.s3.S3FileName;
+import synk.meeteam.infra.s3.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +36,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final FieldRepository fieldRepository;
     private final RoleRepository roleRepository;
+
+    private final S3Service s3Service;
 
     @Transactional
     public List<Portfolio> changePinPortfoliosByIds(Long userId, List<Long> portfolioIds) {
@@ -66,13 +73,31 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public GetUserPortfolioResponseDto getMyAllPortfolio(int page, int size, User user) {
+    @Transactional(readOnly = true)
+    public GetUserPortfolioResponseDto getSliceMyAllPortfolio(int page, int size, User user) {
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size);
-        Slice<SimplePortfolioDto> userPortfolioDtos = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
+        Slice<SimplePortfolioDto> userPortfolioDtos = portfolioRepository.findSlicePortfoliosByUserOrderByCreatedAtDesc(
                 pageable, user);
+        userPortfolioDtos.getContent().forEach(userPortfolio -> {
+            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO, userPortfolio.getMainImageUrl());
+            userPortfolio.setMainImageUrl(imageUrl);
+        });
         SliceInfo pageInfo = new SliceInfo(page, size, userPortfolioDtos.hasNext());
         return new GetUserPortfolioResponseDto(userPortfolioDtos.getContent(), pageInfo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaginationPortfolioDto<SimplePortfolioDto> getPageMyAllPortfolio(int page, int size, User user) {
+        Page<SimplePortfolioDto> myPortfolios = portfolioRepository.findPaginationPortfoliosByUserOrderByCreatedAtDesc(
+                PageRequest.of(page - 1, size), user);
+        myPortfolios.getContent().forEach(myPortfolio -> {
+            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO, myPortfolio.getMainImageUrl());
+            myPortfolio.setMainImageUrl(imageUrl);
+        });
+        PageInfo pageInfo = new PageInfo(page, size, myPortfolios.getTotalElements(), myPortfolios.getTotalPages());
+        return new PaginationPortfolioDto<>(myPortfolios.getContent(), pageInfo);
     }
 
     @Override

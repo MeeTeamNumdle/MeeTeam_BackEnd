@@ -78,7 +78,7 @@ public class PortfolioRepositoryTest {
         User user = userRepository.findById(1L).get();
         int page = 1;
         //when
-        Slice<SimplePortfolioDto> userPortfolios = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
+        Slice<SimplePortfolioDto> userPortfolios = portfolioRepository.findSlicePortfoliosByUserOrderByCreatedAtDesc(
                 PageRequest.of(page - 1, 12), user);
         //then
         assertThat(userPortfolios.hasNext()).isEqualTo(false);
