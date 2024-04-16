@@ -14,11 +14,6 @@ import synk.meeteam.domain.common.university.entity.University;
 public class ProfessorService {
     private final ProfessorRepository professorRepository;
 
-    @Transactional
-    public Professor createProfessor(Professor professor) {
-        return professorRepository.save(professor);
-    }
-
     @Transactional(readOnly = true)
     public List<SearchCourseDto> searchByKeyword(String keyword, long limit) {
         return professorRepository.findAllByKeywordAndTopLimit(keyword, limit);
@@ -29,7 +24,7 @@ public class ProfessorService {
         Professor professor = professorRepository.findByNameAndUniversity(professorName, university).orElse(null);
         if (professor == null) {
             professor = createProfessor(professorName, university);
-            professorRepository.save(professor);
+            return professorRepository.save(professor);
         }
 
         return professor;

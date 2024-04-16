@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.PaginationSearchPostResponseDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SearchRecruitmentPostDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SimpleRecruitmentPostDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.global.dto.PageInfo;
@@ -51,11 +51,11 @@ public class RecruitmentPostFixture {
     }
 
     public static PaginationSearchPostResponseDto createPageSearchPostResponseDto() {
-        List<SearchRecruitmentPostDto> searchRecruitmentPostDtos = List.of(
-                new SearchRecruitmentPostDto(1L, "제목", "프로젝트", "작성자", "이미지", "2022-03-03", "교외", true),
-                new SearchRecruitmentPostDto(2L, "제목2", "스터디", "작성자", "이미지", "2022-03-03", "교내", false)
+        List<SimpleRecruitmentPostDto> simpleRecruitmentPostDtos = List.of(
+                new SimpleRecruitmentPostDto(1L, "제목", "프로젝트", "작성자", "이미지", "2022-03-03", "교외", true),
+                new SimpleRecruitmentPostDto(2L, "제목2", "스터디", "작성자", "이미지", "2022-03-03", "교내", false)
         );
-        return new PaginationSearchPostResponseDto(searchRecruitmentPostDtos, new PageInfo(1, 24, 3L, 1));
+        return new PaginationSearchPostResponseDto(simpleRecruitmentPostDtos, new PageInfo(1, 24, 3L, 1));
     }
 
     public static Page<RecruitmentPostVo> createPagePostVo() {
