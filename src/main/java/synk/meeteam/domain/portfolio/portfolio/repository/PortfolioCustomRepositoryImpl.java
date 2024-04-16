@@ -6,13 +6,16 @@ import static synk.meeteam.domain.portfolio.portfolio.entity.QPortfolio.portfoli
 
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import synk.meeteam.domain.portfolio.portfolio.dto.QSimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
@@ -39,8 +42,20 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
     }
 
     @Override
-    public Slice<SimplePortfolioDto> findUserPortfoliosByUserOrderByCreatedAtDesc(Pageable pageable, User user) {
-        List<SimplePortfolioDto> contents = queryFactory
+    public Slice<SimplePortfolioDto> findSlicePortfoliosByUserOrderByCreatedAtDesc(Pageable pageable, User user) {
+        List<SimplePortfolioDto> contents = getSimplePortfolios(user, pageable, pageable.getPageSize() + 1);
+        return new SliceImpl<>(contents, pageable, hasNextPage(contents, pageable.getPageSize()));
+    }
+
+    @Override
+    public Page<SimplePortfolioDto> findPaginationPortfoliosByUserOrderByCreatedAtDesc(Pageable pageable, User user) {
+        List<SimplePortfolioDto> contents = getSimplePortfolios(user, pageable, pageable.getPageSize());
+        JPAQuery<Long> countQuery = getCount(user);
+        return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
+    }
+
+    private List<SimplePortfolioDto> getSimplePortfolios(User user, Pageable pageable, int limit) {
+        return queryFactory
                 .select(new QSimplePortfolioDto(
                         portfolio.id,
                         portfolio.title,
@@ -54,12 +69,12 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
                 .leftJoin(portfolio.role, role)
                 .leftJoin(portfolio.field, field)
                 .where(portfolio.createdBy.eq(user.getId()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
                 .orderBy(portfolio.createdAt.desc(), portfolio.id.desc())
+                .offset(pageable.getOffset())
+                .limit(limit)
                 .fetch();
-        return new SliceImpl<>(contents, pageable, hasNextPage(contents, pageable.getPageSize()));
     }
+
 
     private boolean hasNextPage(List<SimplePortfolioDto> contents, int pageSize) {
         if (contents.size() > pageSize) {
@@ -67,6 +82,12 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
             return true;
         }
         return false;
+    }
+
+    private JPAQuery<Long> getCount(User user) {
+        return queryFactory.select(portfolio.countDistinct())
+                .from(portfolio)
+                .where(portfolio.createdBy.eq(user.getId()));
     }
 
     NumberExpression<Integer> orderPortfolios(List<Long> ids) {
