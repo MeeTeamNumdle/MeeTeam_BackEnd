@@ -4,7 +4,7 @@ public class MailText {
 
     // 공통 설정
     public static final String SENDER_ADDRESS = "meeteam@naver.com";
-    public static final String SENDER = "Meeteam";
+    public static final String SENDER = "MeeTeam";
     public static final String CHAR_SET = "utf-8";
     public static final String SUB_TYPE = "html";
     public static final String LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/meeteam-operation.appspot.com/o/meeteam-logo.svg?alt=media&token=37065a86-e757-410b-83c6-cbde150a5181";

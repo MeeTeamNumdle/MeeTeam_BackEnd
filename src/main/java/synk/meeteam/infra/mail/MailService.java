@@ -41,7 +41,7 @@ public class MailService {
     private final TemplateEngine templateEngine;
 
     public String generateApproveMailForm(String userName, String postId, String postName, String roleName,
-                                          String writerName) {
+                                          String writerName, String link) {
 
         String logoUrl = LOGO_URL;
 
@@ -53,6 +53,7 @@ public class MailService {
         context.setVariable("roleName", roleName);
         context.setVariable("writerName", writerName);
         context.setVariable("logoUrl", logoUrl);
+        context.setVariable("link", link);
 
         // Thymeleaf 템플릿 엔진을 사용하여 변수 값을 주입하여 HTML 렌더링
         return templateEngine.process(MAIL_APPROVE_TEMPLATE, context);
@@ -68,7 +69,6 @@ public class MailService {
         context.setVariable("userName", userName);
         context.setVariable("verifyUrl", verifyUrl);
         context.setVariable("logoUrl", logoUrl);
-
 
         // Thymeleaf 템플릿 엔진을 사용하여 변수 값을 주입하여 HTML 렌더링
         return templateEngine.process(MAIL_VERIFY_TEMPLATE, context);
@@ -118,7 +118,8 @@ public class MailService {
 
                 String body = generateApproveMailForm(applicant.getName(), postId.toString(),
                         recruitmentApplicant.getRecruitmentPost().getTitle(),
-                        recruitmentApplicant.getRole().getName(), writerName);
+                        recruitmentApplicant.getRole().getName(), writerName,
+                        recruitmentApplicant.getRecruitmentPost().getKakaoLink());
 
                 message.setText(body, CHAR_SET, SUB_TYPE);// 내용, charset 타입, subtype
                 // 보내는 사람의 이메일 주소, 보내는 사람 이름
