@@ -3,8 +3,7 @@ package synk.meeteam.infra.mail;
 import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_MAIL_SERVICE;
 import static synk.meeteam.infra.mail.MailText.CHAR_SET;
 import static synk.meeteam.infra.mail.MailText.FRONT_VERIFY_DOMAIN;
-import static synk.meeteam.infra.mail.MailText.LOGO_DIR;
-import static synk.meeteam.infra.mail.MailText.LOGO_FILE;
+import static synk.meeteam.infra.mail.MailText.LOGO_URL;
 import static synk.meeteam.infra.mail.MailText.MAIL_APPROVE_TEMPLATE;
 import static synk.meeteam.infra.mail.MailText.MAIL_TITLE_APPROVE;
 import static synk.meeteam.infra.mail.MailText.MAIL_TITLE_SIGNUP;
@@ -30,7 +29,6 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentA
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.UserVO;
 import synk.meeteam.infra.redis.repository.RedisUserRepository;
-import synk.meeteam.infra.s3.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
@@ -39,12 +37,13 @@ public class MailService {
 
     private final JavaMailSender mailSender;
     private final RedisUserRepository redisUserRepository;
-    private final S3Service s3Service;
 
     private final TemplateEngine templateEngine;
 
     public String generateApproveMailForm(String userName, String postId, String postName, String roleName,
                                           String writerName) {
+
+        String logoUrl = LOGO_URL;
 
         // Thymeleaf context 생성
         Context context = new Context();
@@ -53,6 +52,7 @@ public class MailService {
         context.setVariable("postId", postId);
         context.setVariable("roleName", roleName);
         context.setVariable("writerName", writerName);
+        context.setVariable("logoUrl", logoUrl);
 
         // Thymeleaf 템플릿 엔진을 사용하여 변수 값을 주입하여 HTML 렌더링
         return templateEngine.process(MAIL_APPROVE_TEMPLATE, context);
@@ -61,7 +61,7 @@ public class MailService {
     public String generateEmailVerifyMailForm(String userName, String emailCode) {
 
         String verifyUrl = FRONT_VERIFY_DOMAIN + emailCode.toString();
-        String logoUrl = s3Service.createPreSignedGetUrl(LOGO_DIR, LOGO_FILE);
+        String logoUrl = LOGO_URL;
 
         // Thymeleaf context 생성
         Context context = new Context();
