@@ -25,7 +25,15 @@ if [ -z "$EXIST_BLUE" ]; then
 	sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml up -d --build
 
   # 30초 동안 대기
-  sleep 30
+  while [ 1 = 1 ]; do
+      echo ">>> spring blue health check ..."
+      sleep 3
+      REQUEST_SPRING=$(curl https://127.0.0.1:8081/actuator/health)
+      if [ -n "$REQUEST_SPRING" ]; then
+        echo ">>> spring blue health check success !"
+        break;
+      fi
+  done;
 
   # /home/ubuntu/deploy.log: 로그 파일에 "green 중단 시작"이라는 내용을 추가
   echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ubuntu/deploy.log
@@ -43,7 +51,15 @@ else
 	echo "green 배포 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ubuntu/deploy.log
 	sudo docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml up -d --build
 
-  sleep 30
+    while [ 1 = 1 ]; do
+        echo ">>> spring green health check ..."
+        sleep 3
+        REQUEST_SPRING=$(curl https://127.0.0.1:8082/actuator/health)
+        if [ -n "$REQUEST_SPRING" ]; then
+          echo ">>> spring green health check success !"
+          break;
+        fi
+    done;
 
   echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ubuntu/deploy.log
   sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml down

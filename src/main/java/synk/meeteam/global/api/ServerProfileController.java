@@ -27,17 +27,8 @@ public class ServerProfileController {
 
     private static final String ZIP_NAME = "zip";
 
-    private final Environment env;
     private final S3Service s3Service;
     private final PortfolioService portfolioService;
-
-    @Operation(summary = "프론트에서 필요없는 API 입니다.")
-    @GetMapping("/profile")
-    public ResponseEntity<String> getProfile() {
-        return ResponseEntity.ok(env.getActiveProfiles()[0]);
-    }
-
-    // THUMBNAIL_PORTFOLIO
 
     @GetMapping("/profile/pre-signed-url")
     public ResponseEntity<PreSignedUrlVO> getPreSignedUrl(@AuthUser User user,
