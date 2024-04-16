@@ -10,7 +10,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 
 public interface RecruitmentPostRepository extends JpaRepository<RecruitmentPost, Long>,
-        RecruitmentPostSearchRepository {
+        RecruitmentPostSearchRepository, RecruitmentManagementRepository {
 
     @Query("SELECT r FROM RecruitmentPost r WHERE r.id = :id AND r.deleteStatus = synk.meeteam.global.entity.DeleteStatus.ALIVE")
     Optional<RecruitmentPost> findByIdAndDeleteStatus(@Param("id") Long postId);

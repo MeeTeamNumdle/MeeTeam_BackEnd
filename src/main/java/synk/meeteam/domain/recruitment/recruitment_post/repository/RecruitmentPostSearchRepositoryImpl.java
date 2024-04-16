@@ -1,20 +1,21 @@
 package synk.meeteam.domain.recruitment.recruitment_post.repository;
 
-import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static synk.meeteam.domain.common.course.entity.QCourse.course;
 import static synk.meeteam.domain.common.course.entity.QProfessor.professor;
 import static synk.meeteam.domain.common.field.entity.QField.field;
 import static synk.meeteam.domain.common.role.entity.QRole.role;
 import static synk.meeteam.domain.common.skill.entity.QSkill.skill;
 import static synk.meeteam.domain.common.tag.entity.QTag.tag;
-import static synk.meeteam.domain.recruitment.bookmark.entity.QBookmark.bookmark;
 import static synk.meeteam.domain.recruitment.recruitment_post.entity.QRecruitmentPost.recruitmentPost;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.categoryEq;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.isBookmark;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.scopeEq;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.titleStartWith;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.writerUniversityEq;
 import static synk.meeteam.domain.recruitment.recruitment_role.entity.QRecruitmentRole.recruitmentRole;
 import static synk.meeteam.domain.recruitment.recruitment_role_skill.entity.QRecruitmentRoleSkill.recruitmentRoleSkill;
 import static synk.meeteam.domain.recruitment.recruitment_tag.entity.QRecruitmentTag.recruitmentTag;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -29,7 +30,6 @@ import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.QRecruitme
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.QUser;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.Scope;
 
 @Repository
@@ -57,12 +57,14 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                                 recruitmentPost.id,
                                 recruitmentPost.title,
                                 recruitmentPost.category,
+                                recruitmentPost.scope,
+                                writer.id,
                                 writer.nickname,
                                 writer.profileImgFileName,
                                 recruitmentPost.deadline,
-                                recruitmentPost.scope,
                                 isBookmark(userDomain),
-                                recruitmentPost.createdAt
+                                recruitmentPost.createdAt,
+                                recruitmentPost.isClosed
                         )
                 )
                 .distinct()
@@ -82,7 +84,7 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
             query = jpaUtils.joinWithCourseAndProfessor(query, condition, userDomain);
         }
 
-        return query.orderBy(recruitmentPost.createdAt.desc())
+        return query.orderBy(recruitmentPost.createdAt.desc(), recruitmentPost.id.desc())
                 .offset(pageable.getOffset()) //페이지 번호
                 .limit(pageable.getPageSize()) //페이지 사이즈
                 .fetch();
@@ -110,45 +112,6 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
         return countQuery;
     }
 
-
-    //BooleanExpression
-    private BooleanExpression isBookmark(User userDomain) {
-        //로그인 안된 경우
-        if (userDomain == null) {
-            return isFalse();
-        }
-
-        return selectOne()
-                .from(bookmark)
-                .where(
-                        bookmark.user.id.eq(userDomain.getId()),
-                        bookmark.recruitmentPost.id.eq(recruitmentPost.id))
-                .exists();
-    }
-
-    private BooleanExpression writerUniversityEq(QUser writer, User userDomain, Scope scope) {
-        return scope != Scope.ON_CAMPUS ? null : writer.university.eq(userDomain.getUniversity());
-    }
-
-    private BooleanExpression categoryEq(Category category) {
-        return category == null ? null : recruitmentPost.category.eq(category);
-    }
-
-    private BooleanExpression scopeEq(Scope scope) {
-        if (scope == null) {
-            return null;
-        } else {
-            return recruitmentPost.scope.eq(scope);
-        }
-    }
-
-    private BooleanExpression titleStartWith(String keyword) {
-        return (keyword == null || keyword.isEmpty()) ? null : recruitmentPost.title.startsWith(keyword);
-    }
-
-    private BooleanExpression isFalse() {
-        return Expressions.asBoolean(false);
-    }
 
     static class jpaUtils {
         public static <T> JPAQuery<T> joinWithFieldAndTagAndRoleAndSkill(JPAQuery<T> query, SearchCondition condition) {

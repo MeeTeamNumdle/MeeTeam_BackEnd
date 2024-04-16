@@ -9,6 +9,8 @@ public record SimpleRecruitmentPostDto(
         String title,
         @Schema(description = "유형", example = "프로젝트")
         String category,
+        @Schema(description = "작성자 id", example = "sdfkljwncxmv")
+        String writerId,
         @Schema(description = "작성자 닉네임", example = "song123")
         String writerNickname,
         @Schema(description = "작성자 사진", example = "url 형태")
@@ -18,6 +20,8 @@ public record SimpleRecruitmentPostDto(
         @Schema(description = "범위", example = "교내")
         String scope,
         @Schema(description = "북마크 여부", example = "true")
-        Boolean isBookmarked
+        Boolean isBookmarked,
+        @Schema(description = "마감 여부", example = "true")
+        Boolean isClosed
 ) {
 }
