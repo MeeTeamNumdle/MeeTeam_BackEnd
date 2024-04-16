@@ -21,7 +21,7 @@ import synk.meeteam.security.CustomAuthUser;
 public class ExecutionLoggingAop {
 
     // 모든 패키지 내의 controller package에 존재하는 클래스
-    @Around("execution(* *..api.*.*(..))")
+    @Around("execution(* synk.meeteam.domain..api..*(..))")
     public void logExecutionTrace(ProceedingJoinPoint pjp) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         RequestMethod httpMethod = RequestMethod.valueOf(request.getMethod());
