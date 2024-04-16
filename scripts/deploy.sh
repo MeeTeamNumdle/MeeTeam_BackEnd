@@ -28,7 +28,7 @@ if [ -z "$EXIST_BLUE" ]; then
   while [ 1 = 1 ]; do
       echo ">>> spring blue health check ..."
       sleep 3
-      REQUEST_SPRING=$(curl https://127.0.0.1:8081/actuator/health)
+      REQUEST_SPRING=$(curl 127.0.0.1:8081/actuator/health)
       if [ -n "$REQUEST_SPRING" ]; then
         echo ">>> spring blue health check success !"
         break;
@@ -54,7 +54,7 @@ else
     while [ 1 = 1 ]; do
         echo ">>> spring green health check ..."
         sleep 3
-        REQUEST_SPRING=$(curl https://127.0.0.1:8082/actuator/health)
+        REQUEST_SPRING=$(curl 127.0.0.1:8082/actuator/health)
         if [ -n "$REQUEST_SPRING" ]; then
           echo ">>> spring green health check success !"
           break;
