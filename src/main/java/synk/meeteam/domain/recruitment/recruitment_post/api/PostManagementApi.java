@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SimpleRecruitmentPostDto;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.global.dto.PageNationDto;
+import synk.meeteam.global.dto.PaginationDto;
 import synk.meeteam.security.AuthUser;
 
 @Tag(name = "management", description = "내 구인글 관리 관련 API")
@@ -20,7 +20,7 @@ public interface PostManagementApi {
     )
     @Operation(summary = "북마크한 구인글 조회")
     @SecurityRequirement(name = "Authorization")
-    PageNationDto<SimpleRecruitmentPostDto> getBookmarkPost(@AuthUser User user,
+    PaginationDto<SimpleRecruitmentPostDto> getBookmarkPost(@AuthUser User user,
                                                             @RequestParam(value = "is-closed", required = false) Boolean isClosed);
 
     @ApiResponses(
@@ -30,7 +30,7 @@ public interface PostManagementApi {
     )
     @Operation(summary = "내가 신청한 구인글 조회")
     @SecurityRequirement(name = "Authorization")
-    PageNationDto<SimpleRecruitmentPostDto> getAppliedPost(@AuthUser User user,
+    PaginationDto<SimpleRecruitmentPostDto> getAppliedPost(@AuthUser User user,
                                                            @RequestParam(value = "is-closed", required = false) Boolean isClosed);
 
     @ApiResponses(
@@ -40,6 +40,6 @@ public interface PostManagementApi {
     )
     @Operation(summary = "내가 작성한 구인글 조회")
     @SecurityRequirement(name = "Authorization")
-    PageNationDto<SimpleRecruitmentPostDto> getMyPost(@AuthUser User user,
+    PaginationDto<SimpleRecruitmentPostDto> getMyPost(@AuthUser User user,
                                                       @RequestParam(value = "is-closed", required = false) Boolean isClosed);
 }
