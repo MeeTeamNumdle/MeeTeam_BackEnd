@@ -18,6 +18,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.QRecruitme
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.QUser;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.entity.DeleteStatus;
 
 @Repository
 @RequiredArgsConstructor
@@ -69,7 +70,8 @@ public class RecruitmentManagementRepositoryImpl implements RecruitmentManagemen
                 .leftJoin(bookmark).on(recruitmentPost.id.eq(bookmark.recruitmentPost.id))
                 .where(
                         isClosedEq(isClosed),
-                        bookmark.user.id.eq(userDomain.getId())
+                        bookmark.user.id.eq(userDomain.getId()),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
 
         return query.orderBy(recruitmentPost.createdAt.desc(), recruitmentPost.id.desc())
@@ -102,7 +104,8 @@ public class RecruitmentManagementRepositoryImpl implements RecruitmentManagemen
                 .leftJoin(recruitmentApplicant).on(recruitmentPost.id.eq(recruitmentApplicant.recruitmentPost.id))
                 .where(
                         isClosedEq(isClosed),
-                        recruitmentApplicant.applicant.id.eq(userDomain.getId())
+                        recruitmentApplicant.applicant.id.eq(userDomain.getId()),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
 
         return query.orderBy(recruitmentPost.createdAt.desc(), recruitmentPost.id.desc())
@@ -134,7 +137,8 @@ public class RecruitmentManagementRepositoryImpl implements RecruitmentManagemen
                 .leftJoin(writer).on(recruitmentPost.createdBy.eq(writer.id))
                 .where(
                         isClosedEq(isClosed),
-                        writer.id.eq(userDomain.getId())
+                        writer.id.eq(userDomain.getId()),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
 
         return query.orderBy(recruitmentPost.createdAt.desc(), recruitmentPost.id.desc())
@@ -152,7 +156,8 @@ public class RecruitmentManagementRepositoryImpl implements RecruitmentManagemen
                 .leftJoin(bookmark).on(recruitmentPost.id.eq(bookmark.recruitmentPost.id))
                 .where(
                         isClosedEq(isClosed),
-                        bookmark.user.id.eq(userDomain.getId())
+                        bookmark.user.id.eq(userDomain.getId()),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
     }
 
@@ -165,7 +170,8 @@ public class RecruitmentManagementRepositoryImpl implements RecruitmentManagemen
                 .leftJoin(recruitmentApplicant).on(recruitmentPost.id.eq(recruitmentApplicant.recruitmentPost.id))
                 .where(
                         isClosedEq(isClosed),
-                        recruitmentApplicant.applicant.id.eq(userDomain.getId())
+                        recruitmentApplicant.applicant.id.eq(userDomain.getId()),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
     }
 
@@ -177,7 +183,8 @@ public class RecruitmentManagementRepositoryImpl implements RecruitmentManagemen
                 .leftJoin(writer).on(recruitmentPost.createdBy.eq(writer.id))
                 .where(
                         isClosedEq(isClosed),
-                        writer.id.eq(userDomain.getId())
+                        writer.id.eq(userDomain.getId()),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
     }
 
