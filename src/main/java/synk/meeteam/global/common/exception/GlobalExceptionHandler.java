@@ -16,6 +16,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -88,6 +89,15 @@ public class GlobalExceptionHandler {
             HttpRequestMethodNotSupportedException e) {
         ExceptionType exceptionType = SS_100;
         log.warn(String.format(LOG_FORMAT, e.getMessage()), e);
+        return ResponseEntity.status(exceptionType.httpStatus())
+                .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleNoResourceFoundException(
+            NoResourceFoundException e) {
+        ExceptionType exceptionType = SS_100;
+        //log.warn(String.format(LOG_FORMAT, e.getMessage()), e);
         return ResponseEntity.status(exceptionType.httpStatus())
                 .body(ExceptionResponse.of(exceptionType.name(), exceptionType.message()));
     }
