@@ -15,12 +15,12 @@ public class AuthUserResponseDto {
         @Schema(description = "역할, User: 회원가입된 유저, GUEST: 회원가입되지 않은 유저", example = "USER or GUEST")
         private Authority authority;
         @Schema(description = "유저 대학교", example = "광운대학교")
-        private String universityName;
+        private String university;
 
-        public InnerParent(AuthType authType, Authority authority, String universityName) {
+        public InnerParent(AuthType authType, Authority authority, String university) {
             this.authType = authType;
             this.authority = authority;
-            this.universityName = universityName;
+            this.university = university;
         }
     }
 
