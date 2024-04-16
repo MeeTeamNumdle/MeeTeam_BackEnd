@@ -38,6 +38,14 @@ public interface RecruitmentApplicantApi {
 
     @ApiResponses(
             value = {
+                    @ApiResponse(responseCode = "200", description = "방문 처리 성"),
+            }
+    )
+    @Operation(summary = "최초 접근 후 호출 API")
+    ResponseEntity<Void> processFirstAccess(@PathVariable("id") Long postId, @AuthUser User user);
+
+    @ApiResponses(
+            value = {
                     @ApiResponse(responseCode = "200", description = "신청자 승인 성공"),
             }
     )

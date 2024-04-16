@@ -74,4 +74,10 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.findByIdFetchRole(userId);
     }
+
+    @Transactional
+    public void processFirstAccess(User user) {
+        user.processFirstAccess();
+        userRepository.save(user);
+    }
 }

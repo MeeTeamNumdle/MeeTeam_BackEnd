@@ -156,11 +156,11 @@ public class User extends BaseTimeEntity {
     @ColumnDefault("0")
     private long scoreProfessionalism = 0;
 
-    @ColumnDefault("0")
-    private boolean isFirstProfileAccess = false;
+    @ColumnDefault("1")
+    private boolean isFirstProfileAccess = true;
 
-    @ColumnDefault("0")
-    private boolean isFirstApplicantAccess = false;
+    @ColumnDefault("1")
+    private boolean isFirstApplicantAccess = true;
 
     public User(String platformId) {
         this.platformId = platformId;
@@ -252,5 +252,9 @@ public class User extends BaseTimeEntity {
 
     public boolean isNotEqualNickname(String nickname) {
         return !this.nickname.equals(nickname);
+    }
+
+    public void processFirstAccess(){
+        this.isFirstApplicantAccess = false;
     }
 }
