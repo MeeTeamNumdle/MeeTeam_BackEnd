@@ -18,11 +18,11 @@ public enum SkillExceptionType implements ExceptionType {
 
     @Override
     public HttpStatus httpStatus() {
-        return null;
+        return status;
     }
 
     @Override
     public String message() {
-        return null;
+        return message;
     }
 }
