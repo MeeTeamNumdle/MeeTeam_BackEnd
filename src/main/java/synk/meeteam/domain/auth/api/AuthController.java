@@ -60,12 +60,12 @@ public class AuthController implements AuthApi {
 
         if (vo.authority() == Authority.GUEST) {
             AuthUserResponseDto.create responseDTO = authUserResponseMapper.ofCreate(vo.authType(), vo.authority(),
-                    vo.platformId());
+                    vo.universityName(), vo.platformId());
             return ResponseEntity.ok(responseDTO);
         }
 
         AuthUserResponseDto.login responseDTO = jwtService.issueToken(vo);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @Override

@@ -14,10 +14,13 @@ public class AuthUserResponseDto {
         private AuthType authType;
         @Schema(description = "역할, User: 회원가입된 유저, GUEST: 회원가입되지 않은 유저", example = "USER or GUEST")
         private Authority authority;
+        @Schema(description = "유저 대학교", example = "광운대학교")
+        private String universityName;
 
-        public InnerParent(AuthType authType, Authority authority) {
+        public InnerParent(AuthType authType, Authority authority, String universityName) {
             this.authType = authType;
             this.authority = authority;
+            this.universityName = universityName;
         }
     }
 
@@ -36,8 +39,8 @@ public class AuthUserResponseDto {
         private String refreshToken;
 
         public login(AuthType authType, Authority authority, String userId, String nickname, String imageUrl,
-                     String accessToken, String refreshToken) {
-            super(authType, authority);
+                     String universityName, String accessToken, String refreshToken) {
+            super(authType, authority, universityName);
             this.userId = userId;
             this.nickname = nickname;
             this.imageUrl = imageUrl;
@@ -52,8 +55,8 @@ public class AuthUserResponseDto {
         @Schema(description = "플랫폼 Id", example = "Di7lChMGxjZVTai6d76Ho1YLDU_xL8tl1CfdPMV5SQM")
         private String platformId;
 
-        public create(AuthType authType, Authority authority, String platformId) {
-            super(authType, authority);
+        public create(AuthType authType, Authority authority, String universityName, String platformId) {
+            super(authType, authority, universityName);
             this.platformId = platformId;
         }
     }
