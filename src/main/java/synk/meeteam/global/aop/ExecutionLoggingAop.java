@@ -22,7 +22,7 @@ public class ExecutionLoggingAop {
 
     // 모든 패키지 내의 controller package에 존재하는 클래스
     @Around("execution(* synk.meeteam.domain..api..*(..))")
-    public void logExecutionTrace(ProceedingJoinPoint pjp) throws Throwable {
+    public Object logExecutionTrace(ProceedingJoinPoint pjp) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         RequestMethod httpMethod = RequestMethod.valueOf(request.getMethod());
 
@@ -51,9 +51,11 @@ public class ExecutionLoggingAop {
         StopWatch sw = new StopWatch();
         sw.start();
 
+        Object result = null;
+
         // 해당 클래스의 메소드 실행
         try{
-            Object result = pjp.proceed();
+            result = pjp.proceed();
         }
         catch (Exception e){
             log.warn("[ERROR] " + task + " 메서드 예외 발생 : " + e.getMessage());
@@ -65,6 +67,8 @@ public class ExecutionLoggingAop {
         long executionTime = sw.getTotalTimeMillis();
 
         log.info("[ExecutionTime] " + task + " --> " + executionTime + " (ms)");
+
+        return result;
     }
 
 }
