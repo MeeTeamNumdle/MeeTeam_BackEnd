@@ -35,6 +35,12 @@ public class RecruitmentPostService {
     }
 
     @Transactional
+    public void deleteRecruitmentPost(final Long postId, final Long userId) {
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
+        recruitmentPost.softDelete(userId);
+    }
+
+    @Transactional
     public void incrementApplicantCount(RecruitmentPost recruitmentPost) {
         recruitmentPost.incrementApplicantCount();
     }

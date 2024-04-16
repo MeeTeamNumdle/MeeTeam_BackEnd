@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import synk.meeteam.domain.common.department.entity.QDepartment;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.QGetApplicantDto;
-import synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 
 @Repository
