@@ -109,9 +109,9 @@ public class PortfolioServiceTest {
     void 내포트폴리오목록조회_목록조회성공() {
         //given
         doReturn(PortfolioFixture.createSlicePortfolioDtos()).when(portfolioRepository)
-                .findUserPortfoliosByUserOrderByCreatedAtDesc(eq(PageRequest.of(0, 12)), any());
+                .findSlicePortfoliosByUserOrderByCreatedAtDesc(eq(PageRequest.of(0, 12)), any());
         //when
-        GetUserPortfolioResponseDto userAllPortfolios = portfolioService.getMyAllPortfolio(1, 12,
+        GetUserPortfolioResponseDto userAllPortfolios = portfolioService.getSliceMyAllPortfolio(1, 12,
                 User.builder().build());
 
         //then
