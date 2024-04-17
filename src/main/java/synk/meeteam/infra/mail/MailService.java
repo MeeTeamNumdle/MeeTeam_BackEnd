@@ -20,6 +20,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -74,6 +75,7 @@ public class MailService {
         return templateEngine.process(MAIL_VERIFY_TEMPLATE, context);
     }
 
+    @Async
     @Transactional
     public void sendVerifyMail(String platformId, String receiverMail) {
         String newEmailCode = UUID.randomUUID().toString();
@@ -100,6 +102,8 @@ public class MailService {
         }
     }
 
+
+    @Async
     @Transactional
     public void sendApproveMails(Long postId, List<RecruitmentApplicant> applicants, String writerName) {
         if (applicants == null) {
