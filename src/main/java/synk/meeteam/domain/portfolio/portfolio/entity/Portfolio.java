@@ -36,7 +36,6 @@ import synk.meeteam.global.util.StringListConverter;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.MODULE)
-@Builder
 public class Portfolio extends BaseEntity {
 
     public static int MAX_PIN_SIZE = 8;
@@ -108,9 +107,12 @@ public class Portfolio extends BaseEntity {
     private DeleteStatus deleteStatus = DeleteStatus.ALIVE;
 
     @Builder
-    public Portfolio(String title, String description, String content, LocalDate proceedStart, LocalDate proceedEnd,
+    public Portfolio(Long id, String title, String description, String content, LocalDate proceedStart,
+                     LocalDate proceedEnd,
                      ProceedType proceedType, Field field, Role role, String mainImageFileName, String zipFileName,
+                     Boolean isPin, int pinOrder,
                      List<String> fileOrder) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.content = content;
@@ -122,15 +124,6 @@ public class Portfolio extends BaseEntity {
         this.mainImageFileName = mainImageFileName;
         this.zipFileName = zipFileName;
         this.fileOrder = fileOrder;
-        this.isPin = false;
-        this.pinOrder = 0;
-    }
-
-    @Builder
-    public Portfolio(Long id, String title, String description, Boolean isPin, int pinOrder) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
         this.isPin = isPin;
         this.pinOrder = pinOrder;
     }
