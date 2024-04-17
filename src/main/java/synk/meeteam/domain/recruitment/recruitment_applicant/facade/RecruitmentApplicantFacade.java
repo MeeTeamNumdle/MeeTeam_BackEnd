@@ -39,7 +39,10 @@ public class RecruitmentApplicantFacade {
 
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
         User user = userService.findById(recruitmentPost.getCreatedBy());
-        mailService.sendApproveMails(postId, applicants, user.getName());
+
+        applicants.stream().forEach(
+                applicant -> mailService.sendApproveMails(postId, applicant, user.getName())
+        );
     }
 
     @Transactional
