@@ -16,38 +16,16 @@ import synk.meeteam.global.entity.ProceedType;
 public class PortfolioFixture {
     public static List<Portfolio> createPortfolioFixtures_1_2() {
         return List.of(
-                new Portfolio(1L, "타이틀1", "디스크립션1", true, 1),
-                new Portfolio(2L, "타이틀2", "디스크립션2", true, 2)
+                Portfolio.builder().id(1L).title("타이틀1").description("디스크립션1").isPin(true).pinOrder(1).build(),
+                Portfolio.builder().id(2L).title("타이틀2").description("디스크립션2").isPin(true).pinOrder(2).build()
         );
     }
 
     public static List<Portfolio> createPortfolioFixtures_2_1() {
         return List.of(
-                new Portfolio(2L, "타이틀2", "디스크립션2", true, 2),
-                new Portfolio(1L, "타이틀1", "디스크립션1", true, 1)
+                Portfolio.builder().id(2L).title("타이틀2").description("디스크립션2").isPin(true).pinOrder(2).build(),
+                Portfolio.builder().id(1L).title("타이틀1").description("디스크립션1").isPin(true).pinOrder(1).build()
         );
-    }
-
-    public static Portfolio createUserPortfolio(String title, boolean isPin, int pinOrder, Long createdBy,
-                                                LocalDate start, Role role,
-                                                Field field) {
-        Portfolio portfolio = Portfolio.builder()
-                .title(title)
-                .content("컨텐츠")
-                .description("디스크립션")
-                .proceedStart(start)
-                .proceedEnd(LocalDate.now())
-                .proceedType(ProceedType.ON_LINE)
-                .isPin(isPin)
-                .pinOrder(pinOrder)
-                .mainImageFileName("이미지.png")
-                .zipFileName("집.zip")
-                .fileOrder(List.of("집1", "집2"))
-                .role(role)
-                .field(field)
-                .build();
-        portfolio.setCreatedBy(createdBy);
-        return portfolio;
     }
 
     public static Portfolio createPortfolioFixture() {
