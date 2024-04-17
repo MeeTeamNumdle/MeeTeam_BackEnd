@@ -105,6 +105,7 @@ public class RecruitmentManagementRepositoryImpl implements RecruitmentManagemen
                 .where(
                         isClosedEq(isClosed),
                         recruitmentApplicant.applicant.id.eq(userDomain.getId()),
+                        recruitmentApplicant.deleteStatus.ne(DeleteStatus.DELETED),
                         recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
 
