@@ -63,6 +63,8 @@ jobs:
 
       - name: Discord 알림 봇
         uses: sarisia/actions-status-discord@v1
-        if: always()
+        if: ${{ failure() }}
         with:
+          title: ❗️ Backend CI failed ❗️
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: FFFF00
