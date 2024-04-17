@@ -15,7 +15,6 @@ import static synk.meeteam.infra.mail.MailText.SUB_TYPE;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMessage.RecipientType;
-import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -105,7 +104,7 @@ public class MailService {
 
     @Async
     @Transactional
-    public void sendApproveMails(Long postId, RecruitmentApplicant recruitmentApplicant, String writerName) {
+    public void sendApproveMail(Long postId, RecruitmentApplicant recruitmentApplicant, String writerName) {
 
         MimeMessage message = mailSender.createMimeMessage();
 
