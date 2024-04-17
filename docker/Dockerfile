@@ -1,3 +1,5 @@
+### 타임존 설정
+RUN apk add tzdata
 ### Docker 이미지를 생성할 때 기반이 되는 베이스 이미지를 설정한다.
 FROM openjdk:17
 ### Dockerfile 내에서 사용할 변수 JAR_FILE을 정의한다.
