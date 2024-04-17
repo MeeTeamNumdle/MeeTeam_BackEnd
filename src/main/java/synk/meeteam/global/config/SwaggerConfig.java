@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.tags.Tag;
 import java.util.Arrays;
 import java.util.List;
@@ -46,19 +47,15 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        io.swagger.v3.oas.models.servers.Server devServer = new io.swagger.v3.oas.models.servers.Server();
+        Server devServer = new Server();
         devServer.setDescription("dev server");
         devServer.setUrl(SERVER_DOMAIN);
-
-        io.swagger.v3.oas.models.servers.Server localServer = new io.swagger.v3.oas.models.servers.Server();
-        localServer.setDescription("local server");
-        localServer.setUrl("http://localhost:5173");
 
         OpenAPI info = new OpenAPI()
                 .components(new Components())
                 .info(apiInfo());
 
-        info.setServers(Arrays.asList(devServer, localServer));
+        info.setServers(Arrays.asList(devServer));
 
         return info;
     }
