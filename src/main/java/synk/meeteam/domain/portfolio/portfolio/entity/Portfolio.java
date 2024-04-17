@@ -27,6 +27,7 @@ import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.global.entity.BaseEntity;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.util.StringListConverter;
 
@@ -100,6 +101,12 @@ public class Portfolio extends BaseEntity {
     @ColumnDefault("0")
     private int pinOrder;
 
+    //삭제 여부
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ALIVE'")
+    private DeleteStatus deleteStatus = DeleteStatus.ALIVE;
+
     @Builder
     public Portfolio(String title, String description, String content, LocalDate proceedStart, LocalDate proceedEnd,
                      ProceedType proceedType, Field field, Role role, String mainImageFileName, String zipFileName,
@@ -158,5 +165,9 @@ public class Portfolio extends BaseEntity {
     public void unpin() {
         isPin = false;
         pinOrder = 0;
+    }
+
+    public void softDelete() {
+        this.deleteStatus = DeleteStatus.DELETED;
     }
 }
