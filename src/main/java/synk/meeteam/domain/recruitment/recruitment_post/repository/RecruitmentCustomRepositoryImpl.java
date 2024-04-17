@@ -5,6 +5,7 @@ import static synk.meeteam.domain.recruitment.recruitment_post.entity.QRecruitme
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +17,7 @@ public class RecruitmentCustomRepositoryImpl implements RecruitmentCustomReposit
     @Override
     public void updateIsCloseTrue() {
         queryFactory.update(recruitmentPost)
-                .where(Expressions.asDate(LocalDate.now()).after(recruitmentPost.deadline))
+                .where(Expressions.asDate(LocalDate.now(ZoneId.of("Asia/Seoul"))).after(recruitmentPost.deadline))
                 .set(recruitmentPost.isClosed, true)
                 .execute();
     }
