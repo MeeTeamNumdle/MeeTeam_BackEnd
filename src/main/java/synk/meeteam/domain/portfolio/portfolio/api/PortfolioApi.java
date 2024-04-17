@@ -51,6 +51,14 @@ public interface PortfolioApi {
 
     @ApiResponses(
             value = {
+                    @ApiResponse(responseCode = "200", description = "포트폴리오 삭제 성공"),
+            }
+    )
+    @Operation(summary = "포트폴리오 삭제 API")
+    ResponseEntity<Void> deletePortfolio(@AuthUser User user, @PathVariable Long portfolioId);
+
+    @ApiResponses(
+            value = {
                     @ApiResponse(responseCode = "200", description = "포트폴리오 목록 조회 성공"),
             }
     )
