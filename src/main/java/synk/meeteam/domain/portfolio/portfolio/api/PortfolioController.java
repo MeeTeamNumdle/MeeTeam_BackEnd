@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,13 @@ public class PortfolioController implements PortfolioApi {
     public ResponseEntity<Long> modifyPortfolio(@AuthUser User user, @PathVariable("id") Long portfolioId,
                                                 @RequestBody @Valid UpdatePortfolioRequestDto requestDto) {
         return ResponseEntity.ok(portfolioFacade.editPortfolio(portfolioId, user, requestDto));
+    }
+
+    @DeleteMapping("/{id}")
+    @Override
+    public ResponseEntity<Void> deletePortfolio(@AuthUser User user, @PathVariable("id") Long portfolioId) {
+        portfolioService.deletePortfolio(portfolioId, user);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
