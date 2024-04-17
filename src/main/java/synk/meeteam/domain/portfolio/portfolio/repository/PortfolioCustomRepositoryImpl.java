@@ -36,8 +36,9 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
 
         return queryFactory
                 .selectFrom(portfolio)
-                .where(portfolio.id.in(portfolioIds))
-                .orderBy(orderPortfolios(portfolioIds).asc())
+                .where(portfolio.id.in(portfolioIds),
+                        portfolio.createdBy.eq(userId))
+                .orderBy(orderByPin(portfolioIds).asc())
                 .fetch();
     }
 
@@ -90,8 +91,8 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
                 .where(portfolio.createdBy.eq(user.getId()));
     }
 
-    NumberExpression<Integer> orderPortfolios(List<Long> ids) {
-        // 포트폴리오 ID의 위치를 기준으로 순서를 정의합니다.
+    NumberExpression<Integer> orderByPin(List<Long> ids) {
+        // 포트폴리오 ID의 순서를 기준으로 순서를 정의합니다.
         CaseBuilder caseBuilder = new CaseBuilder();
 
         return caseBuilder
