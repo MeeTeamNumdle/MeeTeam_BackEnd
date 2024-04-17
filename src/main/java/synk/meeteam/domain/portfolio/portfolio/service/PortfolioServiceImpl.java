@@ -126,6 +126,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
+    @Transactional
     public Portfolio editPortfolio(Portfolio portfolio, User user, UpdatePortfolioCommand command) {
         Field field = fieldRepository.findByIdOrElseThrowException(command.fieldId());
         Role role = roleRepository.findByIdOrElseThrowException(command.roleId());
@@ -143,6 +144,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         return portfolio;
     }
 
+    @Transactional
     @Override
     public void deletePortfolio(Long portfolioId, User user) {
         Portfolio portfolio = portfolioRepository.findByIdOrElseThrow(portfolioId);
@@ -153,11 +155,13 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Portfolio getPortfolio(Long portfolioId) {
         return portfolioRepository.findByIdWithFieldAndRoleOrElseThrow(portfolioId);
     }
 
+    @Transactional(readOnly = true)
     public Portfolio getPortfolio(Long portfolioId, User user) {
         Portfolio portfolio = portfolioRepository.findByIdOrElseThrow(portfolioId);
 
