@@ -1,5 +1,6 @@
 package synk.meeteam.domain.recruitment.recruitment_post;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture.TITLE_EXCEED_40;
 
 import jakarta.validation.ConstraintViolationException;
@@ -29,7 +30,7 @@ public class RecruitmentPostRepositoryTest {
                 savedRecruitmentPost.getId()).orElse(null);
 
         // then
-        Assertions.assertThat(foundRecruitmentPost)
+        assertThat(foundRecruitmentPost)
                 .extracting("title", "content", "scope", "category", "field", "proceedType", "proceedingStart",
                         "proceedingEnd", "deadline")
                 .containsExactly(recruitmentPost.getTitle(), recruitmentPost.getContent(), recruitmentPost.getScope(),
@@ -60,4 +61,14 @@ public class RecruitmentPostRepositoryTest {
         }).isInstanceOf(ConstraintViolationException.class);
     }
 
+    @Test
+    void 마감일지난구인글마감_마감성공() {
+        //when
+        recruitmentPostRepository.updateIsCloseTrue();
+
+        //then
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(1L);
+
+        assertThat(recruitmentPost.isClosed()).isTrue();
+    }
 }
