@@ -26,4 +26,6 @@ public interface PortfolioService {
 
     Portfolio editPortfolio(Portfolio portfolio, User user, UpdatePortfolioCommand command);
 
+    void deletePortfolio(Long portfolioId, User user);
+
 }
