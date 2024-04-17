@@ -15,11 +15,11 @@ import static synk.meeteam.infra.mail.MailText.SUB_TYPE;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMessage.RecipientType;
-import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -74,6 +74,7 @@ public class MailService {
         return templateEngine.process(MAIL_VERIFY_TEMPLATE, context);
     }
 
+    @Async
     @Transactional
     public void sendVerifyMail(String platformId, String receiverMail) {
         String newEmailCode = UUID.randomUUID().toString();
@@ -100,35 +101,34 @@ public class MailService {
         }
     }
 
+
+    @Async
     @Transactional
-    public void sendApproveMails(Long postId, List<RecruitmentApplicant> applicants, String writerName) {
-        if (applicants == null) {
-            return;
-        }
+    public void sendApproveMail(Long postId, RecruitmentApplicant recruitmentApplicant, String writerName) {
+
         MimeMessage message = mailSender.createMimeMessage();
 
-        for (RecruitmentApplicant recruitmentApplicant : applicants) {
-            User applicant = recruitmentApplicant.getApplicant();
-            String receiverMail =
-                    applicant.isUniversityMainEmail() ? applicant.getUniversityEmail() : applicant.getSubEmail();
+        User applicant = recruitmentApplicant.getApplicant();
 
-            try {
-                message.addRecipients(RecipientType.TO, receiverMail);// 받는 대상
-                message.setSubject(MAIL_TITLE_APPROVE);// 제목
+        String receiverMail =
+                applicant.isUniversityMainEmail() ? applicant.getUniversityEmail() : applicant.getSubEmail();
 
-                String body = generateApproveMailForm(applicant.getName(), postId.toString(),
-                        recruitmentApplicant.getRecruitmentPost().getTitle(),
-                        recruitmentApplicant.getRole().getName(), writerName,
-                        recruitmentApplicant.getRecruitmentPost().getKakaoLink());
+        try {
+            message.addRecipients(RecipientType.TO, receiverMail);// 받는 대상
+            message.setSubject(MAIL_TITLE_APPROVE);// 제목
 
-                message.setText(body, CHAR_SET, SUB_TYPE);// 내용, charset 타입, subtype
-                // 보내는 사람의 이메일 주소, 보내는 사람 이름
-                message.setFrom(new InternetAddress(SENDER_ADDRESS, SENDER));// 보내는 대상
-                mailSender.send(message); // 메일 전송
-            } catch (Exception e) {
-                log.info("{}", e);
-                throw new AuthException(INVALID_MAIL_SERVICE);
-            }
+            String body = generateApproveMailForm(applicant.getName(), postId.toString(),
+                    recruitmentApplicant.getRecruitmentPost().getTitle(),
+                    recruitmentApplicant.getRole().getName(), writerName,
+                    recruitmentApplicant.getRecruitmentPost().getKakaoLink());
+
+            message.setText(body, CHAR_SET, SUB_TYPE);// 내용, charset 타입, subtype
+            // 보내는 사람의 이메일 주소, 보내는 사람 이름
+            message.setFrom(new InternetAddress(SENDER_ADDRESS, SENDER));// 보내는 대상
+            mailSender.send(message); // 메일 전송
+        } catch (Exception e) {
+            log.info("{}", e);
+            throw new AuthException(INVALID_MAIL_SERVICE);
         }
 
     }
