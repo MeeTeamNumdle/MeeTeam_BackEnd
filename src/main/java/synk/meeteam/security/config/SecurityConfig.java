@@ -61,8 +61,8 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://meeteam.co.kr", "http://localhost:5173", "http://localhost:8080")
-                        .allowedOriginPatterns("https://meeteam.co.kr", "http://localhost:5173",
+                        .allowedOrigins("https://meeteam.co.kr", "https://www.meeteam.co.kr","http://localhost:5173", "http://localhost:8080")
+                        .allowedOriginPatterns("https://meeteam.co.kr", "https://www.meeteam.co.kr", "http://localhost:5173",
                                 "http://localhost:8080")
                         .allowedMethods(
                                 HttpMethod.GET.name(),
