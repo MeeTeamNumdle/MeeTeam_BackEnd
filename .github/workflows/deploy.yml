@@ -62,7 +62,7 @@ jobs:
         env:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
-          $MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
+          MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
         shell: bash
 
       - name: Gradle 권한 부여
