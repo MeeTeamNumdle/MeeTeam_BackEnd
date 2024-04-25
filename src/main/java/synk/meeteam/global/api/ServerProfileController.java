@@ -53,8 +53,8 @@ public class ServerProfileController {
         if (portfolioId != null) {
             // 수정의 경우
             Portfolio portfolio = portfolioService.getPortfolio(portfolioId, user);
-            zipFileName = portfolio.getZipFileName();
-            thumbNailFileName = portfolio.getMainImageFileName();
+            zipFileName = getFileNameWithoutExtension(portfolio.getZipFileName());
+            thumbNailFileName = getFileNameWithoutExtension(portfolio.getMainImageFileName());
         }
 
         PreSignedUrlVO zipUrl = s3Service.getUploadPreSignedUrl(PORTFOLIO, zipFileName,
@@ -64,5 +64,20 @@ public class ServerProfileController {
 
         return ResponseEntity.ok().body(List.of(zipUrl, thumbNailUrl));
 
+    }
+
+    private String getFileNameWithoutExtension(String fileName){
+        int lastDotIndex = fileName.lastIndexOf('.');
+
+        // 파일명에서 확장자를 제외한 부분을 추출합니다.
+        String fileNameWithoutExtension;
+        if (lastDotIndex != -1) {
+            fileNameWithoutExtension = fileName.substring(0, lastDotIndex);
+        } else {
+            // 파일명에 확장자가 없는 경우
+            fileNameWithoutExtension = fileName;
+        }
+
+        return fileNameWithoutExtension;
     }
 }
