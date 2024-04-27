@@ -45,7 +45,7 @@ public record CreatePortfolioRequestDto(
         @NotNull
         String proceedType,
         @NotNull
-        @Pattern(regexp = "^(\\S+(\\.(?i)(jpg|png|gif|bmp))$)")
+        @Pattern(regexp = "^(\\S+(\\.(?i)(jpg|png|gif|bmp|jpeg))$)")
         String mainImageFileName,
         @NotNull
         @Pattern(regexp = "^(\\S+(\\.(?i)(zip))$)")
