@@ -15,7 +15,7 @@ import synk.meeteam.domain.recruitment.recruitment_role.exception.RecruitmentRol
 
 public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole, Long>,
         RecruitmentRoleRepositoryCustom {
-    @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentRoleSkills s JOIN FETCH s.skill WHERE r.recruitmentPost.id = :postId")
+    @Query("SELECT r FROM RecruitmentRole r LEFT JOIN FETCH r.recruitmentRoleSkills s LEFT JOIN FETCH s.skill WHERE r.recruitmentPost.id = :postId")
     List<RecruitmentRole> findByPostIdWithSkills(@Param("postId") Long postId);
 
     @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentPost p JOIN FETCH r.role WHERE p.id = :postId")
