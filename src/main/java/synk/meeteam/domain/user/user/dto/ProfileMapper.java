@@ -27,6 +27,7 @@ public interface ProfileMapper {
     @Mapping(source = "user.admissionYear", target = "year")
     @Mapping(source = "user.university.name", target = "university")
     @Mapping(source = "user.department.name", target = "department")
+    @Mapping(source = "user.profileImgFileName", target = "imageFileName")
     GetProfileResponseDto toGetProfileResponseDto(
             User user,
             String imageUrl,
