@@ -90,6 +90,7 @@ public class AuthController implements AuthApi {
 
         AuthUserVo vo = AuthUserVo.of(user, user.getPlatformType(), user.getAuthority(), AuthType.SIGN_UP);
         AuthUserResponseDto.login responseDTO = jwtService.issueToken(vo);
+        mailService.deleteTemporaryUser(requestDto.emailCode());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }

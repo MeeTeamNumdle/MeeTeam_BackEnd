@@ -1,10 +1,13 @@
 package synk.meeteam.domain.auth.service;
 
+import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_ACCESS;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
+import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.service.vo.AuthUserVo;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.department.repository.DepartmentRepository;
@@ -72,7 +75,12 @@ public abstract class AuthService {
     }
 
     @Transactional
-    public User createSocialUser(UserVO userVO, String nickName) {
+    public User createSocialUser(UserVO userVO, String nickname) {
+        // 닉네임 검사
+        if(userRepository.findByNickname(nickname).isPresent()){
+            throw new AuthException(INVALID_ACCESS);
+        }
+
         University foundUniversity = universityRepository.findByIdOrElseThrowException(
                 userVO.getUniversityId());
         Department foundDepartment = departmentRepository.findByIdOrElseThrowException(
@@ -81,7 +89,7 @@ public abstract class AuthService {
         User newUser = User.builder()
                 .universityEmail(userVO.getEmail())
                 .name(userVO.getName())
-                .nickname(nickName)
+                .nickname(nickname)
                 .phoneNumber(userVO.getPhoneNumber())
                 .admissionYear(userVO.getAdmissionYear())
                 .university(foundUniversity)
