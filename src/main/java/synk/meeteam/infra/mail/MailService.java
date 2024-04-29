@@ -133,7 +133,7 @@ public class MailService {
 
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserVO verify(String emailCode) {
         return redisUserRepository.findByEmailCodeOrElseThrowException(emailCode);
     }
