@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +32,7 @@ public interface UserApi {
     )
     @Operation(summary = "유저 프로필 저장 API")
     @SecurityRequirement(name = "Authorization")
-    ResponseEntity<String> editProfile(@AuthUser User user, @RequestBody UpdateProfileRequestDto requestDto);
+    ResponseEntity<String> editProfile(@AuthUser User user, @RequestBody @Valid UpdateProfileRequestDto requestDto);
 
     @ApiResponses(
             value = {

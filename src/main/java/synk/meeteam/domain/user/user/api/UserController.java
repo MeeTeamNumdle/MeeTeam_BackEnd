@@ -33,7 +33,7 @@ public class UserController implements UserApi {
     @Override
     @PutMapping("/profile")
     public ResponseEntity<String> editProfile(@AuthUser User user,
-                                              @Valid @RequestBody UpdateProfileRequestDto requestDto) {
+                                              @RequestBody @Valid UpdateProfileRequestDto requestDto) {
 
         profileFacade.editProfile(user, requestDto);
 
