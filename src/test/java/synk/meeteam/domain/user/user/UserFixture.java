@@ -66,6 +66,7 @@ public class UserFixture {
     public static GetProfileResponseDto createReadProfile() {
         return new GetProfileResponseDto(
                 "https://dasfsdf.png",
+                "dasfdf.png",
                 "민지",
                 "mingi123",
                 true,
