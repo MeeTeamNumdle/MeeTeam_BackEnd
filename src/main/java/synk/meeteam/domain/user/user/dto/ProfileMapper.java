@@ -11,25 +11,22 @@ import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileEmailDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfilePhoneDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
-import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.dto.response.ProfileDto;
 import synk.meeteam.domain.user.user_link.dto.GetProfileUserLinkDto;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface ProfileMapper {
-    @Mapping(source = "user", target = "universityEmail", qualifiedByName = "toUniversityEmail")
-    @Mapping(source = "user", target = "subEmail", qualifiedByName = "toSubEmail")
-    @Mapping(source = "user", target = "phone", qualifiedByName = "toPhone")
-    @Mapping(source = "user.interestRole.name", target = "interest")
-    @Mapping(source = "user.name", target = "userName")
-    @Mapping(source = "user.isPublicName", target = "isUserNamePublic")
-    @Mapping(source = "user.oneLineIntroduction", target = "introduction")
-    @Mapping(source = "user.mainIntroduction", target = "aboutMe")
-    @Mapping(source = "user.admissionYear", target = "year")
-    @Mapping(source = "user.university.name", target = "university")
-    @Mapping(source = "user.department.name", target = "department")
-    @Mapping(source = "user.profileImgFileName", target = "imageFileName")
+    @Mapping(source = "profile", target = "universityEmail", qualifiedByName = "toUniversityEmail")
+    @Mapping(source = "profile", target = "subEmail", qualifiedByName = "toSubEmail")
+    @Mapping(source = "profile", target = "phone", qualifiedByName = "toPhone")
+    @Mapping(source = "profile.name", target = "userName")
+    @Mapping(source = "profile.isPublicName", target = "isUserNamePublic")
+    @Mapping(source = "profile.oneLineIntroduction", target = "introduction")
+    @Mapping(source = "profile.mainIntroduction", target = "aboutMe")
+    @Mapping(source = "profile.admissionYear", target = "year")
+    @Mapping(source = "profile.profileImgFileName", target = "imageFileName")
     GetProfileResponseDto toGetProfileResponseDto(
-            User user,
+            ProfileDto profile,
             String imageUrl,
             List<GetProfileUserLinkDto> links,
             List<GetProfileAwardDto> awards,
@@ -39,21 +36,21 @@ public interface ProfileMapper {
 
 
     @Named("toUniversityEmail")
-    @Mapping(source = "user.universityEmail", target = "content")
-    @Mapping(source = "user.isPublicUniversityEmail", target = "isPublic")
-    @Mapping(source = "user.isUniversityMainEmail", target = "isDefault")
-    GetProfileEmailDto toUniversityEmail(User user);
+    @Mapping(source = "profile.universityEmail", target = "content")
+    @Mapping(source = "profile.isPublicUniversityEmail", target = "isPublic")
+    @Mapping(source = "profile.isUniversityMainEmail", target = "isDefault")
+    GetProfileEmailDto toUniversityEmail(ProfileDto profile);
 
 
     @Named("toSubEmail")
     @Mapping(source = "subEmail", target = "content")
     @Mapping(source = "isPublicSubEmail", target = "isPublic")
-    @Mapping(expression = "java(!user.isUniversityMainEmail())", target = "isDefault")
-    GetProfileEmailDto toSubEmail(User user);
+    @Mapping(expression = "java(!profile.isUniversityMainEmail())", target = "isDefault")
+    GetProfileEmailDto toSubEmail(ProfileDto profile);
 
     @Named("toPhone")
     @Mapping(source = "phoneNumber", target = "content")
     @Mapping(source = "isPublicPhone", target = "isPublic")
-    GetProfilePhoneDto tuPhone(User user);
+    GetProfilePhoneDto tuPhone(ProfileDto profile);
 
 }
