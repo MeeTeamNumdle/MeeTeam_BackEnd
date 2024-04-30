@@ -137,4 +137,10 @@ public class MailService {
     public UserVO verify(String emailCode) {
         return redisUserRepository.findByEmailCodeOrElseThrowException(emailCode);
     }
+
+    @Transactional
+    public void deleteTemporaryUser(String emailCode) {
+        UserVO userVO = redisUserRepository.findByEmailCodeOrElseThrowException(emailCode);
+        redisUserRepository.delete(userVO);
+    }
 }
