@@ -44,7 +44,7 @@ public interface UserApi {
     )
     @Operation(summary = "유저 프로필 조회 API")
     @SecurityRequirements
-    ResponseEntity<GetProfileResponseDto> getProfile(@PathVariable("userId") String userId);
+    ResponseEntity<GetProfileResponseDto> getProfile(@AuthUser User user, @PathVariable("userId") String userId);
 
 
     @ApiResponses(

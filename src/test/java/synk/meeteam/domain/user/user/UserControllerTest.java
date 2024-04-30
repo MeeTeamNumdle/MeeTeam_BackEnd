@@ -105,7 +105,7 @@ public class UserControllerTest {
         //given
         String encryptedId = "암호화된아이디";
         final String url = "/user/profile/" + encryptedId;
-        doReturn(UserFixture.createReadProfile()).when(profileFacade).readProfile(encryptedId);
+        doReturn(UserFixture.createReadProfile()).when(profileFacade).readProfile(any(), encryptedId);
         //when
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url));

@@ -42,8 +42,9 @@ public class UserController implements UserApi {
 
     @Override
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<GetProfileResponseDto> getProfile(@PathVariable("userId") String userId) {
-        return ResponseEntity.ok(profileFacade.readProfile(userId));
+    public ResponseEntity<GetProfileResponseDto> getProfile(@AuthUser User user,
+                                                            @PathVariable("userId") String userId) {
+        return ResponseEntity.ok(profileFacade.readProfile(user, userId));
     }
 
     @GetMapping("encrypt/{userId}")
