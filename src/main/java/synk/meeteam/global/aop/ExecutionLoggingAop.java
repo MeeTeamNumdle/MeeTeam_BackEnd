@@ -40,13 +40,17 @@ public class ExecutionLoggingAop {
         log.info("[Call Method] " + httpMethod.toString() + ": " + task + " | Request userId=" + userId.toString());
 
         Object[] paramArgs = pjp.getArgs();
+        String loggingMessage = "";
+        int cnt = 1;
         for (Object object : paramArgs) {
             if (Objects.nonNull(object)) {
-                log.info("[parameter type] {}", object.getClass().getSimpleName());
-                log.info("[parameter value] {}", object);
+                String paramName = "[param" + cnt +"] " + object.getClass().getSimpleName();
+                String paramValue = " [value" + cnt +"] " + object;
+                loggingMessage += paramName + paramValue + "\n";
+                cnt++;
             }
         }
-
+        log.info("{}", loggingMessage);
         // 해당 클래스 처리 전의 시간
         StopWatch sw = new StopWatch();
         sw.start();
