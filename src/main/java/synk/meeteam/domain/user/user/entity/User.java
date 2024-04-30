@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.university.entity.University;
+import synk.meeteam.domain.user.user.dto.response.ProfileDto;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
 import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.global.entity.BaseTimeEntity;
@@ -244,6 +245,49 @@ public class User extends BaseTimeEntity {
         this.password = passwordEncoder.encode(this.password);
     }
 
+    public ProfileDto getOpenProfile(boolean isNotWriter) {
+        String openName = name;
+        String openPhoneNumber = phoneNumber;
+        String openUniversityEmail = universityEmail;
+        String openSubEmail = subEmail;
+        if (isNotWriter) {
+            if (!isPublicName) {
+                openName = null;
+            }
+            if (!isPublicPhone) {
+                openPhoneNumber = null;
+            }
+            if (!isPublicUniversityEmail) {
+                openUniversityEmail = null;
+            }
+            if (!isPublicSubEmail) {
+                openSubEmail = null;
+            }
+        }
+        String interest = (interestRole == null) ? null : interestRole.getName();
+
+        return new ProfileDto(
+                profileImgFileName,
+                openName,
+                isPublicName,
+                nickname,
+                interest,
+                oneLineIntroduction,
+                mainIntroduction,
+                isUniversityMainEmail,
+                openUniversityEmail,
+                isPublicUniversityEmail,
+                openSubEmail,
+                isPublicSubEmail,
+                openPhoneNumber,
+                isPublicPhone,
+                university.getName(),
+                department.getName(),
+                maxGpa,
+                gpa,
+                admissionYear
+        );
+    }
 
     //닉네임 변경
     public void updateNickname(String nickname) {
@@ -254,7 +298,7 @@ public class User extends BaseTimeEntity {
         return !this.nickname.equals(nickname);
     }
 
-    public void processFirstAccess(){
+    public void processFirstAccess() {
         this.isFirstApplicantAccess = false;
     }
 }
