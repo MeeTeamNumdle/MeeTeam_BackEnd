@@ -43,7 +43,7 @@ public class UserFixture {
         return new UpdateProfileRequestDto(
                 "goder",
                 true,
-                "imageUrl",
+                "imageUrl.png",
                 "010-1234-5678",
                 true,
                 true,
