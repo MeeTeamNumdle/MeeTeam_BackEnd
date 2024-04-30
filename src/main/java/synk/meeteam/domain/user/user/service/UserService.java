@@ -1,6 +1,7 @@
 package synk.meeteam.domain.user.user.service;
 
 import synk.meeteam.domain.user.user.dto.command.UpdateInfoCommand;
+import synk.meeteam.domain.user.user.dto.response.ProfileDto;
 import synk.meeteam.domain.user.user.entity.User;
 
 public interface UserService {
@@ -13,6 +14,8 @@ public interface UserService {
     User findById(Long userId);
 
     User findByEncryptedId(String encryptedId);
+
+    ProfileDto getOpenProfile(Long userId, User reader);
 
     void processFirstAccess(User user);
 }
