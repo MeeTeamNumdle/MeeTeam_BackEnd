@@ -1,6 +1,7 @@
 package synk.meeteam.domain.user.user.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Pattern;
 import java.util.List;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
@@ -10,6 +11,9 @@ import synk.meeteam.domain.user.user_link.dto.GetProfileUserLinkDto;
 public record GetProfileResponseDto(
         @Schema(description = "프로필 이미지 url", example = "https://image.png")
         String imageUrl,
+        @Schema(description = "프로필 이미지 파일명", example = "dfksfdfs.png")
+        @Pattern(regexp = "^(\\S+(\\.(?i)(jpg|png|gif|bmp|jpeg))$)")
+        String imageFileName,
         @Schema(description = "이름", example = "민지")
         String userName,
         @Schema(description = "닉네임", example = "minji")

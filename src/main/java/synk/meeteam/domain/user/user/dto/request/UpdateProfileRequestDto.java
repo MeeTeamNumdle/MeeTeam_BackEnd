@@ -22,7 +22,8 @@ public record UpdateProfileRequestDto(
         @NotNull
         boolean isUserNamePublic,
 
-        @Schema(description = "프로필사진 url")
+        @Schema(description = "프로필 이미지 파일명")
+        @Pattern(regexp = "^(\\S+(\\.(?i)(jpg|png|gif|bmp|jpeg))$)")
         String imageFileName,
 
         @Schema(description = "전화정보", example = "010-1234-5678")

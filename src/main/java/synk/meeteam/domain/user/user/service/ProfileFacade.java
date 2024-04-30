@@ -17,12 +17,14 @@ import synk.meeteam.domain.user.user.dto.ProfileMapper;
 import synk.meeteam.domain.user.user.dto.UpdateProfileCommandMapper;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
+import synk.meeteam.domain.user.user.dto.response.ProfileDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user_link.dto.GetProfileUserLinkDto;
 import synk.meeteam.domain.user.user_link.entity.UserLink;
 import synk.meeteam.domain.user.user_link.entity.UserLinkMapper;
 import synk.meeteam.domain.user.user_link.service.UserLinkService;
 import synk.meeteam.domain.user.user_skill.service.UserSkillService;
+import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.s3.S3FileName;
 import synk.meeteam.infra.s3.service.S3Service;
 
@@ -66,14 +68,15 @@ public class ProfileFacade {
     }
 
     @Transactional(readOnly = true)
-    public GetProfileResponseDto readProfile(String encryptedId) {
-        User user = userService.findByEncryptedId(encryptedId);
-        String profileImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, user.getProfileImgFileName());
-        List<GetProfileUserLinkDto> links = getProfileLinks(user.getId());
-        List<GetProfileAwardDto> awards = getProfileAwards(user.getId());
-        List<SimplePortfolioDto> portfolios = getProfilePortfolios(user.getId(), encryptedId);
-        List<SkillDto> skills = userSkillService.getUserSKill(user.getId());
-        return profileMapper.toGetProfileResponseDto(user, profileImgUrl, links, awards,
+    public GetProfileResponseDto readProfile(User user, String encryptedId) {
+        Long userId = Encryption.decryptLong(encryptedId);
+        ProfileDto openProfile = userService.getOpenProfile(userId, user);
+        String profileImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, openProfile.profileImgFileName());
+        List<GetProfileUserLinkDto> links = getProfileLinks(userId);
+        List<GetProfileAwardDto> awards = getProfileAwards(userId);
+        List<SimplePortfolioDto> portfolios = getProfilePortfolios(userId, encryptedId);
+        List<SkillDto> skills = userSkillService.getUserSKill(userId);
+        return profileMapper.toGetProfileResponseDto(openProfile, profileImgUrl, links, awards,
                 portfolios, skills);
     }
 

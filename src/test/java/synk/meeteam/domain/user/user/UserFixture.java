@@ -43,7 +43,7 @@ public class UserFixture {
         return new UpdateProfileRequestDto(
                 "goder",
                 true,
-                "imageUrl",
+                "imageUrl.png",
                 "010-1234-5678",
                 true,
                 true,
@@ -66,6 +66,7 @@ public class UserFixture {
     public static GetProfileResponseDto createReadProfile() {
         return new GetProfileResponseDto(
                 "https://dasfsdf.png",
+                "dasfdf.png",
                 "민지",
                 "mingi123",
                 true,
