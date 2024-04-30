@@ -32,6 +32,6 @@ public class Department {
     private University university;
 
     @NotNull
-    @Column(length = 20)
+    @Column(length = 70)
     private String name;
 }

@@ -23,7 +23,7 @@ public class University {
     private Long id;
 
     @NotNull
-    @Column(length = 20)
+    @Column(length = 70)
     private String name;
 
     @NotNull
