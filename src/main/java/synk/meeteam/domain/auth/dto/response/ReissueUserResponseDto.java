@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "ReissueUserResponseDto", description = "토큰 재발급 요청 Dto")
 public record ReissueUserResponseDto(
-        @Schema(description = "플랫폼 Id", example = "Di7lChMGxjZVTai6d76Ho1YLDU_xL8tl1CfdPMV5SQM")
+        @Schema(description = "user Id", example = "40aVE421DSwR63xfKf6vxA")
         String platformId,
         @Schema(description = "액세스 토큰", example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInBsYXRmb3JtSWQiOiJEaTdsQ2hNR3hqWlZUYWk2ZDc2SG8xWUxEVV94TDh0bDFDZmRQTVY1U1FNIiwicGxhdGZvcm1UeXBlIjoiTkFWRVIiLCJpYXQiOjE3MDYyODA1MjMsImV4cCI6MTgxNDI4MDUyM30.doPtAdLQMZ8NeuhRAOg7GNMBBtFZzPOOZp60HskGtZ0")
         String accessToken,
