@@ -16,6 +16,7 @@ public enum AuthExceptionType implements ExceptionType {
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 리프레시 토큰입니다."),
     INVALID_MAIL_SERVICE(HttpStatus.BAD_REQUEST, "메일 서비스를 이용할 수 없는 형식입니다."),
     INVALID_ACCESS(HttpStatus.BAD_REQUEST, "올바르지 않는 요청입니다."),
+    ALREADY_REGISTER(HttpStatus.BAD_REQUEST, "이미 가입된 이메일입니다."),
     INVALID_VERIFY_MAIL(HttpStatus.BAD_REQUEST, "잘못된 이메일 코드 입니다."),
     INVALID_MAIL_REGEX(HttpStatus.BAD_REQUEST, "학교 도메인과 유저의 도메인이 다릅니다."),
 

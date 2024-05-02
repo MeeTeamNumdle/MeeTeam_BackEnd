@@ -1,5 +1,6 @@
 package synk.meeteam.domain.auth.service;
 
+import static synk.meeteam.domain.auth.exception.AuthExceptionType.ALREADY_REGISTER;
 import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_ACCESS;
 
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,11 @@ public abstract class AuthService {
 
     @Transactional
     public void updateUniversityInfo(VerifyEmailRequestDto requestDTO, String email) {
+        User foundUser = userRepository.findByUniversityEmail(email).orElse(null);
+        if(foundUser != null){
+            throw new AuthException(ALREADY_REGISTER);
+        }
+
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
         userVO.updateUniversityInfo(requestDTO.universityId(), requestDTO.departmentId(), requestDTO.year(),
                 email);
