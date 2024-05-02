@@ -9,10 +9,10 @@ public record CourseTagDto(
         @Schema(description = "수업 여부", example = "true")
         Boolean isCourse,
         @Schema(description = "수업 관련 태그 이름", example = "응용소프트웨어실습 or null")
-        @Size(max = 100)
+        @Size(max = 20)
         String courseTagName,
         @Schema(description = "교수명", example = "김용혁 or null")
-        @Size(max = 100)
+        @Size(max = 20)
         String courseProfessor
 ) {
 }
