@@ -58,7 +58,7 @@ public class XssSpringBootTest {
     }
 
     @Test
-    public void 구인글생성_예외발생_xss공격1() {
+    public void escape문자로치환_구인글생성_성공_xss공격() {
         HttpEntity request = new HttpEntity(headers);
 
         String title = "<li>content</li>";
@@ -83,7 +83,7 @@ public class XssSpringBootTest {
     }
 
     @Test
-    public void 구인글생성_예외발생_xss공격_LocalDate치환() {
+    public void escape문자로치환및LocalDate치환_구인글생성_성공_xss공격() {
         HttpEntity request = new HttpEntity(headers);
 
         String title = "<li>content</li>";
