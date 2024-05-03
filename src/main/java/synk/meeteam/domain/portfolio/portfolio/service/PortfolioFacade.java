@@ -52,7 +52,7 @@ public class PortfolioFacade {
 
         List<Skill> skills = portfolioSkillService.getPortfolioSkill(portfolio);
         List<PortfolioLink> links = portfolioLinkService.getPortfolioLink(portfolio);
-        String zipFileUrl = s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO,
+        String zipFileUrl = s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
                 portfolio.getZipFileName());
         List<Portfolio> otherPinPortfolios = getUserPortfolio(portfolio);
         return new GetPortfolioResponseDto(
@@ -70,7 +70,7 @@ public class PortfolioFacade {
                 links.stream().map(link -> new PortfolioLinkDto(link.getUrl(), link.getDescription())).toList(),
                 otherPinPortfolios.stream().map(otherPortfolio ->
                         portfolioMapper.toGetProfilePortfolioDto(otherPortfolio,
-                                s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO,
+                                s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
                                         otherPortfolio.getMainImageFileName()))).toList(),
                 portfolio.isWriter(user.getId())
         );

@@ -95,7 +95,7 @@ public class ProfileFacade {
 
         return portfolios.stream().map((portfolio) -> {
             String imageUrl = s3Service.createPreSignedGetUrl(
-                    S3FileName.getPortfolioUrl(encryptedId),
+                    S3FileName.getPortfolioPath(encryptedId),
                     portfolio.getMainImageFileName());
             return portfolioMapper.toGetProfilePortfolioDto(portfolio, imageUrl);
         }).toList();
