@@ -81,7 +81,8 @@ public class PortfolioServiceImpl implements PortfolioService {
         Slice<SimplePortfolioDto> userPortfolioDtos = portfolioRepository.findSlicePortfoliosByUserOrderByCreatedAtDesc(
                 pageable, user);
         userPortfolioDtos.getContent().forEach(userPortfolio -> {
-            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO, userPortfolio.getMainImageUrl());
+            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+                    userPortfolio.getMainImageUrl());
             userPortfolio.setMainImageUrl(imageUrl);
         });
         SliceInfo pageInfo = new SliceInfo(page, size, userPortfolioDtos.hasNext());
@@ -94,7 +95,8 @@ public class PortfolioServiceImpl implements PortfolioService {
         Page<SimplePortfolioDto> myPortfolios = portfolioRepository.findPaginationPortfoliosByUserOrderByCreatedAtDesc(
                 PageRequest.of(page - 1, size), user);
         myPortfolios.getContent().forEach(myPortfolio -> {
-            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO, myPortfolio.getMainImageUrl());
+            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+                    myPortfolio.getMainImageUrl());
             myPortfolio.setMainImageUrl(imageUrl);
         });
         PageInfo pageInfo = new PageInfo(page, size, myPortfolios.getTotalElements(), myPortfolios.getTotalPages());
