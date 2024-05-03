@@ -1,12 +1,9 @@
 package synk.meeteam.global.api;
 
-import static synk.meeteam.infra.s3.S3FileName.PORTFOLIO;
 import static synk.meeteam.infra.s3.S3FileName.USER;
 
-import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +14,7 @@ import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.ServiceType;
 import synk.meeteam.global.util.Encryption;
+import synk.meeteam.infra.s3.S3FileName;
 import synk.meeteam.infra.s3.service.S3Service;
 import synk.meeteam.infra.s3.service.vo.PreSignedUrlVO;
 import synk.meeteam.security.AuthUser;
@@ -56,17 +54,19 @@ public class ServerProfileController {
             zipFileName = getFileNameWithoutExtension(portfolio.getZipFileName());
             thumbNailFileName = getFileNameWithoutExtension(portfolio.getMainImageFileName());
         }
+        String encryptedId = user.getEncryptUserId();
 
-        PreSignedUrlVO zipUrl = s3Service.getUploadPreSignedUrl(PORTFOLIO, zipFileName,
+        PreSignedUrlVO zipUrl = s3Service.getUploadPreSignedUrl(S3FileName.getPortfolioPath(encryptedId), zipFileName,
                 ZIP_NAME, ServiceType.PORTFOLIOS);
-        PreSignedUrlVO thumbNailUrl = s3Service.getUploadPreSignedUrl(PORTFOLIO, thumbNailFileName,
+        PreSignedUrlVO thumbNailUrl = s3Service.getUploadPreSignedUrl(S3FileName.getPortfolioPath(encryptedId),
+                thumbNailFileName,
                 extension, ServiceType.THUMBNAIL_PORTFOLIO);
 
         return ResponseEntity.ok().body(List.of(zipUrl, thumbNailUrl));
 
     }
 
-    private String getFileNameWithoutExtension(String fileName){
+    private String getFileNameWithoutExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf('.');
 
         // 파일명에서 확장자를 제외한 부분을 추출합니다.
