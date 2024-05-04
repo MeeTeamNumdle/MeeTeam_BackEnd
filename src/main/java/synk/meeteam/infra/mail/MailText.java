@@ -20,4 +20,8 @@ public class MailText {
     public static final String MAIL_TITLE_APPROVE = "구인 신청 승인";
     public static final String MAIL_APPROVE_TEMPLATE = "ApproveMail";
 
+    // 구인글 신청 알림 관련
+    public static final String MAIL_TITLE_APPLICATION = "구인 신청 알림";
+    public static final String MAIL_APPLICATION_NOTIFICATION_TEMPLATE = "ApplicationNotificationMail";
+
 }
