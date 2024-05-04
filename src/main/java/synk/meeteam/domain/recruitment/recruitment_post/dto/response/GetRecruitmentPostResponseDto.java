@@ -1,5 +1,6 @@
 package synk.meeteam.domain.recruitment.recruitment_post.dto.response;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.util.Encryption;
+import synk.meeteam.global.util.UnescapedFieldSerializer;
 
 @Builder
 @Schema(name = "GetRecruitmentPostResponseDto", description = "구인글 조회 Dto")
@@ -59,6 +61,7 @@ public record GetRecruitmentPostResponseDto(
         @Schema(description = "구인 역할", example = "")
         List<GetRecruitmentRoleResponseDto> recruitmentRoles,
         @Schema(description = "상세 내용", example = "안녕하세요. 저는 팀원을...")
+        @JsonSerialize(using = UnescapedFieldSerializer.class)
         String content,
         @Schema(description = "댓글, 대댓글", example = "")
         List<GetCommentResponseDto> comments
