@@ -20,6 +20,7 @@ import synk.meeteam.domain.recruitment.recruitment_role_skill.service.Recruitmen
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.infra.mail.MailService;
 
 
 @Service
@@ -32,6 +33,7 @@ public class RecruitmentPostFacade {
     private final RecruitmentApplicantService recruitmentApplicantService;
     private final BookmarkService bookmarkService;
 
+    private final MailService mailService;
 
     @Transactional
     public Long createRecruitmentPost(RecruitmentPost recruitmentPost, List<RecruitmentRole> recruitmentRoles,
@@ -61,12 +63,16 @@ public class RecruitmentPostFacade {
     }
 
     @Transactional
-    public void applyRecruitment(RecruitmentRole recruitmentRole, RecruitmentApplicant recruitmentApplicant) {
+    public void applyRecruitment(RecruitmentRole recruitmentRole, RecruitmentApplicant recruitmentApplicant,
+                                 User writer) {
         recruitmentApplicantService.registerRecruitmentApplicant(recruitmentApplicant);
 
         recruitmentPostService.incrementApplicantCount(recruitmentApplicant.getRecruitmentPost());
 
         recruitmentRoleService.incrementApplicantCount(recruitmentRole);
+
+        mailService.sendApplicationNotificationMail(recruitmentApplicant.getRecruitmentPost().getId(),
+                recruitmentApplicant, writer);
     }
 
     @Transactional
