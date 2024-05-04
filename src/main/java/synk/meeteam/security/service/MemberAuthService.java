@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.repository.UserRepository;
+import synk.meeteam.global.util.Encryption;
 import synk.meeteam.security.CustomAuthUser;
 
 @Service
@@ -16,8 +17,8 @@ public class MemberAuthService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String platformId) throws UsernameNotFoundException {
-        User user = userRepository.findByPlatformIdOrElseThrowException(platformId);
+    public UserDetails loadUserByUsername(String encryptedUserId) throws UsernameNotFoundException {
+        User user = userRepository.findByIdOrElseThrow(Encryption.decryptLong(encryptedUserId));
 
         return new CustomAuthUser(user, user.getAuthority());
     }

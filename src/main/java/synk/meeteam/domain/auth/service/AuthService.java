@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
 import synk.meeteam.domain.auth.exception.AuthException;
-import synk.meeteam.domain.auth.service.vo.AuthUserVo;
+import synk.meeteam.domain.auth.service.vo.AuthUserVO;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.entity.University;
@@ -30,9 +30,9 @@ public abstract class AuthService {
     private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public abstract AuthUserVo saveUserOrLogin(String platformType, AuthUserRequestDto request);
+    public abstract AuthUserVO saveUserOrLogin(String platformType, AuthUserRequestDto request);
 
-    protected User getUser(PlatformType platformType, String platformId) {
+    protected User getUser(String platformId, PlatformType platformType) {
         return userRepository.findByPlatformIdAndPlatformType(platformId, platformType)
                 .orElse(null);
     }
@@ -49,9 +49,9 @@ public abstract class AuthService {
                 .build();
     }
 
-    protected User saveTempUser(AuthUserRequestDto request, String email, String name, String id,
+    protected User saveTempUser(AuthUserRequestDto request, String email, String name, String platformId,
                                 String phoneNumber, String profileImgFileName) {
-        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber,
+        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), platformId, phoneNumber,
                 profileImgFileName);
         redisUserRepository.save(tempSocialUser);
 
@@ -60,7 +60,7 @@ public abstract class AuthService {
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .platformType(request.platformType())
-                .platformId(id)
+                .platformId(platformId)
                 .authority(Authority.GUEST)
                 .profileImgFileName(profileImgFileName)
                 .build();

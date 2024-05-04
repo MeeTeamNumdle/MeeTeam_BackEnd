@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.index.Indexed;
 public class TokenVO {
     @Id
     @Indexed
-    private String platformId;
+    private String userId;
 
     private boolean isBlack;
 
@@ -31,8 +31,8 @@ public class TokenVO {
     }
 
     @Builder
-    public TokenVO(String platformId, boolean isBlack, String refreshToken) {
-        this.platformId = platformId;
+    public TokenVO(String userId, boolean isBlack, String refreshToken) {
+        this.userId = userId;
         this.isBlack = isBlack;
         this.refreshToken = refreshToken;
     }

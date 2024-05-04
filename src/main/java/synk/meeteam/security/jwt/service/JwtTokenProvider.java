@@ -12,18 +12,13 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 
 @Slf4j
 @Component
 public class JwtTokenProvider {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String EMAIL_CLAIM = "email";
-    private static final String PLATFORM_ID_CLAIM = "platformId";
-    private static final String PLATFORM_TYPE_CLAIM = "platformType";
-
-
+    private static final String USER_ID_CLAIM = "userId";
 
     private final Key key;
     private final ObjectMapper objectMapper;
@@ -35,24 +30,24 @@ public class JwtTokenProvider {
         this.objectMapper = objectMapper;
     }
 
-    public String createAccessToken(String platformId, PlatformType platformType, Long expirationTime) {
+    public String createAccessToken(String userId, Long expirationTime) {
         Date now = new Date();
 
         return Jwts.builder()
                 .setSubject(ACCESS_TOKEN_SUBJECT)
-                .claim(PLATFORM_ID_CLAIM, platformId)
-                .claim(PLATFORM_TYPE_CLAIM, platformType)
+                .claim(USER_ID_CLAIM, userId)
                 .setIssuedAt(now)   //토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + expirationTime))  //토큰 만료 시간 설정
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String createRefreshToken(Long expirationTime) {
+    public String createRefreshToken(String userId, Long expirationTime) {
         Date now = new Date();
 
         return Jwts.builder()
                 .setSubject(REFRESH_TOKEN_SUBJECT)
+                .claim(USER_ID_CLAIM, userId)
                 .setIssuedAt(now)   //토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + expirationTime))  //토큰 만료 시간 설정
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -66,13 +61,6 @@ public class JwtTokenProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public Claims makeInfoToClaim(String infoName, final Long memberId) throws JsonProcessingException {
-        String claimValue = objectMapper.writeValueAsString(memberId);
-        Claims claims = Jwts.claims();
-        claims.put(infoName, claimValue);
-        return claims;
     }
 
     public String getPlatformIdFromClaim(Claims claims, String infoName) throws JsonProcessingException {
