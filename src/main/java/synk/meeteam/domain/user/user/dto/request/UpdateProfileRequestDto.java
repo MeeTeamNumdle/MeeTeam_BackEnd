@@ -2,10 +2,12 @@ package synk.meeteam.domain.user.user.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import synk.meeteam.domain.user.award.dto.UpdateAwardDto;
 import synk.meeteam.domain.user.user_link.dto.UpdateUserLinkDto;
@@ -66,15 +68,22 @@ public record UpdateProfileRequestDto(
         Double maxGpa,
 
         @Schema(description = "스킬 id 정보", example = "[1,2,3]")
+        @NotNull
+        @Size(max = 10)
         List<Long> skills,
 
         @Schema(description = "링크 목록")
-        List<UpdateUserLinkDto> links,
+        @NotNull
+        @Size(max = 10)
+        List<@Valid UpdateUserLinkDto> links,
 
         @Schema(description = "수상내역")
-        List<UpdateAwardDto> awards,
+        @NotNull
+        @Size(max = 10)
+        List<@Valid UpdateAwardDto> awards,
 
         @Schema(description = "포트폴리오 순서", example = "[1,2,3]")
+        @Size(max = 8)
         List<Long> portfolios
 
 ) {
