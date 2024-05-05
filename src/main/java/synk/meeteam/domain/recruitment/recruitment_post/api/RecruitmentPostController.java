@@ -177,8 +177,9 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         RecruitmentApplicant recruitmentApplicant = recruitmentPostMapper.toRecruitmentApplicantEntity(
                 recruitmentRole.getRecruitmentPost(), recruitmentRole.getRole(), user, requestDto.message(),
                 RecruitStatus.NONE);
-
-        recruitmentPostFacade.applyRecruitment(recruitmentRole, recruitmentApplicant);
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        User writer = userService.findById(recruitmentPost.getCreatedBy());
+        recruitmentPostFacade.applyRecruitment(recruitmentRole, recruitmentApplicant, writer);
 
         return ResponseEntity.ok().build();
     }

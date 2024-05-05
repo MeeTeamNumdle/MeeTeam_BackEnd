@@ -301,4 +301,8 @@ public class User extends BaseTimeEntity {
     public void processFirstAccess() {
         this.isFirstApplicantAccess = false;
     }
+
+    public String getMainEmail(){
+        return isUniversityMainEmail ? universityEmail : subEmail;
+    }
 }

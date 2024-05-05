@@ -58,11 +58,15 @@ jobs:
           
           touch ./UniversityAuthMail.html
           echo "$MAIL_VERIFY_TEMPLATE" > ./UniversityAuthMail.html
+          
+          touch ./ApplicationNotificationMail.html
+          echo "MAIL_APPLICATION_NOTIFICATION_TEMPLATE" > ./ApplicationNotificationMail.html
 
         env:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
           MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
+          MAIL_APPLICATION_NOTIFICATION_TEMPLATE: ${{ secrets.MAIL_APPLICATION_NOTIFICATION_TEMPLATE }}
         shell: bash
 
       - name: Gradle 권한 부여
