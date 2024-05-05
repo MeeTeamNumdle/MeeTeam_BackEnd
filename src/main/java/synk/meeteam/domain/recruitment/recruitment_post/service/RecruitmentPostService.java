@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.ManageType;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.SimpleRecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.PaginationSearchPostResponseDto;
@@ -129,37 +130,10 @@ public class RecruitmentPostService {
     }
 
     @Transactional
-    public PaginationDto<SimpleRecruitmentPostDto> getBookmarkPost(int size, int page, User user, Boolean isClosed) {
-        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyBookmarkPost(PageRequest.of(page - 1, size),
-                user, isClosed);
-        PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
-        List<SimpleRecruitmentPostDto> contents = postVos.stream()
-                .map((postVo) -> {
-                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
-                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
-                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
-                }).toList();
-        return new PaginationDto<>(contents, pageInfo);
-    }
-
-    @Transactional
-    public PaginationDto<SimpleRecruitmentPostDto> getAppliedPost(int size, int page, User user, Boolean isClosed) {
-        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyAppliedPost(PageRequest.of(page - 1, size),
-                user, isClosed);
-        PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
-        List<SimpleRecruitmentPostDto> contents = postVos.stream()
-                .map((postVo) -> {
-                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
-                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
-                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
-                }).toList();
-        return new PaginationDto<>(contents, pageInfo);
-    }
-
-    @Transactional
-    public PaginationDto<SimpleRecruitmentPostDto> getMyPost(int size, int page, User user, Boolean isClosed) {
-        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findMyPost(PageRequest.of(page - 1, size),
-                user, isClosed);
+    public PaginationDto<SimpleRecruitmentPostDto> getManagementPost(int size, int page, User user, Boolean isClosed,
+                                                                     ManageType manageType) {
+        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findManagementPost(PageRequest.of(page - 1, size),
+                user, isClosed, manageType);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
         List<SimpleRecruitmentPostDto> contents = postVos.stream()
                 .map((postVo) -> {

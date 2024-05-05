@@ -6,13 +6,14 @@ import static synk.meeteam.domain.recruitment.recruitment_post.entity.QRecruitme
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.ManageType;
 import synk.meeteam.domain.user.user.entity.QUser;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.Category;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.entity.Scope;
 
-public class ExpressionUtils {
-    //BooleanExpression
+public class RecruitmentExpressionUtils {
     public static BooleanExpression isBookmark(User userDomain) {
         //로그인 안된 경우
         if (userDomain == null) {
@@ -54,4 +55,13 @@ public class ExpressionUtils {
     private static BooleanExpression isFalse() {
         return Expressions.asBoolean(false);
     }
+
+    public static BooleanExpression isWriter(ManageType manageType, User user, QUser writer) {
+        return manageType.equals(ManageType.WRITTEN) ? writer.id.eq(user.getId()) : null;
+    }
+
+    public static BooleanExpression isNotDeleted() {
+        return recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED);
+    }
+
 }

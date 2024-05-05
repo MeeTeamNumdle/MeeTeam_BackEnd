@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.ManageType;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SimpleRecruitmentPostDto;
 import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostService;
 import synk.meeteam.domain.user.user.entity.User;
@@ -26,7 +27,7 @@ public class PostManagementController implements PostManagementApi {
                                                                    @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
                                                                    @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                                    @RequestParam(value = "is-closed", required = false) Boolean isClosed) {
-        return recruitmentPostService.getBookmarkPost(size, page, user, isClosed);
+        return recruitmentPostService.getManagementPost(size, page, user, isClosed, ManageType.BOOKMARKED);
     }
 
     @GetMapping("/applied")
@@ -35,7 +36,7 @@ public class PostManagementController implements PostManagementApi {
                                                                   @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
                                                                   @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                                   @RequestParam(value = "is-closed", required = false) Boolean isClosed) {
-        return recruitmentPostService.getAppliedPost(size, page, user, isClosed);
+        return recruitmentPostService.getManagementPost(size, page, user, isClosed, ManageType.APPLIED);
     }
 
     @GetMapping("/my-post")
@@ -44,6 +45,6 @@ public class PostManagementController implements PostManagementApi {
                                                              @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
                                                              @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
                                                              @RequestParam(value = "is-closed", required = false) Boolean isClosed) {
-        return recruitmentPostService.getMyPost(size, page, user, isClosed);
+        return recruitmentPostService.getManagementPost(size, page, user, isClosed, ManageType.WRITTEN);
     }
 }
