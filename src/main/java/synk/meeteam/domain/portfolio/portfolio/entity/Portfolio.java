@@ -16,7 +16,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -147,7 +146,7 @@ public class Portfolio extends BaseEntity {
     }
 
     public boolean isWriter(Long userId) {
-        return Objects.equals(getCreatedBy(), userId);
+        return getCreatedBy().equals(userId);
     }
 
     public void putPin(int order) {

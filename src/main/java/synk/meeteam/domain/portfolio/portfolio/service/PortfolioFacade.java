@@ -20,6 +20,7 @@ import synk.meeteam.domain.portfolio.portfolio_link.entity.PortfolioLink;
 import synk.meeteam.domain.portfolio.portfolio_link.service.PortfolioLinkService;
 import synk.meeteam.domain.portfolio.portfolio_skill.service.PortfolioSkillService;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.s3.S3FileName;
 import synk.meeteam.infra.s3.service.S3Service;
 
@@ -46,13 +47,16 @@ public class PortfolioFacade {
     @Transactional(readOnly = true)
     public GetPortfolioResponseDto getPortfolio(Long portfolioId, User user) {
         Portfolio portfolio = portfolioService.getPortfolio(portfolioId);
-        if (!portfolio.isAllViewAble(user.getId())) {
+        Long userId = user != null ? user.getId() : null;
+        if (!portfolio.isAllViewAble(userId)) {
             throw new PortfolioException(NOT_YOUR_PORTFOLIO);
         }
+        String writerEncryptedId = Encryption.encryptLong(portfolio.getCreatedBy());
 
         List<Skill> skills = portfolioSkillService.getPortfolioSkill(portfolio);
         List<PortfolioLink> links = portfolioLinkService.getPortfolioLink(portfolio);
-        String zipFileUrl = s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+        String zipFileUrl = s3Service.createPreSignedGetUrl(
+                S3FileName.getPortfolioPath(writerEncryptedId),
                 portfolio.getZipFileName());
         List<Portfolio> otherPinPortfolios = getUserPortfolio(portfolio);
         return new GetPortfolioResponseDto(
@@ -70,9 +74,9 @@ public class PortfolioFacade {
                 links.stream().map(link -> new PortfolioLinkDto(link.getUrl(), link.getDescription())).toList(),
                 otherPinPortfolios.stream().map(otherPortfolio ->
                         portfolioMapper.toGetProfilePortfolioDto(otherPortfolio,
-                                s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+                                s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(writerEncryptedId),
                                         otherPortfolio.getMainImageFileName()))).toList(),
-                portfolio.isWriter(user.getId())
+                portfolio.isWriter(userId)
         );
     }
 
