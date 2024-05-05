@@ -7,11 +7,11 @@ import static synk.meeteam.domain.common.role.entity.QRole.role;
 import static synk.meeteam.domain.common.skill.entity.QSkill.skill;
 import static synk.meeteam.domain.common.tag.entity.QTag.tag;
 import static synk.meeteam.domain.recruitment.recruitment_post.entity.QRecruitmentPost.recruitmentPost;
-import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.categoryEq;
-import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.isBookmark;
-import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.scopeEq;
-import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.titleStartWith;
-import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.ExpressionUtils.writerUniversityEq;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.categoryEq;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.isBookmark;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.scopeEq;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.titleStartWith;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.writerUniversityEq;
 import static synk.meeteam.domain.recruitment.recruitment_role.entity.QRecruitmentRole.recruitmentRole;
 import static synk.meeteam.domain.recruitment.recruitment_role_skill.entity.QRecruitmentRoleSkill.recruitmentRoleSkill;
 import static synk.meeteam.domain.recruitment.recruitment_tag.entity.QRecruitmentTag.recruitmentTag;
@@ -80,11 +80,11 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                         recruitmentPost.isClosed.isFalse()
                 );
 
-        query = jpaUtils.joinWithFieldAndTagAndRoleAndSkill(query, condition);
+        searchJpaUtils.joinWithFieldAndTagAndRoleAndSkill(query, condition);
 
         //교내
         if (condition.getScope() == Scope.ON_CAMPUS) {
-            query = jpaUtils.joinWithCourseAndProfessor(query, condition, userDomain);
+            searchJpaUtils.joinWithCourseAndProfessor(query, condition, userDomain);
         }
 
         return query.orderBy(recruitmentPost.createdAt.desc(), recruitmentPost.id.desc())
@@ -107,27 +107,27 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                         recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
                 );
 
-        countQuery = jpaUtils.joinWithFieldAndTagAndRoleAndSkill(countQuery, condition);
+        searchJpaUtils.joinWithFieldAndTagAndRoleAndSkill(countQuery, condition);
         //교내
         if (condition.getScope() == Scope.ON_CAMPUS) {
-            countQuery = jpaUtils.joinWithCourseAndProfessor(countQuery, condition, userDomain);
+            searchJpaUtils.joinWithCourseAndProfessor(countQuery, condition, userDomain);
         }
 
         return countQuery;
     }
 
 
-    static class jpaUtils {
-        public static <T> JPAQuery<T> joinWithFieldAndTagAndRoleAndSkill(JPAQuery<T> query, SearchCondition condition) {
+    static class searchJpaUtils {
+        public static <T> void joinWithFieldAndTagAndRoleAndSkill(JPAQuery<T> query, SearchCondition condition) {
             //분야
             if (condition.isExistField()) {
-                query = query.leftJoin(recruitmentPost.field, field)
+                query.leftJoin(recruitmentPost.field, field)
                         .where(field.id.eq(condition.getFieldId()));
             }
 
             //태그
             if (condition.isExistTags()) {
-                query = query.leftJoin(recruitmentTag).on(recruitmentPost.id.eq(recruitmentTag.recruitmentPost.id))
+                query.leftJoin(recruitmentTag).on(recruitmentPost.id.eq(recruitmentTag.recruitmentPost.id))
                         .leftJoin(recruitmentTag.tag, tag)
                         .where(
                                 tag.type.eq(TagType.MEETEAM),
@@ -137,46 +137,43 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
 
             //역할
             if (condition.isExistRoles()) {
-                query = query.leftJoin(recruitmentRole)
+                query.leftJoin(recruitmentRole)
                         .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
                         .leftJoin(recruitmentRole.role, role)
                         .where(role.id.in(condition.getRoleIds()));
                 //역할 + 스킬
                 if (condition.isExistSkills()) {
-                    query = query.leftJoin(recruitmentRoleSkill)
+                    query.leftJoin(recruitmentRoleSkill)
                             .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
                             .leftJoin(recruitmentRoleSkill.skill, skill)
                             .where(skill.id.in(condition.getSkillIds()));
                 }
             } else if (condition.isExistSkills()) {
-                query = query.leftJoin(recruitmentRole)
+                query.leftJoin(recruitmentRole)
                         .on(recruitmentPost.id.eq(recruitmentRole.recruitmentPost.id))
                         .leftJoin(recruitmentRoleSkill)
                         .on(recruitmentRole.id.eq(recruitmentRoleSkill.recruitmentRole.id))
                         .leftJoin(recruitmentRoleSkill.skill, skill)
                         .where(skill.id.in(condition.getSkillIds()));
             }
-
-            return query;
         }
 
-        public static <T> JPAQuery<T> joinWithCourseAndProfessor(JPAQuery<T> query,
-                                                                 SearchCondition condition, User userDomain) {
+        public static <T> void joinWithCourseAndProfessor(JPAQuery<T> query,
+                                                          SearchCondition condition, User userDomain) {
             if (condition.isExistCourse()) {
-                query = query.leftJoin(recruitmentPost.course, course)
+                query.leftJoin(recruitmentPost.course, course)
                         .where(
                                 course.id.eq(condition.getCourseId()),
                                 course.university.eq(userDomain.getUniversity())
                         );
             }
             if (condition.isExistProfessor()) {
-                query = query.leftJoin(recruitmentPost.professor, professor)
+                query.leftJoin(recruitmentPost.professor, professor)
                         .where(
                                 professor.id.eq(condition.getProfessorId()),
                                 professor.university.eq(userDomain.getUniversity())
                         );
             }
-            return query;
         }
     }
 }
