@@ -1,6 +1,7 @@
 package synk.meeteam.domain.portfolio.portfolio.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -55,8 +56,10 @@ public record CreatePortfolioRequestDto(
         List<String> fileOrder,
         @Schema(description = "스킬", example = "[1,2,3]")
         @NotNull
+        @Size(max = 10)
         List<Long> skills,
         @NotNull
-        List<PortfolioLinkDto> links
+        @Size(max = 10)
+        List<@Valid PortfolioLinkDto> links
 ) {
 }
