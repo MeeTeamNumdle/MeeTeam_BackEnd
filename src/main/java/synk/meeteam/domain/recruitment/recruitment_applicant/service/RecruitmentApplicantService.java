@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_applicant.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_USER;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.SS_602;
 import static synk.meeteam.infra.s3.S3FileName.USER;
 
@@ -92,7 +93,9 @@ public class RecruitmentApplicantService {
     }
 
     @Transactional
-    public GetApplicantResponseDto getAllByRole(Long postId, Long roleId, int page, int size) {
+    public GetApplicantResponseDto getAllByRole(Long postId, Long roleId, Long userId, Long writerId, int page, int size) {
+        validateIsWriter(userId, writerId);
+
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size);
 
@@ -115,6 +118,12 @@ public class RecruitmentApplicantService {
             return false;
         }
         return true;
+    }
+
+    private void validateIsWriter(Long userId, Long writerId){
+        if(!userId.equals(writerId)){
+            throw new RecruitmentApplicantException(INVALID_USER);
+        }
     }
 
     private void validateCanProcess(List<RecruitmentApplicant> applicants, Long userId) {

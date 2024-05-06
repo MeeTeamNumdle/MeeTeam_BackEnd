@@ -1,11 +1,14 @@
 package synk.meeteam.domain.recruitment.recruitment_role.service;
 
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_USER;
+
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.dto.AvailableRecruitmentRoleDto;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
@@ -63,7 +66,9 @@ public class RecruitmentRoleService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecruitmentRole> findApplyStatusRecruitmentRole(Long postId) {
+    public List<RecruitmentRole> findApplyStatusRecruitmentRole(Long postId, Long userId, Long writerId) {
+        validateIsWriter(userId, writerId);
+
         return recruitmentRoleRepository.findAllByPostIdWithRecruitmentRoleAndRole(postId);
     }
 
@@ -78,4 +83,10 @@ public class RecruitmentRoleService {
                 });
     }
 
+    private void validateIsWriter(Long userId, Long writerId){
+
+        if(!userId.equals(writerId)){
+            throw new RecruitmentApplicantException(INVALID_USER);
+        }
+    }
 }
