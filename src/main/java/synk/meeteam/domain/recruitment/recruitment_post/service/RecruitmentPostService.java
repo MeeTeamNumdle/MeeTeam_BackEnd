@@ -77,7 +77,7 @@ public class RecruitmentPostService {
 
     @Transactional
     public RecruitmentPost modifyRecruitmentPost(RecruitmentPost dstRecruitmentPost,
-                                                 RecruitmentPost srcRecruitmentPost) {
+                                                 RecruitmentPost srcRecruitmentPost, Long userId) {
 
         dstRecruitmentPost.updateRecruitmentPost(srcRecruitmentPost.getTitle(), srcRecruitmentPost.getContent(),
                 srcRecruitmentPost.getScope(), srcRecruitmentPost.getCategory(), srcRecruitmentPost.getField(),
@@ -85,7 +85,7 @@ public class RecruitmentPostService {
                 srcRecruitmentPost.getProceedingEnd(), srcRecruitmentPost.getDeadline(),
                 srcRecruitmentPost.getBookmarkCount(),
                 srcRecruitmentPost.getKakaoLink(), srcRecruitmentPost.isClosed(), srcRecruitmentPost.getMeeteam(),
-                srcRecruitmentPost.getApplicantCount(), srcRecruitmentPost.getResponseCount());
+                srcRecruitmentPost.getApplicantCount(), srcRecruitmentPost.getResponseCount(), userId);
 
         return recruitmentPostRepository.save(dstRecruitmentPost);
     }

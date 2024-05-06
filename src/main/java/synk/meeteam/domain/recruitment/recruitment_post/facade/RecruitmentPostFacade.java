@@ -51,9 +51,9 @@ public class RecruitmentPostFacade {
     public void modifyRecruitmentPost(RecruitmentPost dstRecruitmentPost, RecruitmentPost srcRecruitmentPost,
                                       List<RecruitmentRole> recruitmentRoles,
                                       List<RecruitmentRoleSkill> recruitmentRoleSkills,
-                                      List<RecruitmentTag> recruitmentTags) {
+                                      List<RecruitmentTag> recruitmentTags, Long userId) {
 
-        recruitmentPostService.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost);
+        recruitmentPostService.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost, userId);
 
         // cascade 설정을 하여 recruitmentRoleService에서 Role과 Skills를 한 번에 삭제한다.
         recruitmentRoleService.modifyRecruitmentRoleAndSkills(recruitmentRoles, recruitmentRoleSkills,

@@ -50,7 +50,7 @@ public class RecruitmentPostEntityTest {
         // when
         recruitmentPost.updateRecruitmentPost("정상제목2", "내용", Scope.ON_CAMPUS, Category.PROJECT, new Field(1L, "개발"),
                 ProceedType.ON_LINE, LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 15), LocalDate.of(2024, 1, 15), 5L,
-                "kakaolink~~", false, null, 5L, 5L);
+                "kakaolink~~", false, null, 5L, 5L, 1L);
 
         // then
         Assertions.assertThat(recruitmentPost)

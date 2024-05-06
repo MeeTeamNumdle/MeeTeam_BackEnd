@@ -120,7 +120,7 @@ public class RecruitmentPostServiceTest {
 
         // when
         RecruitmentPost newRecruitmentPost = recruitmentPostService.modifyRecruitmentPost(dstRecruitmentPost,
-                srcRecruitmentPost);
+                srcRecruitmentPost, 1L);
 
         // then
         assertThat(newRecruitmentPost.getTitle()).isEqualTo("수정하려는제목입니다");
