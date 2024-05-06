@@ -1,6 +1,7 @@
 package synk.meeteam.domain.portfolio.portfolio.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ public record UpdatePortfolioRequestDto(
         String content,
         @Schema(description = "zip 파일 순서", example = "[\"이미지1.png\",\"이미지2.jpg\"]")
         @NotNull
+        @Size(min = 1, max = 15)
         List<String> fileOrder,
         @Schema(description = "분야", example = "1")
         @NotNull
@@ -47,8 +49,11 @@ public record UpdatePortfolioRequestDto(
         String proceedType,
         @Schema(description = "스킬", example = "[1,2,3]")
         @NotNull
+        @Size(max = 10)
         List<Long> skills,
+        @Schema(description = "링크")
         @NotNull
-        List<PortfolioLinkDto> links
+        @Size(max = 10)
+        List<@Valid PortfolioLinkDto> links
 ) {
 }
