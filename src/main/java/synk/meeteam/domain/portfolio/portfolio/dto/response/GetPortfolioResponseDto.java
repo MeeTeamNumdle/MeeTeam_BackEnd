@@ -41,6 +41,9 @@ public record GetPortfolioResponseDto(
         List<PortfolioLinkDto> links,
         List<SimplePortfolioDto> otherPortfolios,
         @Schema(description = "작성자여부", example = "true")
-        boolean isWriter
+        boolean isWriter,
+        @Schema(description = "작성자 닉네임", example = "goder")
+        String writerNickname
+
 ) {
 }
