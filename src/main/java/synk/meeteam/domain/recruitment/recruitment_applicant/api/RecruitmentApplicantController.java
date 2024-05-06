@@ -58,7 +58,7 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
                                                                     @AuthUser User user) {
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
         List<RecruitmentRole> applyStatusRecruitmentRoles = recruitmentRoleService.findApplyStatusRecruitmentRole(
-                postId);
+                postId, user.getId(), recruitmentPost.getCreatedBy());
 
         List<GetRecruitmentRoleStatusResponseDto> roleStatusResponseDtos = applyStatusRecruitmentRoles.stream()
                 .map(role -> GetRecruitmentRoleStatusResponseDto.of(role.getRole().getName(), role.getCount(),
@@ -71,7 +71,7 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
 
         return ResponseEntity.ok()
                 .body(new GetApplicantInfoResponseDto(recruitmentPost.getTitle(), recruitmentPost.getKakaoLink(),
-                        user.isFirstApplicantAccess(),roleStatusResponseDtos,
+                        user.isFirstApplicantAccess(), roleStatusResponseDtos,
                         roleDtos));
     }
 
@@ -114,8 +114,9 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
                                                                  @RequestParam(name = "page", defaultValue = "1") int page,
                                                                  @RequestParam(name = "size", defaultValue = "8") int size,
                                                                  @AuthUser User user) {
-
-        GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, page, size);
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, user.getId(),
+                recruitmentPost.getCreatedBy(), page, size);
         return ResponseEntity.ok().body(responseDtos);
     }
 
