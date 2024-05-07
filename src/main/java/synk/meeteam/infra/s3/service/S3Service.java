@@ -22,7 +22,7 @@ import synk.meeteam.infra.s3.service.vo.PreSignedUrlVO;
 @Slf4j
 public class S3Service {
 
-    private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 1L;
+    private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 4320L;
 
     private final S3Config s3Config;
     @Value("${aws-property.s3-bucket-name}")
