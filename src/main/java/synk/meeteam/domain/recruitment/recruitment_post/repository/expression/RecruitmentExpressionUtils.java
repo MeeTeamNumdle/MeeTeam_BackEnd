@@ -48,8 +48,8 @@ public class RecruitmentExpressionUtils {
         }
     }
 
-    public static BooleanExpression titleStartWith(String keyword) {
-        return (keyword == null || keyword.isEmpty()) ? null : recruitmentPost.title.startsWith(keyword);
+    public static BooleanExpression titleContains(String keyword) {
+        return (keyword == null || keyword.isEmpty()) ? null : recruitmentPost.title.contains(keyword);
     }
 
     private static BooleanExpression isFalse() {
