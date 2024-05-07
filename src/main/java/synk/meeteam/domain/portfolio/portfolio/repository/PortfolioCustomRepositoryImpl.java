@@ -4,6 +4,7 @@ import static synk.meeteam.domain.common.field.entity.QField.field;
 import static synk.meeteam.domain.common.role.entity.QRole.role;
 import static synk.meeteam.domain.portfolio.portfolio.entity.QPortfolio.portfolio;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -21,6 +22,7 @@ import synk.meeteam.domain.portfolio.portfolio.dto.QSimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.entity.DeleteStatus;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,7 +39,9 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
         return queryFactory
                 .selectFrom(portfolio)
                 .where(portfolio.id.in(portfolioIds),
-                        portfolio.createdBy.eq(userId))
+                        portfolio.createdBy.eq(userId),
+                        isAlive()
+                )
                 .orderBy(orderByPin(portfolioIds).asc())
                 .fetch();
     }
@@ -69,7 +73,8 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
                 .from(portfolio)
                 .leftJoin(portfolio.role, role)
                 .leftJoin(portfolio.field, field)
-                .where(portfolio.createdBy.eq(user.getId()))
+                .where(portfolio.createdBy.eq(user.getId()),
+                        isAlive())
                 .orderBy(portfolio.createdAt.desc(), portfolio.id.desc())
                 .offset(pageable.getOffset())
                 .limit(limit)
@@ -88,7 +93,7 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
     private JPAQuery<Long> getCount(User user) {
         return queryFactory.select(portfolio.countDistinct())
                 .from(portfolio)
-                .where(portfolio.createdBy.eq(user.getId()));
+                .where(portfolio.createdBy.eq(user.getId()), isAlive());
     }
 
     NumberExpression<Integer> orderByPin(List<Long> ids) {
@@ -98,6 +103,10 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
         return caseBuilder
                 .when(portfolio.id.in(ids)).then(ids.indexOf(portfolio.id))
                 .otherwise(ids.size());
+    }
+
+    BooleanExpression isAlive() {
+        return portfolio.deleteStatus.eq(DeleteStatus.ALIVE);
     }
 
 }
