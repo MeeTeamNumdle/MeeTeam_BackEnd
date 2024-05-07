@@ -85,9 +85,7 @@ public class PortfolioFacade {
     @Transactional
     public Long editPortfolio(Long portfolioId, User user, UpdatePortfolioRequestDto requestDto) {
         Portfolio portfolio = portfolioService.getPortfolio(portfolioId);
-        if (!portfolio.isWriter(user.getId())) {
-            throw new PortfolioException(NOT_YOUR_PORTFOLIO);
-        }
+        portfolio.validWriter(user.getId());
         portfolioService.editPortfolio(portfolio, user, commandMapper.toUpdatePortfolioCommand(requestDto));
         portfolioSkillService.editPortfolioSkill(portfolio, requestDto.skills());
         portfolioLinkService.editPortfolioLink(portfolio, requestDto.links());
