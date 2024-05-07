@@ -34,7 +34,7 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
         return queryFactory
                 .select(new QSearchTagDto(tag.id, tag.name))
                 .from(tag)
-                .where(tag.name.startsWith(keyword).and(tag.type.eq(type)))
+                .where(tag.name.contains(keyword).and(tag.type.eq(type)))
                 .limit(limit)
                 .orderBy(tag.name.asc().nullsLast())
                 .fetch();
