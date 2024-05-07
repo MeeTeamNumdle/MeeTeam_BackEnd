@@ -1,7 +1,6 @@
 package synk.meeteam.domain.portfolio.portfolio.service;
 
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_FOUND_PORTFOLIO;
-import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_YOUR_PORTFOLIO;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.OVER_MAX_PIN_SIZE;
 import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.SS_110;
 
@@ -150,14 +149,11 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public void deletePortfolio(Long portfolioId, User user) {
         Portfolio portfolio = portfolioRepository.findByIdAndAliveOrElseThrow(portfolioId);
-        if (portfolio.isWriter(user.getId())) {
-            if (portfolio.getIsPin()) {
-                reorderPinPortfolio(user, portfolio);
-            }
-            portfolio.softDelete();
-        } else {
-            throw new PortfolioException(NOT_YOUR_PORTFOLIO);
+        portfolio.validWriter(user.getId());
+        if (portfolio.getIsPin()) {
+            reorderPinPortfolio(user, portfolio);
         }
+        portfolio.softDelete();
     }
 
     private void reorderPinPortfolio(User user, Portfolio portfolio) {
