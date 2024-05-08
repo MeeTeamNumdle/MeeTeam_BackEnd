@@ -19,7 +19,7 @@ public class RoleRepositoryCustomImpl implements RoleRepositoryCustom {
         return queryFactory
                 .select(new QRoleDto(role.id, role.name))
                 .from(role)
-                .where(role.name.startsWith(keyword))
+                .where(role.name.contains(keyword))
                 .limit(limit)
                 .orderBy(role.name.asc().nullsLast())
                 .fetch();

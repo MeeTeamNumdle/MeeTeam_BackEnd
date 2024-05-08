@@ -18,7 +18,7 @@ public class SkillRepositoryCustomImpl implements SkillRepositoryCustom {
         return queryFactory
                 .select(new QSkillDto(skill.id, skill.name))
                 .from(skill)
-                .where(skill.name.startsWith(keyword))
+                .where(skill.name.contains(keyword))
                 .limit(limit)
                 .orderBy(skill.name.asc().nullsLast())
                 .fetch();
