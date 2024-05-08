@@ -65,8 +65,10 @@ public class JwtService {
             throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(Encryption.encryptLong(vo.userId()), accessTokenExpirationPeriod);
-        String refreshToken = jwtTokenProvider.createRefreshToken(Encryption.encryptLong(vo.userId()), refreshTokenExpirationPeriod);
+        String accessToken = jwtTokenProvider.createAccessToken(Encryption.encryptLong(vo.userId()),
+                accessTokenExpirationPeriod);
+        String refreshToken = jwtTokenProvider.createRefreshToken(Encryption.encryptLong(vo.userId()),
+                refreshTokenExpirationPeriod);
         updateRefreshTokenByUserId(Encryption.encryptLong(vo.userId()), refreshToken);
 
         return authUserResponseMapper.ofLogin(vo.authType(), vo.authority(), Encryption.encryptLong(vo.userId()),
@@ -83,10 +85,10 @@ public class JwtService {
         }
 
         Claims tokenClaims = jwtTokenProvider.getTokenClaims(accessToken);
-        TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(
-                String.valueOf(tokenClaims.get(USER_ID_CLAIM)));
+        String foundRefreshToken = redisTokenRepository
+                .findByIdOrElseThrow((String) tokenClaims.get(USER_ID_CLAIM)).getRefreshToken();
 
-        if (!foundRefreshToken.getRefreshToken().equals(refreshToken)) {
+        if (foundRefreshToken == null || !foundRefreshToken.equals(refreshToken)) {
             throw new AuthException(INVALID_REFRESH_TOKEN);
         }
 
@@ -101,8 +103,8 @@ public class JwtService {
     }
 
     @Transactional
-    public void logout(User user){
-        TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(user.getPlatformId());
+    public void logout(User user) {
+        TokenVO foundRefreshToken = redisTokenRepository.findByIdOrElseThrow(user.getEncryptUserId());
         foundRefreshToken.updateRefreshToken(null);
         redisTokenRepository.save(foundRefreshToken);
     }
@@ -119,7 +121,7 @@ public class JwtService {
             return !tokenClaims.getExpiration().before(new Date());
         } catch (MalformedJwtException e) {
             throw new AuthException(INVALID_ACCESS_TOKEN);
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             throw new AuthException(UNAUTHORIZED_ACCESS_TOKEN);
         }
     }
