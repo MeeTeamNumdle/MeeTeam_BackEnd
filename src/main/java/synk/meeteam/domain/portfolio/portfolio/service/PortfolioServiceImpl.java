@@ -157,12 +157,12 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     private void reorderPinPortfolio(User user, Portfolio portfolio) {
+        portfolio.unpin();
         List<Portfolio> pinPortfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(
                 user.getId());
         for (int index = 0; index < pinPortfolios.size(); index++) {
             pinPortfolios.get(index).putPin(index + 1);
         }
-        portfolio.unpin();
     }
 
     @Transactional(readOnly = true)
