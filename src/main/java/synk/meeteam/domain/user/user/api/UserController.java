@@ -1,5 +1,7 @@
 package synk.meeteam.domain.user.user.api;
 
+import static synk.meeteam.infra.s3.S3FileName.USER;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +16,13 @@ import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResp
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
+import synk.meeteam.domain.user.user.dto.response.GetProfileImageResponseDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.ProfileFacade;
 import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.global.util.Encryption;
+import synk.meeteam.infra.s3.service.S3Service;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -28,6 +32,8 @@ public class UserController implements UserApi {
 
     private final UserService userService;
     private final PortfolioService portfolioService;
+    private final S3Service s3Service;
+
     private final ProfileFacade profileFacade;
 
     @Override
@@ -68,5 +74,12 @@ public class UserController implements UserApi {
             @AuthUser User user, @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "12") int size) {
         return ResponseEntity.ok(portfolioService.getSliceMyAllPortfolio(page, size, user));
+    }
+
+    @Override
+    @GetMapping("/profile/me")
+    public ResponseEntity<GetProfileImageResponseDto> getProfileImage(@AuthUser User user) {
+        String profileImgUrl = s3Service.createPreSignedGetUrl(USER, user.getProfileImgFileName());
+        return ResponseEntity.ok(GetProfileImageResponseDto.of(profileImgUrl));
     }
 }
