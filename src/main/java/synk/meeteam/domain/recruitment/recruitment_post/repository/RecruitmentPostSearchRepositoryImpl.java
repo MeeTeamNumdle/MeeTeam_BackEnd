@@ -104,7 +104,8 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                         userDomain != null ? writerUniversityEqUser(writer, userDomain, condition.getScope()) : null,
                         categoryEq(condition.getCategory()),
                         titleContains(keyword),
-                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED),
+                        recruitmentPost.isClosed.isFalse()
                 );
 
         searchJpaUtils.joinWithFieldAndTagAndRoleAndSkill(countQuery, condition);
