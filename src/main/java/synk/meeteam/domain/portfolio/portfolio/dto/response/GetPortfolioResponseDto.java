@@ -1,11 +1,13 @@
 package synk.meeteam.domain.portfolio.portfolio.dto.response;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio_link.dto.PortfolioLinkDto;
+import synk.meeteam.global.util.UnescapedFieldSerializer;
 
 public record GetPortfolioResponseDto(
         @Schema(description = "제목", example = "Meeteam")
@@ -22,6 +24,7 @@ public record GetPortfolioResponseDto(
                 + "이를 위해 함께 멋진 서비스를 완성할 웹 디자이너를 찾고 있어요!\n"
                 + "밋팀(Meeteam)은 나 자신을 의미하는 Me, 팀을 의미하는 Team, 만남을 의미하는 Meet이 합쳐진 단어입니다.\n"
                 + "대학생들의 보다 원활한 팀프로젝트를 위해 기획하게 되었으며, 그 외에 포토폴리오로서의 기능까지 생각하고 있습니다!\n")
+        @JsonSerialize(using = UnescapedFieldSerializer.class)
         String content,
         @Schema(description = "zip 파일 url", example = "https://file.zip")
         String zipFileUrl,
