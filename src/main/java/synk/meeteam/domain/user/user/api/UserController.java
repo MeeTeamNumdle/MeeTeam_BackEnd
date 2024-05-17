@@ -77,7 +77,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @GetMapping("/profile/me")
+    @GetMapping("/profile/image")
     public ResponseEntity<GetProfileImageResponseDto> getProfileImage(@AuthUser User user) {
         String profileImgUrl = s3Service.createPreSignedGetUrl(USER, user.getProfileImgFileName());
         return ResponseEntity.ok(GetProfileImageResponseDto.of(profileImgUrl));
