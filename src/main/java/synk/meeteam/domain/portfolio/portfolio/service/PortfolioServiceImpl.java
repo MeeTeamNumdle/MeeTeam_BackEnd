@@ -29,7 +29,7 @@ import synk.meeteam.global.dto.PageInfo;
 import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.global.dto.SliceInfo;
 import synk.meeteam.infra.aws.S3FilePath;
-import synk.meeteam.infra.aws.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     private final FieldRepository fieldRepository;
     private final RoleRepository roleRepository;
 
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     @Transactional
     public List<Portfolio> changePinPortfoliosByIds(Long userId, List<Long> portfolioIds) {
@@ -81,7 +81,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         Slice<SimplePortfolioDto> userPortfolioDtos = portfolioRepository.findSlicePortfoliosByUserOrderByCreatedAtDesc(
                 pageable, user);
         userPortfolioDtos.getContent().forEach(userPortfolio -> {
-            String imageUrl = s3Service.createPreSignedGetUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
+            String imageUrl = cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                     userPortfolio.getMainImageUrl());
             userPortfolio.setMainImageUrl(imageUrl);
         });
@@ -95,7 +95,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         Page<SimplePortfolioDto> myPortfolios = portfolioRepository.findPaginationPortfoliosByUserOrderByCreatedAtDesc(
                 PageRequest.of(page - 1, size), user);
         myPortfolios.getContent().forEach(myPortfolio -> {
-            String imageUrl = s3Service.createPreSignedGetUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
+            String imageUrl = cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                     myPortfolio.getMainImageUrl());
             myPortfolio.setMainImageUrl(imageUrl);
         });

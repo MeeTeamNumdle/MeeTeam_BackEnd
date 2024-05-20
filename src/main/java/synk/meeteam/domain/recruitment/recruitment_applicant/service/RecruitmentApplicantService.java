@@ -24,13 +24,13 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.SliceInfo;
 import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.aws.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
 public class RecruitmentApplicantService {
     private final RecruitmentApplicantRepository recruitmentApplicantRepository;
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     @Transactional
     public void registerRecruitmentApplicant(RecruitmentApplicant recruitmentApplicant) {
@@ -100,7 +100,7 @@ public class RecruitmentApplicantService {
                 roleId, pageable);
         applicantDtos.stream().forEach(applicant -> applicant.setEncryptedUserIdAndProfileImg(
                 Encryption.encryptLong(Long.parseLong(applicant.getUserId())),
-                s3Service.createPreSignedGetUrl(USER, applicant.getProfileImg())));
+                cloudFrontService.getSignedUrl(USER, applicant.getProfileImg())));
 
         SliceInfo pageInfo = new SliceInfo(page, size, applicantDtos.hasNext());
         return new GetApplicantResponseDto(applicantDtos.getContent(), pageInfo);

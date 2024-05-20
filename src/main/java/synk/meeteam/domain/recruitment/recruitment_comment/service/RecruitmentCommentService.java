@@ -16,14 +16,14 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetReplyRes
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.aws.S3FilePath;
-import synk.meeteam.infra.aws.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
 public class RecruitmentCommentService {
 
     private final RecruitmentCommentRepository recruitmentCommentRepository;
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     // 가공된 형태를 많이 사용할 것 같다.
     // 그래서 Dto를 바로 반환하는 식으로 만들었다.
@@ -36,9 +36,7 @@ public class RecruitmentCommentService {
 
         for (RecruitmentCommentVO comment : commentVOs) {
             boolean isWriter = writerId.equals(comment.getUserId());
-            String profileImg = s3Service.createPreSignedGetUrl(
-                    S3FilePath.USER,
-                    comment.getProfileImg());
+            String profileImg = cloudFrontService.getSignedUrl(S3FilePath.USER, comment.getProfileImg());
             String commentWriterId = Encryption.encryptLong(comment.getUserId());
 
             if (comment.isParent()) {
