@@ -71,4 +71,8 @@ public interface UserApi {
     @Operation(summary = "내 프로필 사진 조회 API")
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<GetProfileImageResponseDto> getProfileImage(@AuthUser User user);
+
+    @Operation(summary = "회원 탈퇴 API")
+    @SecurityRequirement(name = "Authorization")
+    ResponseEntity<Void> deleteUser(@AuthUser User user);
 }
