@@ -32,4 +32,6 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long>, Por
                 () -> new PortfolioException(NOT_FOUND_PORTFOLIO));
     }
 
+    List<Portfolio> findAllByCreatedBy(Long userId);
+
 }
