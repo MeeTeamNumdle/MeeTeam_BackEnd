@@ -5,6 +5,7 @@ import static synk.meeteam.infra.s3.S3FileName.USER;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +21,7 @@ import synk.meeteam.domain.user.user.dto.response.GetProfileImageResponseDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.ProfileFacade;
+import synk.meeteam.domain.user.user.service.UserManagementService;
 import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.s3.service.S3Service;
@@ -35,6 +37,7 @@ public class UserController implements UserApi {
     private final S3Service s3Service;
 
     private final ProfileFacade profileFacade;
+    private final UserManagementService userManagementService;
 
     @Override
     @PutMapping("/profile")
@@ -53,7 +56,7 @@ public class UserController implements UserApi {
         return ResponseEntity.ok(profileFacade.readProfile(user, userId));
     }
 
-    @GetMapping("encrypt/{userId}")
+    @GetMapping("/encrypt/{userId}")
     public ResponseEntity<String> getEncryptedId(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(Encryption.encryptLong(userId));
     }
@@ -81,5 +84,13 @@ public class UserController implements UserApi {
     public ResponseEntity<GetProfileImageResponseDto> getProfileImage(@AuthUser User user) {
         String profileImgUrl = s3Service.createPreSignedGetUrl(USER, user.getProfileImgFileName());
         return ResponseEntity.ok(GetProfileImageResponseDto.of(profileImgUrl));
+    }
+
+    @Override
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(@AuthUser User user) {
+        userManagementService.deleteUser(user);
+
+        return ResponseEntity.ok(null);
     }
 }
