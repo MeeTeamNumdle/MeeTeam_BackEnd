@@ -25,4 +25,6 @@ public interface RecruitmentCommentRepository extends JpaRepository<RecruitmentC
     default RecruitmentComment findByIdOrElseThrow(Long commentId) {
         return findById(commentId).orElseThrow(() -> new RecruitmentCommentException(INVALID_COMMENT));
     }
+
+    void deleteAllByRecruitmentPost(RecruitmentPost recruitmentPost);
 }

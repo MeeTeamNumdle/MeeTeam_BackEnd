@@ -28,4 +28,6 @@ public interface RecruitmentApplicantRepository extends JpaRepository<Recruitmen
         return findByRecruitmentPostAndApplicantAndDeleteStatus(recruitmentPost, user, DeleteStatus.ALIVE)
                 .orElseThrow(() -> new RecruitmentApplicantException(SS_600));
     }
+
+    void deleteAllByRecruitmentPost(RecruitmentPost recruitmentPost);
 }
