@@ -182,3 +182,5 @@ replay_pid*
 *.html
 src/main/generated
 .gradle
+
+key
