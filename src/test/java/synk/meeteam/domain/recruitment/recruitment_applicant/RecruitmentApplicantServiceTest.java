@@ -34,7 +34,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.UserFixture;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.service.S3Service;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")

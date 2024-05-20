@@ -28,8 +28,8 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.PageInfo;
 import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.global.dto.SliceInfo;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +81,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         Slice<SimplePortfolioDto> userPortfolioDtos = portfolioRepository.findSlicePortfoliosByUserOrderByCreatedAtDesc(
                 pageable, user);
         userPortfolioDtos.getContent().forEach(userPortfolio -> {
-            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+            String imageUrl = s3Service.createPreSignedGetUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                     userPortfolio.getMainImageUrl());
             userPortfolio.setMainImageUrl(imageUrl);
         });
@@ -95,7 +95,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         Page<SimplePortfolioDto> myPortfolios = portfolioRepository.findPaginationPortfoliosByUserOrderByCreatedAtDesc(
                 PageRequest.of(page - 1, size), user);
         myPortfolios.getContent().forEach(myPortfolio -> {
-            String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+            String imageUrl = s3Service.createPreSignedGetUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                     myPortfolio.getMainImageUrl());
             myPortfolio.setMainImageUrl(imageUrl);
         });

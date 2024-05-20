@@ -19,8 +19,8 @@ import synk.meeteam.global.dto.PageInfo;
 import synk.meeteam.global.dto.PaginationDto;
 import synk.meeteam.global.entity.Scope;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
@@ -106,7 +106,7 @@ public class RecruitmentPostService {
         List<SimpleRecruitmentPostDto> contents = postVos.stream()
                 .map((postVo) -> {
                     String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
-                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
+                    String imageUrl = s3Service.createPreSignedGetUrl(S3FilePath.USER, postVo.getWriterProfileImg());
                     return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
                 }).toList();
 
@@ -138,7 +138,7 @@ public class RecruitmentPostService {
         List<SimpleRecruitmentPostDto> contents = postVos.stream()
                 .map((postVo) -> {
                     String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
-                    String imageUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, postVo.getWriterProfileImg());
+                    String imageUrl = s3Service.createPreSignedGetUrl(S3FilePath.USER, postVo.getWriterProfileImg());
                     return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
                 }).toList();
         return new PaginationDto<>(contents, pageInfo);

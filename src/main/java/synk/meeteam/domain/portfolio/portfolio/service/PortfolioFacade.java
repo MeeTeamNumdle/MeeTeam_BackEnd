@@ -20,8 +20,8 @@ import synk.meeteam.domain.portfolio.portfolio_link.entity.PortfolioLink;
 import synk.meeteam.domain.portfolio.portfolio_link.service.PortfolioLinkService;
 import synk.meeteam.domain.portfolio.portfolio_skill.service.PortfolioSkillService;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class PortfolioFacade {
 
         List<Skill> skills = portfolioSkillService.getPortfolioSkill(portfolio);
         List<PortfolioLink> links = portfolioLinkService.getPortfolioLink(portfolio);
-        String zipFileUrl = s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+        String zipFileUrl = s3Service.createPreSignedGetUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                 portfolio.getZipFileName());
         List<Portfolio> otherPinPortfolios = getUserPortfolio(portfolio);
         return new GetPortfolioResponseDto(
@@ -70,7 +70,7 @@ public class PortfolioFacade {
                 links.stream().map(link -> new PortfolioLinkDto(link.getUrl(), link.getDescription())).toList(),
                 otherPinPortfolios.stream().map(otherPortfolio ->
                         portfolioMapper.toGetProfilePortfolioDto(otherPortfolio,
-                                s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(user.getEncryptUserId()),
+                                s3Service.createPreSignedGetUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                                         otherPortfolio.getMainImageFileName()))).toList(),
                 portfolio.isWriter(user.getId())
         );

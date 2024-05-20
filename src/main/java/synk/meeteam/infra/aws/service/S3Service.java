@@ -1,4 +1,4 @@
-package synk.meeteam.infra.s3.service;
+package synk.meeteam.infra.aws.service;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -14,8 +14,8 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 import synk.meeteam.global.entity.ServiceType;
-import synk.meeteam.infra.s3.config.S3Config;
-import synk.meeteam.infra.s3.service.vo.PreSignedUrlVO;
+import synk.meeteam.infra.aws.config.AwsConfig;
+import synk.meeteam.infra.aws.service.vo.SignedUrlVO;
 
 @Component
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class S3Service {
 
     private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 1L;
 
-    private final S3Config s3Config;
+    private final AwsConfig awsConfig;
     @Value("${aws-property.s3-bucket-name}")
     private String bucketName;
 
@@ -34,7 +34,7 @@ public class S3Service {
         }
         String key = path + fileName;
 
-        S3Presigner preSigner = s3Config.getS3Presigner();
+        S3Presigner preSigner = awsConfig.getS3Presigner();
 
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
@@ -53,8 +53,8 @@ public class S3Service {
         return presignedGetObjectRequest.url().toExternalForm();
     }
 
-    public PreSignedUrlVO getUploadPreSignedUrl(final String prefix, final String fileName, final String extension,
-                                                ServiceType serviceType) {
+    public SignedUrlVO getUploadPreSignedUrl(final String prefix, final String fileName, final String extension,
+                                             ServiceType serviceType) {
         String actualFileName = fileName;
 
         if (actualFileName == null) {
@@ -64,7 +64,7 @@ public class S3Service {
 
         String key = prefix + actualFileName;
 
-        S3Presigner preSigner = s3Config.getS3Presigner();
+        S3Presigner preSigner = awsConfig.getS3Presigner();
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -80,7 +80,7 @@ public class S3Service {
         log.info("Presigned URL: [{}]", presignedPutObjectRequest.url().toString());
         log.info("HTTP method: [{}]", presignedPutObjectRequest.httpRequest().method());
 
-        return PreSignedUrlVO.of(serviceType, actualFileName, presignedPutObjectRequest.url().toExternalForm());
+        return SignedUrlVO.of(serviceType, actualFileName, presignedPutObjectRequest.url().toExternalForm());
     }
 
     private String generateZipFileName() {

@@ -15,8 +15,8 @@ import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentR
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetReplyResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.S3Service;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class RecruitmentCommentService {
         for (RecruitmentCommentVO comment : commentVOs) {
             boolean isWriter = writerId.equals(comment.getUserId());
             String profileImg = s3Service.createPreSignedGetUrl(
-                    S3FileName.USER,
+                    S3FilePath.USER,
                     comment.getProfileImg());
             String commentWriterId = Encryption.encryptLong(comment.getUserId());
 

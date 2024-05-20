@@ -25,7 +25,7 @@ import synk.meeteam.domain.recruitment.recruitment_comment.service.vo.Recruitmen
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.service.S3Service;
 
 @ExtendWith(MockitoExtension.class)
 public class RecruitmentCommentServiceTest {

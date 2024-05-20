@@ -1,4 +1,4 @@
-package synk.meeteam.infra.s3.service.vo;
+package synk.meeteam.infra.aws.service.vo;
 
 
 import lombok.AllArgsConstructor;
@@ -7,13 +7,13 @@ import synk.meeteam.global.entity.ServiceType;
 
 @Data
 @AllArgsConstructor
-public class PreSignedUrlVO {
+public class SignedUrlVO {
 
     private ServiceType serviceType;
     private String fileName;
     private String url;
 
-    public static PreSignedUrlVO of(ServiceType serviceType, String fileName, String url) {
-        return new PreSignedUrlVO(serviceType, fileName, url);
+    public static SignedUrlVO of(ServiceType serviceType, String fileName, String url) {
+        return new SignedUrlVO(serviceType, fileName, url);
     }
 }
