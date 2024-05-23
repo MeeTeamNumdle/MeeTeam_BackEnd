@@ -53,9 +53,10 @@ public class UserManagementService {
     public void deleteUser(User user) {
         recruitmentPostRepository.findAllByCreatedBy(user.getId())
                 .forEach(this::deleteRecruitmentPost);
+        bookmarkRepository.deleteAllByUser(user);
 
         portfolioRepository.findAllByCreatedBy(user.getId())
-                .forEach(portfolio -> deletePortfolio(portfolio, user));
+                .forEach(portfolio -> deletePortfolio(portfolio));
 
         deleteProfile(user);
 
@@ -73,18 +74,18 @@ public class UserManagementService {
         recruitmentCommentRepository.deleteAllByRecruitmentPost(recruitmentPost);
         recruitmentApplicantRepository.deleteAllByRecruitmentPost(recruitmentPost);
         recruitmentPostRepository.delete(recruitmentPost);
+
     }
 
-    private void deletePortfolio(Portfolio portfolio, User user){
+    private void deletePortfolio(Portfolio portfolio){
         portfolioSkillRepository.deleteAllByPortfolio(portfolio);
         portfolioLinkRepository.deleteAllByPortfolio(portfolio);
-        awardRepository.deleteAllByCreatedBy(user.getId());
-        bookmarkRepository.deleteAllByUser(user);
         portfolioRepository.delete(portfolio);
     }
 
     private void deleteProfile(User user){
         userSkillRepository.deleteAllByCreatedBy(user.getId());
         userLinkRepository.deleteAllByCreatedBy(user.getId());
+        awardRepository.deleteAllByCreatedBy(user.getId());
     }
 }
