@@ -6,8 +6,10 @@ import static synk.meeteam.domain.recruitment.recruitment_role.exception.Recruit
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
@@ -30,6 +32,12 @@ public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole
     }
 
     void deleteAllByRecruitmentPostId(Long postId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM RecruitmentRole r WHERE r.recruitmentPost.id IN :postIds")
+    void deleteAllByPostIdInQuery(List<Long> postIds);
+
 
     @Query("SELECT r FROM RecruitmentRole r JOIN FETCH r.recruitmentPost p JOIN FETCH r.role t WHERE p.id = :postId AND t.id IN :roleIds")
     List<RecruitmentRole> findAllByPostIdAndRoleIds(@Param("postId") Long postId, @Param("roleIds") List<Long> roleIds);

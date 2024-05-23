@@ -51,41 +51,38 @@ public class UserManagementService {
 
     @Transactional
     public void deleteUser(User user) {
-        recruitmentPostRepository.findAllByCreatedBy(user.getId())
-                .forEach(this::deleteRecruitmentPost);
-        bookmarkRepository.deleteAllByUser(user);
+        List<Long> postIds = recruitmentPostRepository.findAllByCreatedBy(user.getId()).stream()
+                .map(RecruitmentPost::getId).toList();
+        deleteRecruitmentPosts(postIds, user.getId());
 
-        portfolioRepository.findAllByCreatedBy(user.getId())
-                .forEach(portfolio -> deletePortfolio(portfolio));
+        List<Long> portfolioIds = portfolioRepository.findAllByCreatedBy(user.getId())
+                .stream().map(Portfolio::getId).toList();
+        deletePortfolios(portfolioIds);
 
-        deleteProfile(user);
+        deleteProfile(user.getId());
 
         userRepository.delete(user);
     }
 
-    private void deleteRecruitmentPost(RecruitmentPost recruitmentPost) {
-        List<Long> recruitmentRoleIds = recruitmentRoleRepository.findByPostIdWithSkills(
-                recruitmentPost.getId()).stream()
-                .map(RecruitmentRole::getId).toList();
+    private void deleteRecruitmentPosts(List<Long> postIds, Long userId) {
 
-        recruitmentRoleSkillRepository.deleteAllByRecruitmentRoleIdInQuery(recruitmentRoleIds);
-        recruitmentRoleRepository.deleteAllByRecruitmentPostId(recruitmentPost.getId());
-        recruitmentTagRepository.deleteAllByRecruitmentPostId(recruitmentPost.getId());
-        recruitmentCommentRepository.deleteAllByRecruitmentPost(recruitmentPost);
-        recruitmentApplicantRepository.deleteAllByRecruitmentPost(recruitmentPost);
-        recruitmentPostRepository.delete(recruitmentPost);
-
+        bookmarkRepository.deleteAllByUserId(userId);
+        recruitmentRoleRepository.deleteAllByPostIdInQuery(postIds);
+        recruitmentTagRepository.deleteAllByPostIdInQuery(postIds);
+        recruitmentCommentRepository.deleteAllByPostIdInQuery(postIds);
+        recruitmentApplicantRepository.deleteAllByPostIdInQuery(postIds);
+        recruitmentPostRepository.deleteAllByIdInQuery(postIds);
     }
 
-    private void deletePortfolio(Portfolio portfolio){
-        portfolioSkillRepository.deleteAllByPortfolio(portfolio);
-        portfolioLinkRepository.deleteAllByPortfolio(portfolio);
-        portfolioRepository.delete(portfolio);
+    private void deletePortfolios(List<Long> portfolioIds) {
+        portfolioSkillRepository.deleteAllByPortfolioIdsInQuery(portfolioIds);
+        portfolioLinkRepository.deleteAllByPortfolioIdsInQuery(portfolioIds);
+        portfolioRepository.deleteAllByIdsInQuery(portfolioIds);
     }
 
-    private void deleteProfile(User user){
-        userSkillRepository.deleteAllByCreatedBy(user.getId());
-        userLinkRepository.deleteAllByCreatedBy(user.getId());
-        awardRepository.deleteAllByCreatedBy(user.getId());
+    private void deleteProfile(Long userId) {
+        userSkillRepository.deleteAllByUserId(userId);
+        userLinkRepository.deleteAllByUserId(userId);
+        awardRepository.deleteAllByUserId(userId);
     }
 }

@@ -5,8 +5,10 @@ import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.Re
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
@@ -28,6 +30,8 @@ public interface RecruitmentApplicantRepository extends JpaRepository<Recruitmen
         return findByRecruitmentPostAndApplicantAndDeleteStatus(recruitmentPost, user, DeleteStatus.ALIVE)
                 .orElseThrow(() -> new RecruitmentApplicantException(SS_600));
     }
-
-    void deleteAllByRecruitmentPost(RecruitmentPost recruitmentPost);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM RecruitmentApplicant r WHERE r.recruitmentPost.id IN :postIds")
+    void deleteAllByPostIdInQuery(List<Long> postIds);
 }
