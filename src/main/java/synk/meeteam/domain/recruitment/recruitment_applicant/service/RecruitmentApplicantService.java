@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
+import synk.meeteam.domain.recruitment.recruitment_applicant.service.vo.RecruitmentApplicants;
 import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
@@ -78,22 +79,26 @@ public class RecruitmentApplicantService {
 
     @Transactional
     public void approveApplicants(List<RecruitmentApplicant> applicants, List<Long> applicantIds, Long userId) {
+        // TODO : List<RecruitmentApplicant> 일급컬렉션으로 리팩토링 필요.
         validateCanProcess(applicants, userId);
-        validateApplicantCount(applicantIds.size(), applicants.size());
+        validateApplicants(applicantIds.size(), applicants.size());
 
         recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.APPROVED);
     }
 
     @Transactional
-    public void rejectApplicants(List<RecruitmentApplicant> applicants, List<Long> applicantIds, Long userId) {
-        validateCanProcess(applicants, userId);
-        validateApplicantCount(applicantIds.size(), applicants.size());
+    public void rejectApplicants(List<Long> requestApplicantIds, Long writerId) {
+        List<RecruitmentApplicant> applicants = getAllApplicants(requestApplicantIds);
+        RecruitmentApplicants recruitmentApplicants = new RecruitmentApplicants(applicants, requestApplicantIds,
+                writerId);
 
-        recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.REJECTED);
+        recruitmentApplicantRepository.updateRecruitStatus(recruitmentApplicants.getRecruitmentApplicantIds(),
+                RecruitStatus.REJECTED);
     }
 
     @Transactional
-    public GetApplicantResponseDto getAllByRole(Long postId, Long roleId, Long userId, Long writerId, int page, int size) {
+    public GetApplicantResponseDto getAllByRole(Long postId, Long roleId, Long userId, Long writerId, int page,
+                                                int size) {
         validateIsWriter(userId, writerId);
 
         int pageNumber = page - 1;
@@ -120,8 +125,8 @@ public class RecruitmentApplicantService {
         return true;
     }
 
-    private void validateIsWriter(Long userId, Long writerId){
-        if(!userId.equals(writerId)){
+    private void validateIsWriter(Long userId, Long writerId) {
+        if (!userId.equals(writerId)) {
             throw new RecruitmentApplicantException(INVALID_USER);
         }
     }
@@ -135,7 +140,7 @@ public class RecruitmentApplicantService {
                 .forEach(applicant -> applicant.validateCanApprove(userId));
     }
 
-    private void validateApplicantCount(int requestCount, int actualCount) {
+    private void validateApplicants(int requestCount, int actualCount) {
         if (requestCount != actualCount) {
             throw new RecruitmentApplicantException(INVALID_REQUEST);
         }

@@ -48,8 +48,7 @@ public class RecruitmentApplicantFacade {
     @Transactional
     public void rejectApplicants(Long postId, Long userId, List<Long> applicantIds) {
 
-        List<RecruitmentApplicant> applicants = recruitmentApplicantService.getAllApplicants(applicantIds);
-        recruitmentApplicantService.rejectApplicants(applicants, applicantIds, userId);
+        recruitmentApplicantService.rejectApplicants(applicantIds, userId);
 
         recruitmentPostService.incrementResponseCount(postId, userId, applicantIds.size());
     }
