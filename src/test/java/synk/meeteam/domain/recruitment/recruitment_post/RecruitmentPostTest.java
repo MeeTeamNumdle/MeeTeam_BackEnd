@@ -61,9 +61,8 @@ public class RecruitmentPostTest {
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
 
-    private String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInBsYXRmb3JtSWQiOiJEaTdsQ2hNR3hqWlZUYWk2ZDc2SG8xWUxEVV94TDh0bDFDZmRQTVY1U1FNIiwicGxhdGZvcm1UeXBlIjoiTkFWRVIiLCJpYXQiOjE3MDg1OTkyMTMsImV4cCI6MTgxNjU5OTIxM30.C9Rt8t2dM_9pmUIwyMiRwi2kZSXAFVJnjAPj2rTbQtw";
-
-    private String TOKEN_OTHER = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInBsYXRmb3JtSWQiOiJEaTdsQ2hNR3hqWlZUYWk2ZDc2SG8xWUxEVV94TDh0bDFDZmRQTVY1U1ExIiwicGxhdGZvcm1UeXBlIjoiTkFWRVIiLCJpYXQiOjE3MDg1OTkyMTMsImV4cCI6MTgxNjU5OTIxM30.ujVS6-qGhaOYJv0aPet3tgcc5iN93-k0Kv9w1rETFpA";
+    private String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInVzZXJJZCI6IjRPYVZFNDIxRFN3UjYzeGZLZjZ2eEEiLCJpYXQiOjE3MTQ5ODM5MDQsImV4cCI6MjAyMjk4MzkwNH0.PsQHWlh-tV-FY3dk0zVwiiBCfyLn4LPbFylGcau1Eis";
+    private String TOKEN_OTHER = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInVzZXJJZCI6ImJfVmtjT05oTUNKSWJHbEQ2eW9Ua3ciLCJpYXQiOjE3MTQ5ODM5MDQsImV4cCI6MjAyMjk4MzkwNH0.pGrBWCYOrR2RKQfqKgG705I7NHqIlykUcYrKqhj_nOM";
 
 
     @Autowired

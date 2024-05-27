@@ -115,7 +115,7 @@ public class RecruitmentPostServiceTest {
         // given
         RecruitmentPost srcRecruitmentPost = RecruitmentPostFixture.createRecruitmentPost("수정하려는제목입니다");
         RecruitmentPost dstRecruitmentPost = RecruitmentPostFixture.createRecruitmentPost("그냥제목입니다");
-
+        dstRecruitmentPost.setCreatedBy(1L);
         doReturn(dstRecruitmentPost).when(recruitmentPostRepository).save(any());
 
         // when
