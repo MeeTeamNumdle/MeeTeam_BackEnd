@@ -5,8 +5,10 @@ import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExcepti
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.global.entity.DeleteStatus;
@@ -31,5 +33,12 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long>, Por
         return findByIdWithFieldAndRoleAndDeleteStatus(portfolioId, DeleteStatus.ALIVE).orElseThrow(
                 () -> new PortfolioException(NOT_FOUND_PORTFOLIO));
     }
+
+    List<Portfolio> findAllByCreatedBy(Long userId);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("DELETE FROM Portfolio p WHERE p.id IN :portfolioIds")
+    void deleteAllByIdsInQuery(List<Long> portfolioIds);
 
 }
