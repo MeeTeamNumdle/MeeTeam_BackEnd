@@ -36,7 +36,7 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long>, Por
 
     List<Portfolio> findAllByCreatedBy(Long userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM Portfolio p WHERE p.id IN :portfolioIds")
     void deleteAllByIdsInQuery(List<Long> portfolioIds);

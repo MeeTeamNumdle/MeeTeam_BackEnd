@@ -11,7 +11,7 @@ public interface UserSkillRepository extends JpaRepository<UserSkill, Long>, Use
 
     void deleteAllByCreatedBy(Long userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM UserSkill u WHERE u.createdBy = :userId")
     void deleteAllByUserId(Long userId);

@@ -30,7 +30,7 @@ public interface RecruitmentApplicantRepository extends JpaRepository<Recruitmen
         return findByRecruitmentPostAndApplicantAndDeleteStatus(recruitmentPost, user, DeleteStatus.ALIVE)
                 .orElseThrow(() -> new RecruitmentApplicantException(SS_600));
     }
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM RecruitmentApplicant r WHERE r.recruitmentPost.id IN :postIds")
     void deleteAllByPostIdInQuery(List<Long> postIds);

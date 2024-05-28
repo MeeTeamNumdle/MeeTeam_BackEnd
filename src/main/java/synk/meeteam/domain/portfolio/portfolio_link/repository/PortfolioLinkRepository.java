@@ -13,7 +13,7 @@ public interface PortfolioLinkRepository extends JpaRepository<PortfolioLink, Lo
 
     void deleteAllByPortfolio(Portfolio portfolio);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM PortfolioLink p WHERE p.portfolio.id IN :portfolioIds")
     void deleteAllByPortfolioIdsInQuery(List<Long> portfolioIds);

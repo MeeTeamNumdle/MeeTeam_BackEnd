@@ -11,7 +11,7 @@ import synk.meeteam.domain.recruitment.recruitment_role_skill.entity.Recruitment
 public interface RecruitmentRoleSkillRepository extends JpaRepository<RecruitmentRoleSkill, Long> {
 
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from RecruitmentRoleSkill r where r.recruitmentRole.id in :recruitmentRoleIds")
     void deleteAllByRecruitmentRoleIdInQuery(@Param("recruitmentRoleIds") List<Long> recruitmentRoleIds);
 }

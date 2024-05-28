@@ -24,7 +24,7 @@ public interface RecruitmentPostRepository extends JpaRepository<RecruitmentPost
 
     List<RecruitmentPost> findAllByCreatedBy(Long userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM RecruitmentPost r WHERE r.id IN :postIds")
     void deleteAllByIdInQuery(List<Long> postIds);

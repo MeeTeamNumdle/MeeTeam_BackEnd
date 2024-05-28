@@ -14,7 +14,7 @@ public interface RecruitmentTagRepository extends JpaRepository<RecruitmentTag, 
 
     void deleteAllByRecruitmentPostId(Long postId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM RecruitmentTag r WHERE r.recruitmentPost.id IN :postIds")
     void deleteAllByPostIdInQuery(List<Long> postIds);

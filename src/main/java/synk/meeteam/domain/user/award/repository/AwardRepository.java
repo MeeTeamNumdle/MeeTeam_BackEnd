@@ -13,7 +13,7 @@ public interface AwardRepository extends JpaRepository<Award, Long> {
 
     List<Award> findAllByCreatedBy(Long userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM Award a WHERE a.createdBy = :userId")
     void deleteAllByUserId(Long userId);

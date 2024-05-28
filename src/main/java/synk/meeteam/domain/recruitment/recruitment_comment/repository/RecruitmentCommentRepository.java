@@ -30,7 +30,7 @@ public interface RecruitmentCommentRepository extends JpaRepository<RecruitmentC
         return findById(commentId).orElseThrow(() -> new RecruitmentCommentException(INVALID_COMMENT));
     }
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM RecruitmentComment r WHERE r.recruitmentPost.id IN :postIds")
     void deleteAllByPostIdInQuery(List<Long> postIds);

@@ -33,7 +33,7 @@ public interface RecruitmentRoleRepository extends JpaRepository<RecruitmentRole
 
     void deleteAllByRecruitmentPostId(Long postId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM RecruitmentRole r WHERE r.recruitmentPost.id IN :postIds")
     void deleteAllByPostIdInQuery(List<Long> postIds);

@@ -15,7 +15,7 @@ public interface PortfolioSkillRepository extends JpaRepository<PortfolioSkill, 
 
     void deleteAllByPortfolio(Portfolio portfolio);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM PortfolioSkill p WHERE p.portfolio.id IN :portfolioIds")
     void deleteAllByPortfolioIdsInQuery(List<Long> portfolioIds);

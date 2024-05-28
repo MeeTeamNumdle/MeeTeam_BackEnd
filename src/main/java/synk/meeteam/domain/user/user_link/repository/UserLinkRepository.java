@@ -13,7 +13,7 @@ public interface UserLinkRepository extends JpaRepository<UserLink, Long> {
 
     List<UserLink> findAllByCreatedBy(Long userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM UserLink u WHERE u.createdBy = :userId")
     void deleteAllByUserId(Long userId);
