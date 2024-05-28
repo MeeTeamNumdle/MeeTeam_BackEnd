@@ -42,7 +42,8 @@ public class XssSpringBootTest {
     @Value("${jwt.access.header}")
     private String accessHeader;
 
-    private String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInBsYXRmb3JtSWQiOiI0SUlfbGZaY1Q2NW82MVRfZkh5d2hybzVJanlSTmpSZE1IVi1qNXJWMmtvIiwicGxhdGZvcm1UeXBlIjoiTkFWRVIiLCJpYXQiOjE3MDg1OTkyMTMsImV4cCI6MTgxNjU5OTIxM30.5kAEY2nJ3mNqlnhhFNV0_FVvXTD7JRTzTj6FjpresEA";
+    private String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInVzZXJJZCI6IjRPYVZFNDIxRFN3UjYzeGZLZjZ2eEEiLCJpYXQiOjE3MTQ5ODM5MDQsImV4cCI6MjAyMjk4MzkwNH0.PsQHWlh-tV-FY3dk0zVwiiBCfyLn4LPbFylGcau1Eis";
+    private String TOKEN_OTHER = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInVzZXJJZCI6ImJfVmtjT05oTUNKSWJHbEQ2eW9Ua3ciLCJpYXQiOjE3MTQ5ODM5MDQsImV4cCI6MjAyMjk4MzkwNH0.pGrBWCYOrR2RKQfqKgG705I7NHqIlykUcYrKqhj_nOM";
 
     HttpHeaders headers;
 
