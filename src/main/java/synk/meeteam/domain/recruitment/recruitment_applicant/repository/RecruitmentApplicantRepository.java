@@ -34,4 +34,9 @@ public interface RecruitmentApplicantRepository extends JpaRepository<Recruitmen
     @Transactional
     @Query("DELETE FROM RecruitmentApplicant r WHERE r.recruitmentPost.id IN :postIds")
     void deleteAllByPostIdInQuery(List<Long> postIds);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("DELETE FROM RecruitmentApplicant r WHERE r.applicant.id = :userId")
+    void deleteAllByUserId(Long userId);
 }
