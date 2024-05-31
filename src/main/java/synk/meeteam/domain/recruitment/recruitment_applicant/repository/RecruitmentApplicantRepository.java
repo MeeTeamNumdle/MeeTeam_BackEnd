@@ -21,6 +21,8 @@ public interface RecruitmentApplicantRepository extends JpaRepository<Recruitmen
     @Query("SELECT a FROM RecruitmentApplicant a JOIN FETCH a.recruitmentPost JOIN FETCH a.applicant WHERE a.id IN :ids AND a.deleteStatus = synk.meeteam.global.entity.DeleteStatus.ALIVE")
     List<RecruitmentApplicant> findAllInApplicantId(@Param("ids") List<Long> applicantIds);
 
+    List<RecruitmentApplicant> findAllByApplicant(User applicant);
+
     Optional<RecruitmentApplicant> findByRecruitmentPostAndApplicantAndDeleteStatus(RecruitmentPost recruitmentPost,
                                                                                     User user,
                                                                                     DeleteStatus deleteStatus);
