@@ -53,7 +53,7 @@ public class UserManagementService {
     public void deleteUser(User user) {
         List<Long> postIds = recruitmentPostRepository.findAllByCreatedBy(user.getId()).stream()
                 .map(RecruitmentPost::getId).toList();
-        deleteRecruitmentPosts(postIds, user.getId());
+        deleteRecruitmentPosts(postIds);
 
         List<Long> portfolioIds = portfolioRepository.findAllByCreatedBy(user.getId())
                 .stream().map(Portfolio::getId).toList();
@@ -64,9 +64,8 @@ public class UserManagementService {
         userRepository.delete(user);
     }
 
-    private void deleteRecruitmentPosts(List<Long> postIds, Long userId) {
-
-        bookmarkRepository.deleteAllByUserId(userId);
+    private void deleteRecruitmentPosts(List<Long> postIds) {
+        bookmarkRepository.deleteAllByPostIdInQuery(postIds);
         recruitmentRoleRepository.deleteAllByPostIdInQuery(postIds);
         recruitmentTagRepository.deleteAllByPostIdInQuery(postIds);
         recruitmentCommentRepository.deleteAllByPostIdInQuery(postIds);
@@ -84,5 +83,7 @@ public class UserManagementService {
         userSkillRepository.deleteAllByUserId(userId);
         userLinkRepository.deleteAllByUserId(userId);
         awardRepository.deleteAllByUserId(userId);
+
+        bookmarkRepository.deleteAllByUserId(userId);
     }
 }
