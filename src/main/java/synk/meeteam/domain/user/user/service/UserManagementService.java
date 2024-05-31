@@ -60,6 +60,7 @@ public class UserManagementService {
         deletePortfolios(portfolioIds);
 
         deleteProfile(user.getId());
+        deleteRelatedUserData(user.getId());
 
         userRepository.delete(user);
     }
@@ -83,7 +84,10 @@ public class UserManagementService {
         userSkillRepository.deleteAllByUserId(userId);
         userLinkRepository.deleteAllByUserId(userId);
         awardRepository.deleteAllByUserId(userId);
+    }
 
+    private void deleteRelatedUserData(Long userId){
         bookmarkRepository.deleteAllByUserId(userId);
+        recruitmentApplicantRepository.deleteAllByUserId(userId);
     }
 }
