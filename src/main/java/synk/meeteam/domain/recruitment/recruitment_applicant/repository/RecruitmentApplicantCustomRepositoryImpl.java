@@ -51,7 +51,7 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
                 .select(new QGetApplicantDto(recruitmentApplicant.id,
                         recruitmentApplicant.applicant.id.stringValue(),
                         recruitmentApplicant.applicant.nickname, recruitmentApplicant.applicant.profileImgFileName,
-                        recruitmentApplicant.applicant.name, recruitmentApplicant.applicant.evaluationScore,
+                        recruitmentApplicant.applicant.name, recruitmentApplicant.applicant.gpa,
                         recruitmentApplicant.applicant.university.name, recruitmentApplicant.applicant.department.name,
                         getMainMail, recruitmentApplicant.applicant.admissionYear,
                         recruitmentApplicant.role.name, recruitmentApplicant.comment))

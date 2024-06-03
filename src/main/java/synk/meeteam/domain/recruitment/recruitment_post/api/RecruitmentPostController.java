@@ -160,7 +160,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 postId);
 
         return ResponseEntity.ok()
-                .body(new GetApplyInfoResponseDto(user.getName(), user.getEvaluationScore(),
+                .body(new GetApplyInfoResponseDto(user.getName(), user.getGpa(),
                         user.getUniversity().getName(), user.getDepartment().getName(),
                         user.getAdmissionYear(),
                         user.getUniversityEmail(), availableRecruitmentRoleDtos));
