@@ -62,10 +62,10 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("https://meeteam.co.kr", "https://www.meeteam.co.kr", "http://localhost:5173",
-                                "http://localhost:8080", "https://api.meeteam.co.kr")
+                                "http://localhost:8080", "https://api.meeteam.co.kr", "https://meeteam-phi.vercel.app")
                         .allowedOriginPatterns("https://meeteam.co.kr", "https://www.meeteam.co.kr",
                                 "http://localhost:5173",
-                                "http://localhost:8080", "https://api.meeteam.co.kr")
+                                "http://localhost:8080", "https://api.meeteam.co.kr", "https://meeteam-phi.vercel.app")
                         .allowedMethods(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
