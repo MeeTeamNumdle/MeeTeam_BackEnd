@@ -60,7 +60,7 @@ jobs:
           echo "$MAIL_VERIFY_TEMPLATE" > ./UniversityAuthMail.html
           
           touch ./ApplicationNotificationMail.html
-          echo "MAIL_APPLICATION_NOTIFICATION_TEMPLATE" > ./ApplicationNotificationMail.html
+          echo "$MAIL_APPLICATION_NOTIFICATION_TEMPLATE" > ./ApplicationNotificationMail.html
 
         env:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}

@@ -1,6 +1,7 @@
 package synk.meeteam.domain.recruitment.recruitment_applicant.service;
 
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
+import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_USER;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.SS_602;
 import static synk.meeteam.infra.aws.S3FilePath.USER;
 
@@ -19,6 +20,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatu
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
+import synk.meeteam.domain.recruitment.recruitment_applicant.service.vo.RecruitmentApplicants;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.SliceInfo;
@@ -77,22 +79,28 @@ public class RecruitmentApplicantService {
 
     @Transactional
     public void approveApplicants(List<RecruitmentApplicant> applicants, List<Long> applicantIds, Long userId) {
+        // TODO : List<RecruitmentApplicant> 일급컬렉션으로 리팩토링 필요.
         validateCanProcess(applicants, userId);
-        validateApplicantCount(applicantIds.size(), applicants.size());
+        validateApplicants(applicantIds.size(), applicants.size());
 
         recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.APPROVED);
     }
 
     @Transactional
-    public void rejectApplicants(List<RecruitmentApplicant> applicants, List<Long> applicantIds, Long userId) {
-        validateCanProcess(applicants, userId);
-        validateApplicantCount(applicantIds.size(), applicants.size());
+    public void rejectApplicants(List<Long> requestApplicantIds, Long writerId) {
+        List<RecruitmentApplicant> applicants = getAllApplicants(requestApplicantIds);
+        RecruitmentApplicants recruitmentApplicants = new RecruitmentApplicants(applicants, requestApplicantIds,
+                writerId);
 
-        recruitmentApplicantRepository.updateRecruitStatus(applicantIds, RecruitStatus.REJECTED);
+        recruitmentApplicantRepository.updateRecruitStatus(recruitmentApplicants.getRecruitmentApplicantIds(),
+                RecruitStatus.REJECTED);
     }
 
     @Transactional
-    public GetApplicantResponseDto getAllByRole(Long postId, Long roleId, int page, int size) {
+    public GetApplicantResponseDto getAllByRole(Long postId, Long roleId, Long userId, Long writerId, int page,
+                                                int size) {
+        validateIsWriter(userId, writerId);
+
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size);
 
@@ -117,6 +125,12 @@ public class RecruitmentApplicantService {
         return true;
     }
 
+    private void validateIsWriter(Long userId, Long writerId) {
+        if (!userId.equals(writerId)) {
+            throw new RecruitmentApplicantException(INVALID_USER);
+        }
+    }
+
     private void validateCanProcess(List<RecruitmentApplicant> applicants, Long userId) {
         // applicants 검증로직
         // 호출한 사용자가 구인글 작성자인지 확인
@@ -126,7 +140,7 @@ public class RecruitmentApplicantService {
                 .forEach(applicant -> applicant.validateCanApprove(userId));
     }
 
-    private void validateApplicantCount(int requestCount, int actualCount) {
+    private void validateApplicants(int requestCount, int actualCount) {
         if (requestCount != actualCount) {
             throw new RecruitmentApplicantException(INVALID_REQUEST);
         }

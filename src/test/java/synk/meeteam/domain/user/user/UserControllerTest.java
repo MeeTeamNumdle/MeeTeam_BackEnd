@@ -50,6 +50,9 @@ public class UserControllerTest {
     private MockMvc mockMvc;
     private Gson gson;
 
+    private String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInVzZXJJZCI6IjRPYVZFNDIxRFN3UjYzeGZLZjZ2eEEiLCJpYXQiOjE3MTQ5ODM5MDQsImV4cCI6MjAyMjk4MzkwNH0.PsQHWlh-tV-FY3dk0zVwiiBCfyLn4LPbFylGcau1Eis";
+    private String TOKEN_OTHER = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInVzZXJJZCI6ImJfVmtjT05oTUNKSWJHbEQ2eW9Ua3ciLCJpYXQiOjE3MTQ5ODM5MDQsImV4cCI6MjAyMjk4MzkwNH0.pGrBWCYOrR2RKQfqKgG705I7NHqIlykUcYrKqhj_nOM";
+
     @BeforeEach
     public void init() {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -88,7 +91,7 @@ public class UserControllerTest {
             //when
             final ResultActions resultActions = mockMvc.perform(
                     MockMvcRequestBuilders.put(url)
-                            .header("Authorization", "aaaaa")
+                            .header("Authorization", TOKEN)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(gson.toJson(UserFixture.createEditProfileDto()))
             );

@@ -160,7 +160,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 postId);
 
         return ResponseEntity.ok()
-                .body(new GetApplyInfoResponseDto(user.getName(), user.getEvaluationScore(),
+                .body(new GetApplyInfoResponseDto(user.getName(), user.getGpa(),
                         user.getUniversity().getName(), user.getDepartment().getName(),
                         user.getAdmissionYear(),
                         user.getUniversityEmail(), availableRecruitmentRoleDtos));
@@ -227,7 +227,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         List<RecruitmentTag> recruitmentTags = getRecruitmentTags(requestDto, dstRecruitmentPost);
 
         recruitmentPostFacade.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost, recruitmentRoles,
-                recruitmentRoleSkills, recruitmentTags);
+                recruitmentRoleSkills, recruitmentTags, user.getId());
 
         return ResponseEntity.ok().build();
     }

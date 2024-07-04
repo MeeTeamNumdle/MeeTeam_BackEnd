@@ -20,6 +20,7 @@ import synk.meeteam.domain.portfolio.portfolio_link.entity.PortfolioLink;
 import synk.meeteam.domain.portfolio.portfolio_link.service.PortfolioLinkService;
 import synk.meeteam.domain.portfolio.portfolio_skill.service.PortfolioSkillService;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.infra.aws.S3FilePath;
 import synk.meeteam.infra.aws.service.CloudFrontService;
 
@@ -30,6 +31,7 @@ public class PortfolioFacade {
     private final PortfolioSkillService portfolioSkillService;
     private final PortfolioLinkService portfolioLinkService;
     private final CloudFrontService cloudFrontService;
+    private final UserService userService;
 
     private final PortfolioCommandMapper commandMapper;
     private final PortfolioMapper portfolioMapper;
@@ -46,9 +48,11 @@ public class PortfolioFacade {
     @Transactional(readOnly = true)
     public GetPortfolioResponseDto getPortfolio(Long portfolioId, User user) {
         Portfolio portfolio = portfolioService.getPortfolio(portfolioId);
-        if (!portfolio.isAllViewAble(user.getId())) {
+        Long userId = user != null ? user.getId() : null;
+        if (!portfolio.isAllViewAble(userId)) {
             throw new PortfolioException(NOT_YOUR_PORTFOLIO);
         }
+        User writer = userService.findById(portfolio.getCreatedBy());
 
         List<Skill> skills = portfolioSkillService.getPortfolioSkill(portfolio);
         List<PortfolioLink> links = portfolioLinkService.getPortfolioLink(portfolio);
@@ -72,16 +76,15 @@ public class PortfolioFacade {
                         portfolioMapper.toGetProfilePortfolioDto(otherPortfolio,
                                 cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                                         otherPortfolio.getMainImageFileName()))).toList(),
-                portfolio.isWriter(user.getId())
+                portfolio.isWriter(userId),
+                writer.getNickname()
         );
     }
 
     @Transactional
     public Long editPortfolio(Long portfolioId, User user, UpdatePortfolioRequestDto requestDto) {
         Portfolio portfolio = portfolioService.getPortfolio(portfolioId);
-        if (!portfolio.isWriter(user.getId())) {
-            throw new PortfolioException(NOT_YOUR_PORTFOLIO);
-        }
+        portfolio.validWriter(user.getId());
         portfolioService.editPortfolio(portfolio, user, commandMapper.toUpdatePortfolioCommand(requestDto));
         portfolioSkillService.editPortfolioSkill(portfolio, requestDto.skills());
         portfolioLinkService.editPortfolioLink(portfolio, requestDto.links());

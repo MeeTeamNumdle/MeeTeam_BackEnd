@@ -12,7 +12,7 @@ import synk.meeteam.global.entity.exception.EnumException;
 public enum ProceedType {
     ON_LINE("온라인"),
     OFF_LINE("오프라인"),
-    NO_MATTER("상관없음");
+    NO_MATTER("온/오프라인");
 
     private final String name;
 

@@ -318,13 +318,16 @@ public class RecruitmentApplicantServiceTest {
 
         RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user1, role1);
+        applicant1.setId(1L);
         RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user2, role2);
+        applicant2.setId(2L);
 
         doReturn(2L).when(recruitmentApplicantRepository).updateRecruitStatus(any(), any());
+        doReturn(List.of(applicant1, applicant2)).when(recruitmentApplicantRepository).findAllInApplicantId(any());
 
         // when, then
-        recruitmentApplicantService.rejectApplicants(List.of(applicant1, applicant2), List.of(userId1, userId2),
+        recruitmentApplicantService.rejectApplicants(List.of(userId1, userId2),
                 userId1);
     }
 
@@ -347,13 +350,16 @@ public class RecruitmentApplicantServiceTest {
 
         RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user1, role1);
+        applicant1.setId(1L);
         RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user2, role2);
+        applicant2.setId(2L);
+
+        doReturn(List.of(applicant1, applicant2)).when(recruitmentApplicantRepository).findAllInApplicantId(any());
 
         // when, then
         Assertions.assertThatThrownBy(
-                        () -> recruitmentApplicantService.rejectApplicants(List.of(applicant1, applicant2),
-                                List.of(userId1, userId2), userId1))
+                        () -> recruitmentApplicantService.rejectApplicants(List.of(userId1, userId2), userId1))
                 .isInstanceOf(RecruitmentApplicantException.class)
                 .hasMessageContaining(INVALID_USER.message());
     }
@@ -376,13 +382,17 @@ public class RecruitmentApplicantServiceTest {
 
         RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createApprovedRecruitmentApplicant(
                 recruitmentPost, user1, role1);
+        applicant1.setId(1L);
+
         RecruitmentApplicant applicant2 = RecruitmentApplicantFixture.createApprovedRecruitmentApplicant(
                 recruitmentPost, user2, role2);
+        applicant2.setId(2L);
+
+        doReturn(List.of(applicant1, applicant2)).when(recruitmentApplicantRepository).findAllInApplicantId(any());
 
         // when, then
         Assertions.assertThatThrownBy(
-                        () -> recruitmentApplicantService.rejectApplicants(List.of(applicant1, applicant2),
-                                List.of(userId1, userId2), userId1))
+                        () -> recruitmentApplicantService.rejectApplicants(List.of(userId1, userId2), userId1))
                 .isInstanceOf(RecruitmentApplicantException.class)
                 .hasMessageContaining(ALREADY_PROCESSED_APPLICANT.message());
     }
@@ -405,11 +415,13 @@ public class RecruitmentApplicantServiceTest {
 
         RecruitmentApplicant applicant1 = RecruitmentApplicantFixture.createRecruitmentApplicant(
                 recruitmentPost, user1, role1);
+        applicant1.setId(1L);
+
+        doReturn(List.of(applicant1)).when(recruitmentApplicantRepository).findAllInApplicantId(any());
 
         // when, then
         Assertions.assertThatThrownBy(
-                        () -> recruitmentApplicantService.rejectApplicants(List.of(applicant1),
-                                List.of(userId1, userId2), userId1))
+                        () -> recruitmentApplicantService.rejectApplicants(List.of(userId1, userId2), userId1))
                 .isInstanceOf(RecruitmentApplicantException.class)
                 .hasMessageContaining(INVALID_REQUEST.message());
     }
@@ -439,7 +451,8 @@ public class RecruitmentApplicantServiceTest {
             utilities.when(() -> Encryption.encryptLong(any())).thenReturn("1234");
 
             // when
-            GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, 1, 12);
+            GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, 1L, 1L, 1,
+                    12);
 
             // then
             Assertions.assertThat(responseDtos.applicants().size()).isEqualTo(2);

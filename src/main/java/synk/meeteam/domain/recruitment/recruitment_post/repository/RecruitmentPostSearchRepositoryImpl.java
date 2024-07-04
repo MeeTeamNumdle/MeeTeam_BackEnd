@@ -10,8 +10,8 @@ import static synk.meeteam.domain.recruitment.recruitment_post.entity.QRecruitme
 import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.categoryEq;
 import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.isBookmark;
 import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.scopeEq;
-import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.titleStartWith;
-import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.writerUniversityEq;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.titleContains;
+import static synk.meeteam.domain.recruitment.recruitment_post.repository.expression.RecruitmentExpressionUtils.writerUniversityEqUser;
 import static synk.meeteam.domain.recruitment.recruitment_role.entity.QRecruitmentRole.recruitmentRole;
 import static synk.meeteam.domain.recruitment.recruitment_role_skill.entity.QRecruitmentRoleSkill.recruitmentRoleSkill;
 import static synk.meeteam.domain.recruitment.recruitment_tag.entity.QRecruitmentTag.recruitmentTag;
@@ -73,9 +73,9 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                 .leftJoin(writer).on(recruitmentPost.createdBy.eq(writer.id))
                 .where(
                         scopeEq(condition.getScope()),
-                        writerUniversityEq(writer, userDomain, condition.getScope()),
+                        userDomain != null ? writerUniversityEqUser(writer, userDomain, condition.getScope()) : null,
                         categoryEq(condition.getCategory()),
-                        titleStartWith(keyword),
+                        titleContains(keyword),
                         recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED),
                         recruitmentPost.isClosed.isFalse()
                 );
@@ -101,10 +101,11 @@ public class RecruitmentPostSearchRepositoryImpl implements RecruitmentPostSearc
                 .leftJoin(writer).on(recruitmentPost.createdBy.eq(writer.id))
                 .where(
                         scopeEq(condition.getScope()),
-                        writerUniversityEq(writer, userDomain, condition.getScope()),
+                        userDomain != null ? writerUniversityEqUser(writer, userDomain, condition.getScope()) : null,
                         categoryEq(condition.getCategory()),
-                        titleStartWith(keyword),
-                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED)
+                        titleContains(keyword),
+                        recruitmentPost.deleteStatus.ne(DeleteStatus.DELETED),
+                        recruitmentPost.isClosed.isFalse()
                 );
 
         searchJpaUtils.joinWithFieldAndTagAndRoleAndSkill(countQuery, condition);

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
-import synk.meeteam.domain.user.user.dto.ProfileMapper;
 import synk.meeteam.domain.user.user.dto.command.UpdateInfoCommand;
 import synk.meeteam.domain.user.user.dto.response.ProfileDto;
 import synk.meeteam.domain.user.user.entity.User;
@@ -22,7 +21,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final ProfileMapper profileMapper;
 
     @Transactional(readOnly = true)
     public boolean checkAvailableNickname(String nickname) {

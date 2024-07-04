@@ -32,8 +32,22 @@ public class RecruitmentExpressionUtils {
         return isClosed == null ? null : recruitmentPost.isClosed.eq(isClosed);
     }
 
-    public static BooleanExpression writerUniversityEq(QUser writer, User userDomain, Scope scope) {
-        return scope != Scope.ON_CAMPUS ? null : writer.university.eq(userDomain.getUniversity());
+    public static BooleanExpression writerUniversityEqUser(QUser writer, User userDomain, Scope scope) {
+        if (scope == Scope.ON_CAMPUS) {
+            return isOnCampus(writer, userDomain);
+        } else if (scope == Scope.OFF_CAMPUS) {
+            return isOffCampus();
+        } else {
+            return isOnCampus(writer, userDomain).or(isOffCampus());
+        }
+    }
+
+    public static BooleanExpression isOffCampus() {
+        return recruitmentPost.scope.eq(Scope.OFF_CAMPUS);
+    }
+
+    public static BooleanExpression isOnCampus(QUser writer, User userDomain) {
+        return recruitmentPost.scope.eq(Scope.ON_CAMPUS).and(writer.university.eq(userDomain.getUniversity()));
     }
 
     public static BooleanExpression categoryEq(Category category) {
@@ -48,8 +62,8 @@ public class RecruitmentExpressionUtils {
         }
     }
 
-    public static BooleanExpression titleStartWith(String keyword) {
-        return (keyword == null || keyword.isEmpty()) ? null : recruitmentPost.title.startsWith(keyword);
+    public static BooleanExpression titleContains(String keyword) {
+        return (keyword == null || keyword.isEmpty()) ? null : recruitmentPost.title.contains(keyword);
     }
 
     private static BooleanExpression isFalse() {

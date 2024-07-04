@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
 import synk.meeteam.domain.user.user.dto.response.CheckDuplicateNicknameResponseDto;
+import synk.meeteam.domain.user.user.dto.response.GetProfileImageResponseDto;
 import synk.meeteam.domain.user.user.dto.response.GetProfileResponseDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.common.exception.ExceptionResponse;
@@ -66,4 +67,12 @@ public interface UserApi {
     ResponseEntity<GetUserPortfolioResponseDto> getUserPortfolio(@AuthUser User user,
                                                                  @RequestParam(name = "page", defaultValue = "1") int page,
                                                                  @RequestParam(name = "size", defaultValue = "12") int size);
+
+    @Operation(summary = "내 프로필 사진 조회 API")
+    @SecurityRequirement(name = "Authorization")
+    ResponseEntity<GetProfileImageResponseDto> getProfileImage(@AuthUser User user);
+
+    @Operation(summary = "회원 탈퇴 API")
+    @SecurityRequirement(name = "Authorization")
+    ResponseEntity<Void> deleteUser(@AuthUser User user);
 }

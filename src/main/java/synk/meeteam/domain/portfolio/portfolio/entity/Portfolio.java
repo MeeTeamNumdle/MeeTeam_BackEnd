@@ -1,6 +1,7 @@
 package synk.meeteam.domain.portfolio.portfolio.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExceptionType.NOT_YOUR_PORTFOLIO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -16,7 +17,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +26,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.role.entity.Role;
+import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.global.entity.BaseEntity;
 import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.entity.ProceedType;
@@ -147,7 +148,13 @@ public class Portfolio extends BaseEntity {
     }
 
     public boolean isWriter(Long userId) {
-        return Objects.equals(getCreatedBy(), userId);
+        return getCreatedBy().equals(userId);
+    }
+
+    public void validWriter(Long userId) {
+        if (!isWriter(userId)) {
+            throw new PortfolioException(NOT_YOUR_PORTFOLIO);
+        }
     }
 
     public void putPin(int order) {

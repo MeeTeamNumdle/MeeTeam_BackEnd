@@ -40,7 +40,7 @@ public class SecurityConfig {
             "/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**", "/actuator/health",
 
             "/skill/**", "/tag/**", "/role/**",
-            "/user/encrypt/**"
+            "/user/encrypt/**", "/portfolio/{id}"
     };
 
     private static final String[] SEMI_AUTH_WHITELIST = {
@@ -61,10 +61,11 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://meeteam.co.kr", "https://www.meeteam.co.kr","http://localhost:5173",
-                                "http://localhost:8080", "https://api.meeteam.co.kr")
-                        .allowedOriginPatterns("https://meeteam.co.kr", "https://www.meeteam.co.kr", "http://localhost:5173",
-                                "http://localhost:8080", "https://api.meeteam.co.kr")
+                        .allowedOrigins("https://meeteam.co.kr", "https://www.meeteam.co.kr", "http://localhost:5173",
+                                "http://localhost:8080", "https://api.meeteam.co.kr", "https://meeteam-phi.vercel.app")
+                        .allowedOriginPatterns("https://meeteam.co.kr", "https://www.meeteam.co.kr",
+                                "http://localhost:5173",
+                                "http://localhost:8080", "https://api.meeteam.co.kr", "https://meeteam-phi.vercel.app")
                         .allowedMethods(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),

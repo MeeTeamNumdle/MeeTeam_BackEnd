@@ -41,7 +41,7 @@ public class UserFixture {
 
     public static UpdateProfileRequestDto createEditProfileDto() {
         return new UpdateProfileRequestDto(
-                "goder",
+                "goder1",
                 true,
                 "imageUrl.png",
                 "010-1234-5678",
@@ -56,7 +56,7 @@ public class UserFixture {
                 4.3,
                 4.5,
                 List.of(1L, 2L, 3L),
-                List.of(new UpdateUserLinkDto("naver.com", "네이버")),
+                List.of(new UpdateUserLinkDto("https://gemini.google.com/", "네이버")),
                 List.of(new UpdateAwardDto("공공데이터공모전", "장려상수상", LocalDate.parse("2023-02-02"),
                         LocalDate.parse("2023-03-01"))),
                 List.of(1L, 2L)

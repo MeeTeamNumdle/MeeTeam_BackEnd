@@ -185,7 +185,9 @@ public class RecruitmentPost extends BaseEntity {
                                       LocalDate deadline,
                                       long bookmarkCount, String kakaoLink, boolean isClosed,
                                       Meeteam meeteam, long applicantCount,
-                                      long responseCount) {
+                                      long responseCount, Long userId) {
+        validateWriter(userId);
+
         this.title = title;
         this.content = content;
         this.scope = scope;
