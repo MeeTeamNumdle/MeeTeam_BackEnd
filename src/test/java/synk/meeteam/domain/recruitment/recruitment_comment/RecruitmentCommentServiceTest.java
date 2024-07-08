@@ -25,7 +25,7 @@ import synk.meeteam.domain.recruitment.recruitment_comment.service.vo.Recruitmen
 import synk.meeteam.domain.recruitment.recruitment_post.RecruitmentPostFixture;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.GetCommentResponseDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @ExtendWith(MockitoExtension.class)
 public class RecruitmentCommentServiceTest {
@@ -37,7 +37,7 @@ public class RecruitmentCommentServiceTest {
     private RecruitmentCommentRepository recruitmentCommentRepository;
 
     @Mock
-    private S3Service s3Service;
+    private CloudFrontService cloudFrontService;
 
     @Test
     void 댓글조회_댓글그룹반환() {
@@ -50,7 +50,7 @@ public class RecruitmentCommentServiceTest {
         doReturn(recruitmentComments).when(recruitmentCommentRepository)
                 .findAllByRecruitmentId(recruitmentPost.getId());
 
-        doReturn("임시 url").when(s3Service).createPreSignedGetUrl(any(), any());
+        doReturn("임시 url").when(cloudFrontService).getSignedUrl(any(), any());
 
         // when
         List<GetCommentResponseDto> getCommentResponseDtos = recruitmentCommentService.getRecruitmentComments(

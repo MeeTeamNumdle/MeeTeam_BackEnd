@@ -83,9 +83,9 @@ public class RecruitmentRoleService {
                 });
     }
 
-    private void validateIsWriter(Long userId, Long writerId){
+    private void validateIsWriter(Long userId, Long writerId) {
 
-        if(!userId.equals(writerId)){
+        if (!userId.equals(writerId)) {
             throw new RecruitmentApplicantException(INVALID_USER);
         }
     }

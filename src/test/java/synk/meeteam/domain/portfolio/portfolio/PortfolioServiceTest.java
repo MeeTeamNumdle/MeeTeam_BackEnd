@@ -31,7 +31,7 @@ import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioServiceImpl;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.ProceedType;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @ExtendWith(MockitoExtension.class)
 public class PortfolioServiceTest {
@@ -51,7 +51,7 @@ public class PortfolioServiceTest {
     private RoleRepository roleRepository;
 
     @Mock
-    private S3Service s3Service;
+    private CloudFrontService cloudFrontService;
 
     @BeforeEach
     void setup() {
@@ -115,7 +115,7 @@ public class PortfolioServiceTest {
         //given
         doReturn(PortfolioFixture.createSlicePortfolioDtos()).when(portfolioRepository)
                 .findSlicePortfoliosByUserOrderByCreatedAtDesc(eq(PageRequest.of(0, 12)), any());
-        doReturn("url입니다.").when(s3Service).createPreSignedGetUrl(any(), any());
+        doReturn("url입니다.").when(cloudFrontService).getSignedUrl(any(), any());
         //when
         GetUserPortfolioResponseDto userAllPortfolios = portfolioService.getSliceMyAllPortfolio(1, 12,
                 User.builder().build());

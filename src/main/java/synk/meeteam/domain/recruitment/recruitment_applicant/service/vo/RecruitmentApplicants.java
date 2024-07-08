@@ -3,7 +3,6 @@ package synk.meeteam.domain.recruitment.recruitment_applicant.service.vo;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
 
 import java.util.List;
-import lombok.Getter;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 

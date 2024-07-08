@@ -116,6 +116,10 @@ dependencies {
     // actuator 설정
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    // cloudfront
+    implementation("software.amazon.awssdk:bom:2.21.1")
+    implementation 'software.amazon.awssdk:cloudfront:2.22.3'
+
 }
 
 tasks.named('test') {

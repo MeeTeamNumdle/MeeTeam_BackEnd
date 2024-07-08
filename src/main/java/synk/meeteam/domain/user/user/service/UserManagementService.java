@@ -13,7 +13,6 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.repository.Recruitm
 import synk.meeteam.domain.recruitment.recruitment_comment.repository.RecruitmentCommentRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
-import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.repository.RecruitmentRoleRepository;
 import synk.meeteam.domain.recruitment.recruitment_role_skill.repository.RecruitmentRoleSkillRepository;
 import synk.meeteam.domain.recruitment.recruitment_tag.repository.RecruitmentTagRepository;
@@ -86,7 +85,7 @@ public class UserManagementService {
         awardRepository.deleteAllByUserId(userId);
     }
 
-    private void deleteRelatedUserData(Long userId){
+    private void deleteRelatedUserData(Long userId) {
         bookmarkRepository.deleteAllByUserId(userId);
         recruitmentApplicantRepository.deleteAllByUserId(userId);
     }

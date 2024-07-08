@@ -60,8 +60,8 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.Scope;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 import synk.meeteam.security.AuthUser;
 
 
@@ -87,7 +87,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private final CourseService courseService;
     private final ProfessorService professorService;
 
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     private final RecruitmentPostMapper recruitmentPostMapper;
 
@@ -133,7 +133,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         }
 
         User writer = userService.findById(recruitmentPost.getCreatedBy());
-        String writerImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, writer.getProfileImgFileName());
+        String writerImgUrl = cloudFrontService.getSignedUrl(S3FilePath.USER, writer.getProfileImgFileName());
 
         List<RecruitmentRole> recruitmentRoles = recruitmentRoleService.findByRecruitmentPostId(postId);
 

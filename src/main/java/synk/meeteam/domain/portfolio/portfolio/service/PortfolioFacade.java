@@ -21,8 +21,8 @@ import synk.meeteam.domain.portfolio.portfolio_link.service.PortfolioLinkService
 import synk.meeteam.domain.portfolio.portfolio_skill.service.PortfolioSkillService;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.UserService;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +30,8 @@ public class PortfolioFacade {
     private final PortfolioService portfolioService;
     private final PortfolioSkillService portfolioSkillService;
     private final PortfolioLinkService portfolioLinkService;
+    private final CloudFrontService cloudFrontService;
     private final UserService userService;
-    private final S3Service s3Service;
 
     private final PortfolioCommandMapper commandMapper;
     private final PortfolioMapper portfolioMapper;
@@ -56,8 +56,7 @@ public class PortfolioFacade {
 
         List<Skill> skills = portfolioSkillService.getPortfolioSkill(portfolio);
         List<PortfolioLink> links = portfolioLinkService.getPortfolioLink(portfolio);
-        String zipFileUrl = s3Service.createPreSignedGetUrl(
-                S3FileName.getPortfolioPath(writer.getEncryptUserId()),
+        String zipFileUrl = cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                 portfolio.getZipFileName());
         List<Portfolio> otherPinPortfolios = getUserPortfolio(portfolio);
         return new GetPortfolioResponseDto(
@@ -75,7 +74,7 @@ public class PortfolioFacade {
                 links.stream().map(link -> new PortfolioLinkDto(link.getUrl(), link.getDescription())).toList(),
                 otherPinPortfolios.stream().map(otherPortfolio ->
                         portfolioMapper.toGetProfilePortfolioDto(otherPortfolio,
-                                s3Service.createPreSignedGetUrl(S3FileName.getPortfolioPath(writer.getEncryptUserId()),
+                                cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                                         otherPortfolio.getMainImageFileName()))).toList(),
                 portfolio.isWriter(userId),
                 writer.getNickname()

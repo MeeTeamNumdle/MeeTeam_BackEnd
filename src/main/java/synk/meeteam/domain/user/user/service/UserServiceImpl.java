@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
-import synk.meeteam.domain.user.user.dto.ProfileMapper;
 import synk.meeteam.domain.user.user.dto.command.UpdateInfoCommand;
 import synk.meeteam.domain.user.user.dto.response.ProfileDto;
 import synk.meeteam.domain.user.user.entity.User;

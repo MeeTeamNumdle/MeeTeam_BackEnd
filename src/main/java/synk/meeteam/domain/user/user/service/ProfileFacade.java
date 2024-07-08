@@ -25,8 +25,8 @@ import synk.meeteam.domain.user.user_link.entity.UserLinkMapper;
 import synk.meeteam.domain.user.user_link.service.UserLinkService;
 import synk.meeteam.domain.user.user_skill.service.UserSkillService;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class ProfileFacade {
     private final UserSkillService userSkillService;
     private final PortfolioService portfolioService;
     private final AwardService awardService;
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     private final UpdateProfileCommandMapper updateProfileCommandMapper;
 
@@ -71,7 +71,7 @@ public class ProfileFacade {
     public GetProfileResponseDto readProfile(User user, String encryptedId) {
         Long userId = Encryption.decryptLong(encryptedId);
         ProfileDto openProfile = userService.getOpenProfile(userId, user);
-        String profileImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, openProfile.profileImgFileName());
+        String profileImgUrl = cloudFrontService.getSignedUrl(S3FilePath.USER, openProfile.profileImgFileName());
         List<GetProfileUserLinkDto> links = getProfileLinks(userId);
         List<GetProfileAwardDto> awards = getProfileAwards(userId);
         List<SimplePortfolioDto> portfolios = getProfilePortfolios(userId, encryptedId);
@@ -94,8 +94,8 @@ public class ProfileFacade {
         List<Portfolio> portfolios = portfolioService.getMyPinPortfolio(userId);
 
         return portfolios.stream().map((portfolio) -> {
-            String imageUrl = s3Service.createPreSignedGetUrl(
-                    S3FileName.getPortfolioPath(encryptedId),
+            String imageUrl = cloudFrontService.getSignedUrl(
+                    S3FilePath.getPortfolioPath(encryptedId),
                     portfolio.getMainImageFileName());
             return portfolioMapper.toGetProfilePortfolioDto(portfolio, imageUrl);
         }).toList();

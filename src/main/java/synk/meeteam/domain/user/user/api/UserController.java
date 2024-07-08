@@ -1,6 +1,6 @@
 package synk.meeteam.domain.user.user.api;
 
-import static synk.meeteam.infra.s3.S3FileName.USER;
+import static synk.meeteam.infra.aws.S3FilePath.USER;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import synk.meeteam.domain.user.user.service.ProfileFacade;
 import synk.meeteam.domain.user.user.service.UserManagementService;
 import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -34,7 +34,7 @@ public class UserController implements UserApi {
 
     private final UserService userService;
     private final PortfolioService portfolioService;
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     private final ProfileFacade profileFacade;
     private final UserManagementService userManagementService;
@@ -82,7 +82,7 @@ public class UserController implements UserApi {
     @Override
     @GetMapping("/profile/image")
     public ResponseEntity<GetProfileImageResponseDto> getProfileImage(@AuthUser User user) {
-        String profileImgUrl = s3Service.createPreSignedGetUrl(USER, user.getProfileImgFileName());
+        String profileImgUrl = cloudFrontService.getSignedUrl(USER, user.getProfileImgFileName());
         return ResponseEntity.ok(GetProfileImageResponseDto.of(profileImgUrl));
     }
 

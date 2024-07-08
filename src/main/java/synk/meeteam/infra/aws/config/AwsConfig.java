@@ -1,4 +1,4 @@
-package synk.meeteam.infra.s3.config;
+package synk.meeteam.infra.aws.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
-public class S3Config {
+public class AwsConfig {
     private static final String AWS_ACCESS_KEY_ID = "aws.accessKeyId";
     private static final String AWS_SECRET_ACCESS_KEY = "aws.secretAccessKey";
     private static final String AWS_REGION = "aws.region";
@@ -18,9 +18,9 @@ public class S3Config {
     private final String secretKey;
     private final String regionString;
 
-    public S3Config(@Value("${aws-property.access-key}") final String accessKey,
-                    @Value("${aws-property.secret-key}") final String secretKey,
-                    @Value("${aws-property.aws-region}") final String regionString) {
+    public AwsConfig(@Value("${aws-property.access-key}") final String accessKey,
+                     @Value("${aws-property.secret-key}") final String secretKey,
+                     @Value("${aws-property.aws-region}") final String regionString) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
         this.regionString = regionString;

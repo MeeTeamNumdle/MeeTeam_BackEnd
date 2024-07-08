@@ -34,7 +34,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.UserFixture;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -46,7 +46,7 @@ public class RecruitmentApplicantServiceTest {
     private RecruitmentApplicantRepository recruitmentApplicantRepository;
 
     @Mock
-    private S3Service s3Service;
+    private CloudFrontService cloudFrontService;
 
     @Test
     void 구인신청_성공() {
@@ -419,7 +419,6 @@ public class RecruitmentApplicantServiceTest {
 
         doReturn(List.of(applicant1)).when(recruitmentApplicantRepository).findAllInApplicantId(any());
 
-
         // when, then
         Assertions.assertThatThrownBy(
                         () -> recruitmentApplicantService.rejectApplicants(List.of(userId1, userId2), userId1))
@@ -446,13 +445,14 @@ public class RecruitmentApplicantServiceTest {
                 false
         )).when(recruitmentApplicantRepository).findByPostIdAndRoleId(any(), any(), any());
 
-        doReturn("이미지입니다").when(s3Service).createPreSignedGetUrl(any(), any());
+        doReturn("이미지입니다").when(cloudFrontService).getSignedUrl(any(), any());
 
         try (MockedStatic<Encryption> utilities = Mockito.mockStatic(Encryption.class)) {
             utilities.when(() -> Encryption.encryptLong(any())).thenReturn("1234");
 
             // when
-            GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId,1L, 1L, 1, 12);
+            GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, 1L, 1L, 1,
+                    12);
 
             // then
             Assertions.assertThat(responseDtos.applicants().size()).isEqualTo(2);

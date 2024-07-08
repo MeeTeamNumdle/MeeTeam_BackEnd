@@ -9,11 +9,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.entity.DeleteStatus;
 
 public interface RecruitmentApplicantRepository extends JpaRepository<RecruitmentApplicant, Long>,
         RecruitmentApplicantCustomRepository {
@@ -30,6 +30,7 @@ public interface RecruitmentApplicantRepository extends JpaRepository<Recruitmen
         return findByRecruitmentPostAndApplicantAndDeleteStatus(recruitmentPost, user, DeleteStatus.ALIVE)
                 .orElseThrow(() -> new RecruitmentApplicantException(SS_600));
     }
+
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("DELETE FROM RecruitmentApplicant r WHERE r.recruitmentPost.id IN :postIds")

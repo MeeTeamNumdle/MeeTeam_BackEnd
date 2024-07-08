@@ -41,17 +41,23 @@ jobs:
             ${{ runner.os }}-gradle-
 
       # 프로젝트 저장소에 업로드하면 안되는 설정 파일들을 만들어줍니다.
-      - name: Make application.yml & ApproveMail.html
+      - name: Make application.yml & KEYS & ApproveMail.html
         run: |
           # src/main/resources 경로 이동
            cd ./src/main/resources
           
           # yml 파일 생성
-           touch ./application-dev.yml
-           echo "$APPLICATION_DEV" > ./application-dev.yml
+          touch ./application-dev.yml
+          echo "$APPLICATION_DEV" > ./application-dev.yml
           
+          # 폴더 생성
+          mkdir key templates
+          
+          # key cloudfront 키 넣기
+          cd key
+          touch ./private_key.pem
+          echo "$CLOUDFRONT_KEY" > ./private_key.pem
           # 메일 관련된 html 파일 생성
-          mkdir templates
           cd ./templates
           touch ./ApproveMail.html
           echo "$MAIL_APPROVE_TEMPLATE" > ./ApproveMail.html
@@ -67,6 +73,7 @@ jobs:
           MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
           MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
           MAIL_APPLICATION_NOTIFICATION_TEMPLATE: ${{ secrets.MAIL_APPLICATION_NOTIFICATION_TEMPLATE }}
+          CLOUDFRONT_KEY: ${{ secrets.CLOUD_FRONT_KEY }}
         shell: bash
 
       - name: Gradle 권한 부여

@@ -3,7 +3,7 @@ package synk.meeteam.domain.recruitment.recruitment_applicant.service;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_REQUEST;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.INVALID_USER;
 import static synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantExceptionType.SS_602;
-import static synk.meeteam.infra.s3.S3FileName.USER;
+import static synk.meeteam.infra.aws.S3FilePath.USER;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,23 +16,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantResponseDto;
-import synk.meeteam.domain.recruitment.recruitment_applicant.service.vo.RecruitmentApplicants;
-import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.exception.RecruitmentApplicantException;
 import synk.meeteam.domain.recruitment.recruitment_applicant.repository.RecruitmentApplicantRepository;
+import synk.meeteam.domain.recruitment.recruitment_applicant.service.vo.RecruitmentApplicants;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.SliceInfo;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.util.Encryption;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
 public class RecruitmentApplicantService {
     private final RecruitmentApplicantRepository recruitmentApplicantRepository;
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     @Transactional
     public void registerRecruitmentApplicant(RecruitmentApplicant recruitmentApplicant) {
@@ -108,7 +108,7 @@ public class RecruitmentApplicantService {
                 roleId, pageable);
         applicantDtos.stream().forEach(applicant -> applicant.setEncryptedUserIdAndProfileImg(
                 Encryption.encryptLong(Long.parseLong(applicant.getUserId())),
-                s3Service.createPreSignedGetUrl(USER, applicant.getProfileImg())));
+                cloudFrontService.getSignedUrl(USER, applicant.getProfileImg())));
 
         SliceInfo pageInfo = new SliceInfo(page, size, applicantDtos.hasNext());
         return new GetApplicantResponseDto(applicantDtos.getContent(), pageInfo);
