@@ -57,6 +57,8 @@ jobs:
           cd key
           touch ./private_key.pem
           echo "$CLOUDFRONT_KEY" > ./private_key.pem
+          ls src/main/resources/key
+          cat private_key.pem
           # 메일 관련된 html 파일 생성
           cd ../templates
           touch ./ApproveMail.html
