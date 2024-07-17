@@ -4,5 +4,7 @@ FROM openjdk:17
 ARG JAR_FILE=*.jar
 ### JAR_FILE 경로에 해당하는 파일을 Docker 이미지 내부로 복사한다.
 COPY ${JAR_FILE} meeteam.jar
+### CloudFront Private Key 복사
+COPY private_key.pem /app/private_key.pem
 ### Docker 컨테이너가 시작될 때 실행할 명령을 지정한다.
 ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","-Duser.timezone=Asia/Seoul","meeteam.jar"]

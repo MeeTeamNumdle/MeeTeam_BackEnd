@@ -51,14 +51,10 @@ jobs:
           echo "$APPLICATION_DEV" > ./application-dev.yml
           
           # 폴더 생성
-          mkdir key templates
+          mkdir templates
           
-          # key cloudfront 키 넣기
-          cd key
-          touch ./private_key.pem
-          echo "$CLOUDFRONT_KEY" > ./private_key.pem
           # 메일 관련된 html 파일 생성
-          cd ../templates
+          cd ./templates
           touch ./ApproveMail.html
           echo "$MAIL_APPROVE_TEMPLATE" > ./ApproveMail.html
           
@@ -73,7 +69,6 @@ jobs:
           MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
           MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
           MAIL_APPLICATION_NOTIFICATION_TEMPLATE: ${{ secrets.MAIL_APPLICATION_NOTIFICATION_TEMPLATE }}
-          CLOUDFRONT_KEY: ${{ secrets.CLOUD_FRONT_KEY }}
         shell: bash
 
       - name: Gradle 권한 부여

@@ -60,7 +60,6 @@ public class CloudFrontService {
         } catch (AwsException e) {
             throw new AwsException(AwsExceptionType.FAIL_GET_URL);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new AwsException(AwsExceptionType.CAN_NOT_FOUND_KEY);
         }
     }
