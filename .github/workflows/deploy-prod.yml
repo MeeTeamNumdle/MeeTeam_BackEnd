@@ -52,8 +52,8 @@ jobs:
            cd ./src/main/resources
           
           # yml 파일 생성
-          touch ./application-dev.yml
-          echo "$APPLICATION_DEV" > ./application-dev.yml
+          touch ./application-prod.yml
+          echo "$APPLICATION_DEV" > ./application-prod.yml
           
           # 폴더 생성
           mkdir templates
