@@ -49,11 +49,15 @@ jobs:
       - name: 🗂️ Make config
         run: |
           # src/main/resources 경로 이동
-           cd ./src/main/resources
+          cd ./src/main/resources
           
           # yml 파일 생성
           touch ./application-dev.yml
           echo "$APPLICATION_DEV" > ./application-dev.yml
+          
+          # 키 파일 생성
+          touch ./private-key.pem
+          echo "$CLOUD_FRONT_KEY" > ./private-key.pem
           
           # 폴더 생성
           mkdir templates
@@ -74,6 +78,7 @@ jobs:
           MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
           MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
           MAIL_APPLICATION_NOTIFICATION_TEMPLATE: ${{ secrets.MAIL_APPLICATION_NOTIFICATION_TEMPLATE }}
+          CLOUD_FRONT_KEY: ${{ secrets.CLOUD_FRONT_KEY }}
         shell: bash
 
       - name: ⚙️ Gradle 권한 부여
@@ -85,11 +90,13 @@ jobs:
       - name: 📦 zip file 생성
         run: |
           mkdir deploy
-          cp ./docker/dev/docker-compose.dev.yml ./deploy/
-          cp ./docker/dev/Dockerfile ./deploy/
+          mkdir deploy/dev
+          cp ./docker/dev/docker-compose.dev.yml ./deploy/dev
+          cp ./docker/dev/Dockerfile ./deploy/dev
+          cp ./src/main/resources/private-key.pem ./deploy/dev
+          cp ./build/libs/*.jar ./deploy/dev
           cp ./appspec.yml ./deploy/
           cp ./scripts/deploy.sh ./deploy/
-          cp ./build/libs/*.jar ./deploy/
           zip -r -qq -j ./spring-app.zip ./deploy
       
 

@@ -55,6 +55,10 @@ jobs:
           touch ./application-prod.yml
           echo "$APPLICATION_PROD" > ./application-prod.yml
           
+          # 키 파일 생성
+          touch ./private-key.pem
+          echo "$CLOUD_FRONT_KEY" > ./private-key.pem
+          
           # 폴더 생성
           mkdir templates
           
@@ -74,6 +78,7 @@ jobs:
           MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
           MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
           MAIL_APPLICATION_NOTIFICATION_TEMPLATE: ${{ secrets.MAIL_APPLICATION_NOTIFICATION_TEMPLATE }}
+          CLOUD_FRONT_KEY: ${{ secrets.CLOUD_FRONT_KEY }}
         shell: bash
 
       - name: ⚙️ Gradle 권한 부여
@@ -85,9 +90,11 @@ jobs:
       - name: 📦 zip file 생성
         run: |
           mkdir deploy
-          cp ./docker/prod/docker-compose.prod.yml ./deploy/
-          cp ./docker/prod/Dockerfile ./deploy/
-          cp ./appspec.yml ./deploy/
+          mkdir deploy/prod
+          cp ./docker/prod/docker-compose.prod.yml ./deploy/prod
+          cp ./docker/prod/Dockerfile ./deploy/prod
+          cp ./src/main/resources/private-key.pem ./deploy/prod
+          cp ./build/libs/*.jar ./deploy/prod
           cp ./scripts/deploy.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
           zip -r -qq -j ./spring-app.zip ./deploy
