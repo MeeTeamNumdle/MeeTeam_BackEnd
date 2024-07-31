@@ -12,6 +12,7 @@ DEPLOYMENT_DETAILS=$(aws deploy get-deployment --deployment-id $DEPLOYMENT_ID)
 
 # 배포 그룹 이름 추출
 DEPLOYMENT_GROUP_NAME=$(echo $DEPLOYMENT_DETAILS | jq -r '.deploymentInfo.deploymentGroupName')
+echo $DEPLOYMENT_GROUP_NAME
 
 # 만약 배포가 prod 라면
 if [ "$DEPLOYMENT_GROUP_NAME" = "spring-app" ]; then
