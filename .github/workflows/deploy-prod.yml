@@ -23,7 +23,7 @@ jobs:
     environment: production
     env:
       DEPLOYMENT_GROUP_NAME: meeteam-app
-      S3_BUCKET_DIR_NAME: meeteam-backend-bucket/prod
+      S3_BUCKET_DIR_NAME: /prod
     steps:
       - name: ✅ Checkout branch
         uses: actions/checkout@v3
