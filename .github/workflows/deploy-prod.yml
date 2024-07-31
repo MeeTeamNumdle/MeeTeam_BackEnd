@@ -96,7 +96,7 @@ jobs:
           cp ./src/main/resources/private-key.pem ./deploy/prod
           cp ./build/libs/*.jar ./deploy/prod
           cp ./scripts/deploy.sh ./deploy/
-          cp ./build/libs/*.jar ./deploy/
+          cp ./appspec.yml ./deploy/
           zip -r -qq ./spring-app.zip ./deploy
       
       
