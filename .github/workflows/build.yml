@@ -9,18 +9,16 @@ name: BackEnd - CI/CD(build)
 
 on:
   pull_request:
-    branches: [ "main","develop" ]
+    branches: [ "develop", "release/v**", "main" ]
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "release/v**" ]
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       # JDK를 17 버전으로 셋팅한다.
