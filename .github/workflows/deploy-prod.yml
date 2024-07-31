@@ -1,0 +1,124 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: BackEnd - CI/CD(deploy)
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [ closed ]
+
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-prod:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      DEPLOYMENT_GROUP_NAME: meeteam-app
+      S3_BUCKET_DIR_NAME: /prod
+    steps:
+      - name: ✅ Checkout branch
+        uses: actions/checkout@v3
+      # JDK를 17 버전으로 셋팅한다.
+      - name: ⚙️ Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Gradle을 캐싱한다 -> 빌드 속도가 증가하는 효과가 있다.
+      - name: ✅ Gradle 캐싱
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # 프로젝트 저장소에 업로드하면 안되는 설정 파일들을 만들어줍니다.
+      - name: 🗂️ Make config
+        run: |
+          # src/main/resources 경로 이동
+           cd ./src/main/resources
+          
+          # yml 파일 생성
+          touch ./application-prod.yml
+          echo "$APPLICATION_PROD" > ./application-prod.yml
+          
+          # 폴더 생성
+          mkdir templates
+          
+          # 메일 관련된 html 파일 생성
+          cd ./templates
+          touch ./ApproveMail.html
+          echo "$MAIL_APPROVE_TEMPLATE" > ./ApproveMail.html
+          
+          touch ./UniversityAuthMail.html
+          echo "$MAIL_VERIFY_TEMPLATE" > ./UniversityAuthMail.html
+          
+          touch ./ApplicationNotificationMail.html
+          echo "$MAIL_APPLICATION_NOTIFICATION_TEMPLATE" > ./ApplicationNotificationMail.html
+
+        env:
+          APPLICATION_PROD: ${{ secrets.APPLICATION_PROD }}
+          MAIL_APPROVE_TEMPLATE: ${{ secrets.MAIL_APPROVE_TEMPLATE }}
+          MAIL_VERIFY_TEMPLATE: ${{ secrets.MAIL_VERIFY_TEMPLATE }}
+          MAIL_APPLICATION_NOTIFICATION_TEMPLATE: ${{ secrets.MAIL_APPLICATION_NOTIFICATION_TEMPLATE }}
+        shell: bash
+
+      - name: ⚙️ Gradle 권한 부여
+        run: chmod +x gradlew
+
+      - name: ⚙️ Gradle로 빌드 실행
+        run: ./gradlew bootjar
+      # 배포에 필요한 여러 설정 파일과 프로젝트 빌드파일을 zip 파일로 모아준다.
+      - name: 📦 zip file 생성
+        run: |
+          mkdir deploy
+          cp ./docker/prod/docker-compose.prod.yml ./deploy/
+          cp ./docker/prod/Dockerfile ./deploy/
+          cp ./appspec.yml ./deploy/
+          cp ./scripts/deploy.sh ./deploy/
+          cp ./build/libs/*.jar ./deploy/
+          zip -r -qq -j ./spring-app.zip ./deploy
+      
+      
+      # AWS에 연결해준다.
+      - name: 🌎 AWS 연결
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # S3에 프로젝트를 업로드 한다.
+      - name: 🚛 S3에 프로젝트 업로드
+        run: |
+          aws s3 cp \
+          --region ap-northeast-2 \
+          ./spring-app.zip s3://meeteam-backend-bucket
+
+      # CodeDelploy에 배포를 요청한다.
+      - name: 🚀 Code Deploy 배포 요청
+        run: aws deploy create-deployment --application-name meeteam-app
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }}
+          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=${{ env.S3_BUCKET_DIR_NAME }}/spring-app.zip
+
+      - name: Discord 알림 봇
+        uses: sarisia/actions-status-discord@v1
+        if: ${{ failure() }}
+        with:
+          title: ❗️ Backend CD failed ❗️
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: FF0000
