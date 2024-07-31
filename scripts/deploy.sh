@@ -6,16 +6,12 @@ if [ -z "$DEPLOYMENT_ID" ]; then
   echo "Deployment ID is not set. Please ensure the deployment ID is provided."
   exit 1
 fi
-
-# AWS CLI를 사용하여 배포 세부 정보 가져오기
-DEPLOYMENT_DETAILS=$(aws deploy get-deployment --deployment-id $DEPLOYMENT_ID)
-
 # 배포 그룹 이름 추출
-DEPLOYMENT_GROUP_NAME=$(echo $DEPLOYMENT_DETAILS | jq -r '.deploymentInfo.deploymentGroupName')
+DEPLOYMENT_GROUP_NAME=$(aws deploy get-deployment --deployment-id $DEPLOYMENT_ID --query 'deploymentInfo.deploymentGroupName' --output text)
 echo $DEPLOYMENT_GROUP_NAME
 
 # 만약 배포가 prod 라면
-if [ "$DEPLOYMENT_GROUP_NAME" = "spring-app" ]; then
+if [ "$DEPLOYMENT_GROUP_NAME" = "meeteam-app" ]; then
   # 작업 디렉토리를 /home/ubuntu/app/prod으로 변경
   cd /home/ubuntu/app/prod
 
