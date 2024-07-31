@@ -97,7 +97,7 @@ jobs:
           cp ./build/libs/*.jar ./deploy/dev
           cp ./appspec.yml ./deploy/
           cp ./scripts/deploy.sh ./deploy/
-          zip -r -qq -j ./spring-app.zip ./deploy
+          zip -r -qq ./spring-app.zip ./deploy
       
 
       # AWS에 연결해준다.
