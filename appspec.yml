@@ -11,6 +11,7 @@ files:
     destination: /home/ubuntu/app
     # 대상 경로에 이미 파일이 존재하는 경우, 덮어쓰기를 허용할지 여부
     overwrite: yes
+file_exists_behavior: OVERWRITE
 
 # 파일 및 디렉토리 권한에 관련된 설정
 permissions:
