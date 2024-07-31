@@ -9,33 +9,28 @@ name: BackEnd - CI/CD(deploy)
 
 on:
   pull_request:
-    branches: [ "develop" ]
     types: [ closed ]
-
+    branches: [ "develop" ]
 
 permissions:
   contents: read
 
 jobs:
-  deploy-dev:
+  deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    environment: develop
-    env:
-      DEPLOYMENT_GROUP_NAME: meeteam-dev
-      S3_BUCKET_DIR_NAME: /dev
+
     steps:
-      - name: ✅ Checkout branch
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       # JDK를 17 버전으로 셋팅한다.
-      - name: ⚙️ Set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
       # Gradle을 캐싱한다 -> 빌드 속도가 증가하는 효과가 있다.
-      - name: ✅ Gradle 캐싱
+      - name: Gradle 캐싱
         uses: actions/cache@v3
         with:
           path: |
@@ -46,7 +41,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       # 프로젝트 저장소에 업로드하면 안되는 설정 파일들을 만들어줍니다.
-      - name: 🗂️ Make config
+      - name: Make application.yml & KEYS & ApproveMail.html
         run: |
           # src/main/resources 경로 이동
            cd ./src/main/resources
@@ -76,44 +71,47 @@ jobs:
           MAIL_APPLICATION_NOTIFICATION_TEMPLATE: ${{ secrets.MAIL_APPLICATION_NOTIFICATION_TEMPLATE }}
         shell: bash
 
-      - name: ⚙️ Gradle 권한 부여
+      - name: Gradle 권한 부여
         run: chmod +x gradlew
 
-      - name: ⚙️ Gradle로 빌드 실행
+      - name: Gradle로 빌드 실행
         run: ./gradlew bootjar
-      # 배포에 필요한 여러 설정 파일과 프로젝트 빌드파일을 zip 파일로 모아준다.
-      - name: 📦 zip file 생성
+
+
+      # 배포에 필요한 여러 설정 파일과 프로젝트 빌드파일을 zip 파일로 모아줍니다.
+      - name: zip file 생성
         run: |
           mkdir deploy
-          cp ./docker/dev/docker-compose.dev.yml ./deploy/
-          cp ./docker/dev/Dockerfile ./deploy/
+          cp ./docker/docker-compose.blue.yml ./deploy/
+          cp ./docker/docker-compose.green.yml ./deploy/
           cp ./appspec.yml ./deploy/
-          cp ./scripts/deploy.sh ./deploy/
+          cp ./docker/Dockerfile ./deploy/
+          cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
-          zip -r -qq -j ./spring-app.zip ./deploy
+          zip -r -qq -j ./spring-build.zip ./deploy
       
 
-      # AWS에 연결해준다.
-      - name: 🌎 AWS 연결
+      # AWS에 연결해줍니다.
+      - name: AWS 연결
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # S3에 프로젝트를 업로드 한다.
-      - name: 🚛 S3에 프로젝트 업로드
+      # S3에 프로젝트를 업로드 합니다.
+      - name: S3에 프로젝트 업로드
         run: |
           aws s3 cp \
           --region ap-northeast-2 \
-          ./spring-app.zip s3://meeteam-backend-bucket
+          ./spring-build.zip s3://meeteam-backend-bucket
 
-      # CodeDelploy에 배포를 요청한다.
-      - name: 🚀 Code Deploy 배포 요청
+      # CodeDelploy에 배포를 요청합니다.
+      - name: Code Deploy 배포 요청
         run: aws deploy create-deployment --application-name meeteam-app
           --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }}
-          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=${{ env.S3_BUCKET_DIR_NAME }}/spring-app.zip
+          --deployment-group-name meeteam-app
+          --s3-location bucket=meeteam-backend-bucket,bundleType=zip,key=spring-build.zip
 
       - name: Discord 알림 봇
         uses: sarisia/actions-status-discord@v1
