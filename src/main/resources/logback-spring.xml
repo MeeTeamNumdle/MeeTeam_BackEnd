@@ -4,7 +4,7 @@
               value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
     <springProperty name="DISCORD_WEBHOOK_URI" source="logging.discord.webhook-uri"/>
 
-    <springProfile name="dev">
+    <springProfile name="prod">
         <include resource="console-appender.xml"/>
         <include resource="discord-appender.xml"/>
         <include resource="file-info-appender.xml"/>
@@ -19,7 +19,13 @@
             <appender-ref ref="FILE-ERROR"/>
         </root>
     </springProfile>
+    <springProfile name="dev">
+        <include resource="console-appender.xml"/>
 
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
     <springProfile name="local">
         <include resource="console-appender.xml"/>
 
