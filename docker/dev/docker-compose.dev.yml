@@ -1,0 +1,26 @@
+version: '3.8'
+
+networks:
+  development_network:
+    driver: bridge
+
+services:
+  redis:
+    image: "redis:alpine"
+    container_name: redis-dev
+    networks:
+      - development_network
+    expose:
+      - "6379"
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dev-spring-app
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    networks:
+      - development_network
+    ports:
+      - "1821:8080"
