@@ -140,7 +140,8 @@ public class PortfolioServiceImpl implements PortfolioService {
                 command.proceedType(),
                 field,
                 role,
-                command.fileOrder()
+                command.fileOrder(),
+                command.mainImageFileName()
         );
         return portfolio;
     }

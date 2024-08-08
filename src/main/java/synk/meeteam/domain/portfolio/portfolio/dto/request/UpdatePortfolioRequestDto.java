@@ -51,6 +51,11 @@ public record UpdatePortfolioRequestDto(
         @NotNull
         @Size(max = 10)
         List<Long> skills,
+
+        @Schema(description = "메인이미지 이름", example = "image.png")
+        @NotNull
+        String mainImageFileName,
+
         @Schema(description = "링크")
         @NotNull
         @Size(max = 10)

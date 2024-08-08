@@ -13,7 +13,8 @@ public record UpdatePortfolioCommand(
         LocalDate proceedStart,
         LocalDate proceedEnd,
         ProceedType proceedType,
-        List<String> fileOrder
+        List<String> fileOrder,
+        String mainImageFileName
 ) {
 
 }
