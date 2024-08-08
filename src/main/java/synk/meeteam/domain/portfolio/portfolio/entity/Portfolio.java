@@ -131,7 +131,7 @@ public class Portfolio extends BaseEntity {
 
     public void updatePortfolio(String title, String description, String content, LocalDate proceedStart,
                                 LocalDate proceedEnd, ProceedType proceedType, Field field, Role role,
-                                List<String> fileOrder) {
+                                List<String> fileOrder, String mainImageFileName) {
         this.title = title;
         this.description = description;
         this.content = content;
@@ -141,6 +141,7 @@ public class Portfolio extends BaseEntity {
         this.field = field;
         this.role = role;
         this.fileOrder = fileOrder;
+        this.mainImageFileName = mainImageFileName;
     }
 
     public boolean isAllViewAble(Long userId) {
