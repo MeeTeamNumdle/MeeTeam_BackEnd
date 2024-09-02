@@ -6,7 +6,7 @@ import java.util.List;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.skill.dto.SkillDto;
 import synk.meeteam.domain.common.university.entity.University;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.user.award.dto.GetProfileAwardDto;
 import synk.meeteam.domain.user.award.dto.UpdateAwardDto;
 import synk.meeteam.domain.user.user.dto.request.UpdateProfileRequestDto;
@@ -41,9 +41,9 @@ public class UserFixture {
 
     public static UpdateProfileRequestDto createEditProfileDto() {
         return new UpdateProfileRequestDto(
-                "goder",
+                "goder1",
                 true,
-                "imageUrl",
+                "imageUrl.png",
                 "010-1234-5678",
                 true,
                 true,
@@ -56,7 +56,7 @@ public class UserFixture {
                 4.3,
                 4.5,
                 List.of(1L, 2L, 3L),
-                List.of(new UpdateUserLinkDto("naver.com", "네이버")),
+                List.of(new UpdateUserLinkDto("https://gemini.google.com/", "네이버")),
                 List.of(new UpdateAwardDto("공공데이터공모전", "장려상수상", LocalDate.parse("2023-02-02"),
                         LocalDate.parse("2023-03-01"))),
                 List.of(1L, 2L)
@@ -66,6 +66,7 @@ public class UserFixture {
     public static GetProfileResponseDto createReadProfile() {
         return new GetProfileResponseDto(
                 "https://dasfsdf.png",
+                "dasfdf.png",
                 "민지",
                 "mingi123",
                 true,
@@ -81,7 +82,7 @@ public class UserFixture {
                 4.3,
                 2019,
                 List.of(
-                        new GetProfilePortfolioDto(1L, "Meeteam 팀을 만나다", "https://~", "개발", "백엔드개발자", true, 1)
+                        new SimplePortfolioDto(1L, "Meeteam 팀을 만나다", "https://~", "개발", "백엔드개발자", true, 1)
                 ),
                 List.of(
                         new GetProfileUserLinkDto("https://~~", "Link"),

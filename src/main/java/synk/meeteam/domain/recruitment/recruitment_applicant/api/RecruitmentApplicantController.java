@@ -26,6 +26,7 @@ import synk.meeteam.domain.recruitment.recruitment_post.service.RecruitmentPostS
 import synk.meeteam.domain.recruitment.recruitment_role.entity.RecruitmentRole;
 import synk.meeteam.domain.recruitment.recruitment_role.service.RecruitmentRoleService;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -38,6 +39,8 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
     private final RecruitmentApplicantService recruitmentApplicantService;
     private final RecruitmentPostService recruitmentPostService;
     private final RecruitmentRoleService recruitmentRoleService;
+
+    private final UserService userService;
 
     @PutMapping("/{id}/link")
     @Override
@@ -55,7 +58,7 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
                                                                     @AuthUser User user) {
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
         List<RecruitmentRole> applyStatusRecruitmentRoles = recruitmentRoleService.findApplyStatusRecruitmentRole(
-                postId);
+                postId, user.getId(), recruitmentPost.getCreatedBy());
 
         List<GetRecruitmentRoleStatusResponseDto> roleStatusResponseDtos = applyStatusRecruitmentRoles.stream()
                 .map(role -> GetRecruitmentRoleStatusResponseDto.of(role.getRole().getName(), role.getCount(),
@@ -68,7 +71,16 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
 
         return ResponseEntity.ok()
                 .body(new GetApplicantInfoResponseDto(recruitmentPost.getTitle(), recruitmentPost.getKakaoLink(),
-                        roleStatusResponseDtos, roleDtos));
+                        user.isFirstApplicantAccess(), roleStatusResponseDtos,
+                        roleDtos));
+    }
+
+    @PatchMapping("/{id}/access")
+    @Override
+    public ResponseEntity<Void> processFirstAccess(@PathVariable("id") Long postId, @AuthUser User user) {
+        userService.processFirstAccess(user);
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/approve")
@@ -102,8 +114,9 @@ public class RecruitmentApplicantController implements RecruitmentApplicantApi {
                                                                  @RequestParam(name = "page", defaultValue = "1") int page,
                                                                  @RequestParam(name = "size", defaultValue = "8") int size,
                                                                  @AuthUser User user) {
-
-        GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, page, size);
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        GetApplicantResponseDto responseDtos = recruitmentApplicantService.getAllByRole(postId, roleId, user.getId(),
+                recruitmentPost.getCreatedBy(), page, size);
         return ResponseEntity.ok().body(responseDtos);
     }
 

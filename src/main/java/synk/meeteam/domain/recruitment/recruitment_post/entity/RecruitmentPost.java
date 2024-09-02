@@ -32,6 +32,7 @@ import synk.meeteam.domain.recruitment.bookmark.exception.BookmarkException;
 import synk.meeteam.domain.recruitment.recruitment_post.exception.RecruitmentPostException;
 import synk.meeteam.global.entity.BaseEntity;
 import synk.meeteam.global.entity.Category;
+import synk.meeteam.global.entity.DeleteStatus;
 import synk.meeteam.global.entity.ProceedType;
 import synk.meeteam.global.entity.Scope;
 
@@ -121,11 +122,17 @@ public class RecruitmentPost extends BaseEntity {
     @JoinColumn(name = "professor_id")
     private Professor professor;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ALIVE'")
+    private DeleteStatus deleteStatus = DeleteStatus.ALIVE;
+
     @Builder
     public RecruitmentPost(String title, String content, Scope scope, Category category, Field field,
                            ProceedType proceedType, LocalDate proceedingStart, LocalDate proceedingEnd,
                            LocalDate deadline,
-                           long bookmarkCount, String kakaoLink, boolean isClosed, Meeteam meeteam) {
+                           long bookmarkCount, String kakaoLink, boolean isClosed, Meeteam meeteam,
+                           Course course, Professor professor) {
         this.title = title;
         this.content = content;
         this.scope = scope;
@@ -139,6 +146,8 @@ public class RecruitmentPost extends BaseEntity {
         this.kakaoLink = kakaoLink;
         this.isClosed = isClosed;
         this.meeteam = meeteam;
+        this.course = course;
+        this.professor = professor;
     }
 
     public double getResponseRate() {
@@ -176,7 +185,9 @@ public class RecruitmentPost extends BaseEntity {
                                       LocalDate deadline,
                                       long bookmarkCount, String kakaoLink, boolean isClosed,
                                       Meeteam meeteam, long applicantCount,
-                                      long responseCount) {
+                                      long responseCount, Long userId) {
+        validateWriter(userId);
+
         this.title = title;
         this.content = content;
         this.scope = scope;
@@ -192,6 +203,11 @@ public class RecruitmentPost extends BaseEntity {
         this.meeteam = meeteam;
         this.applicantCount = applicantCount;
         this.responseCount = responseCount;
+    }
+
+    public void softDelete(Long userId) {
+        validateWriter(userId);
+        this.deleteStatus = DeleteStatus.DELETED;
     }
 
     public RecruitmentPost setLink(String kakaoLink, Long userId) {

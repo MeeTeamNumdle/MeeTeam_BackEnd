@@ -9,18 +9,16 @@ name: BackEnd - CI/CD(build)
 
 on:
   pull_request:
-    branches: [ "main","develop" ]
+    branches: [ "develop", "release/v**", "main" ]
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "release/v**" ]
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       # JDK를 17 버전으로 셋팅한다.
@@ -42,7 +40,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       # 프로젝트 저장소에 업로드하면 안되는 설정 파일들을 만들어줍니다.
-      - name: Make application.yml
+      - name: Make application.yml & Keys
         run: |
           # src/main/resources 경로를 이동
            cd ./src/main/resources
@@ -51,8 +49,15 @@ jobs:
            touch ./application-dev.yml
            # 등록해둔 Github Secrets의 내용을 이용해서 yml 파일의 내용을 써줍니다.
            echo "$APPLICATION_DEV" > ./application-dev.yml
+          
+           # key 폴더 만들고 cloudfront 키 넣기
+           mkdir key
+           cd key
+           touch ./private_key.pem
+           echo "$CLOUDFRONT_KEY" > ./private_key.pem
         env:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
+          CLOUDFRONT_KEY: ${{ secrets.CLOUD_FRONT_KEY }}
         shell: bash
 
       - name: Gradle 권한 부여
@@ -63,6 +68,8 @@ jobs:
 
       - name: Discord 알림 봇
         uses: sarisia/actions-status-discord@v1
-        if: always()
+        if: ${{ failure() }}
         with:
+          title: ❗️ Backend CI failed ❗️
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: FFFF00

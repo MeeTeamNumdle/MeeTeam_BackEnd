@@ -47,8 +47,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new AuthException(UNAUTHORIZED_ACCESS_TOKEN);
             }
 
-            String platformId = jwtService.extractPlatformIdFromAccessToken(authorizationAccessToken);
-            UserDetails userDetails = memberAuthService.loadUserByUsername(platformId);
+            String encryptedUserId = jwtService.extractUserIdFromAccessToken(authorizationAccessToken);
+            UserDetails userDetails = memberAuthService.loadUserByUsername(encryptedUserId);
 
             Authentication authentication
                     = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

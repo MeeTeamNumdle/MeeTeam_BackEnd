@@ -6,6 +6,7 @@ import static synk.meeteam.domain.portfolio.portfolio.exception.PortfolioExcepti
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -15,7 +16,7 @@ import synk.meeteam.domain.common.field.entity.Field;
 import synk.meeteam.domain.common.field.repository.FieldRepository;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
-import synk.meeteam.domain.portfolio.portfolio.dto.GetProfilePortfolioDto;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.command.CreatePortfolioCommand;
 import synk.meeteam.domain.portfolio.portfolio.dto.command.UpdatePortfolioCommand;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetUserPortfolioResponseDto;
@@ -23,7 +24,11 @@ import synk.meeteam.domain.portfolio.portfolio.entity.Portfolio;
 import synk.meeteam.domain.portfolio.portfolio.exception.PortfolioException;
 import synk.meeteam.domain.portfolio.portfolio.repository.PortfolioRepository;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.global.dto.SliceInfo;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +36,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final FieldRepository fieldRepository;
     private final RoleRepository roleRepository;
+
+    private final CloudFrontService cloudFrontService;
 
     @Transactional
     public List<Portfolio> changePinPortfoliosByIds(Long userId, List<Long> portfolioIds) {
@@ -66,13 +73,33 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public GetUserPortfolioResponseDto getMyAllPortfolio(int page, int size, User user) {
+    @Transactional(readOnly = true)
+    public GetUserPortfolioResponseDto getSliceMyAllPortfolio(int page, int size, User user) {
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size);
-        Slice<GetProfilePortfolioDto> userPortfolioDtos = portfolioRepository.findUserPortfoliosByUserOrderByCreatedAtDesc(
+        Slice<SimplePortfolioDto> userPortfolioDtos = portfolioRepository.findSlicePortfoliosByUserOrderByCreatedAtDesc(
                 pageable, user);
+        userPortfolioDtos.getContent().forEach(userPortfolio -> {
+            String imageUrl = cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
+                    userPortfolio.getMainImageUrl());
+            userPortfolio.setMainImageUrl(imageUrl);
+        });
         SliceInfo pageInfo = new SliceInfo(page, size, userPortfolioDtos.hasNext());
         return new GetUserPortfolioResponseDto(userPortfolioDtos.getContent(), pageInfo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaginationPortfolioDto<SimplePortfolioDto> getPageMyAllPortfolio(int page, int size, User user) {
+        Page<SimplePortfolioDto> myPortfolios = portfolioRepository.findPaginationPortfoliosByUserOrderByCreatedAtDesc(
+                PageRequest.of(page - 1, size), user);
+        myPortfolios.getContent().forEach(myPortfolio -> {
+            String imageUrl = cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
+                    myPortfolio.getMainImageUrl());
+            myPortfolio.setMainImageUrl(imageUrl);
+        });
+        PageInfo pageInfo = new PageInfo(page, size, myPortfolios.getTotalElements(), myPortfolios.getTotalPages());
+        return new PaginationPortfolioDto<>(myPortfolios.getContent(), pageInfo);
     }
 
     @Override
@@ -100,6 +127,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
+    @Transactional
     public Portfolio editPortfolio(Portfolio portfolio, User user, UpdatePortfolioCommand command) {
         Field field = fieldRepository.findByIdOrElseThrowException(command.fieldId());
         Role role = roleRepository.findByIdOrElseThrowException(command.roleId());
@@ -112,18 +140,41 @@ public class PortfolioServiceImpl implements PortfolioService {
                 command.proceedType(),
                 field,
                 role,
-                command.fileOrder()
+                command.fileOrder(),
+                command.mainImageFileName()
         );
         return portfolio;
     }
 
+    @Transactional
     @Override
-    public Portfolio getPortfolio(Long portfolioId) {
-        return portfolioRepository.findByIdWithFieldAndRoleOrElseThrow(portfolioId);
+    public void deletePortfolio(Long portfolioId, User user) {
+        Portfolio portfolio = portfolioRepository.findByIdAndAliveOrElseThrow(portfolioId);
+        portfolio.validWriter(user.getId());
+        if (portfolio.getIsPin()) {
+            reorderPinPortfolio(user, portfolio);
+        }
+        portfolio.softDelete();
     }
 
+    private void reorderPinPortfolio(User user, Portfolio portfolio) {
+        List<Portfolio> pinPortfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(
+                user.getId());
+        for (int index = 0; index < pinPortfolios.size(); index++) {
+            pinPortfolios.get(index).putPin(index + 1);
+        }
+        portfolio.unpin();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Portfolio getPortfolio(Long portfolioId) {
+        return portfolioRepository.findByIdAndAliveWithFieldAndRoleOrElseThrow(portfolioId);
+    }
+
+    @Transactional(readOnly = true)
     public Portfolio getPortfolio(Long portfolioId, User user) {
-        Portfolio portfolio = portfolioRepository.findByIdOrElseThrow(portfolioId);
+        Portfolio portfolio = portfolioRepository.findByIdAndAliveOrElseThrow(portfolioId);
 
         if (!portfolio.getCreatedBy().equals(user.getId())) {
             throw new PortfolioException(SS_110);

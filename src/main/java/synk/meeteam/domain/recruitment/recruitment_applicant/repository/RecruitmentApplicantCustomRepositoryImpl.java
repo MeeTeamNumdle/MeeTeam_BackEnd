@@ -20,8 +20,8 @@ import org.springframework.stereotype.Repository;
 import synk.meeteam.domain.common.department.entity.QDepartment;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.GetApplicantDto;
 import synk.meeteam.domain.recruitment.recruitment_applicant.dto.response.QGetApplicantDto;
-import synk.meeteam.domain.recruitment.recruitment_applicant.entity.DeleteStatus;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitStatus;
+import synk.meeteam.global.entity.DeleteStatus;
 
 @Repository
 @RequiredArgsConstructor
@@ -51,7 +51,7 @@ public class RecruitmentApplicantCustomRepositoryImpl implements RecruitmentAppl
                 .select(new QGetApplicantDto(recruitmentApplicant.id,
                         recruitmentApplicant.applicant.id.stringValue(),
                         recruitmentApplicant.applicant.nickname, recruitmentApplicant.applicant.profileImgFileName,
-                        recruitmentApplicant.applicant.name, recruitmentApplicant.applicant.evaluationScore,
+                        recruitmentApplicant.applicant.name, recruitmentApplicant.applicant.gpa,
                         recruitmentApplicant.applicant.university.name, recruitmentApplicant.applicant.department.name,
                         getMainMail, recruitmentApplicant.applicant.admissionYear,
                         recruitmentApplicant.role.name, recruitmentApplicant.comment))

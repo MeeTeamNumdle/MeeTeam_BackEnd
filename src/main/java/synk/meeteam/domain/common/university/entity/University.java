@@ -23,11 +23,11 @@ public class University {
     private Long id;
 
     @NotNull
-    @Column(length = 20)
+    @Column(length = 70)
     private String name;
 
     @NotNull
-    @Column(length = 20)
+    @Column(length = 30)
     private String emailRegex;
 
     public University(String name, String emailRegex) {

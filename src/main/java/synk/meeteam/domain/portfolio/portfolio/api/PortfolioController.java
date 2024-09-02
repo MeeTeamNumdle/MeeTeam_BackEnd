@@ -1,20 +1,26 @@
 package synk.meeteam.domain.portfolio.portfolio.api;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import synk.meeteam.domain.portfolio.portfolio.dto.SimplePortfolioDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.request.CreatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.request.UpdatePortfolioRequestDto;
 import synk.meeteam.domain.portfolio.portfolio.dto.response.GetPortfolioResponseDto;
 import synk.meeteam.domain.portfolio.portfolio.service.PortfolioFacade;
+import synk.meeteam.domain.portfolio.portfolio.service.PortfolioService;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.global.dto.PaginationPortfolioDto;
 import synk.meeteam.security.AuthUser;
 
 @RestController
@@ -23,6 +29,7 @@ import synk.meeteam.security.AuthUser;
 public class PortfolioController implements PortfolioApi {
 
     private final PortfolioFacade portfolioFacade;
+    private final PortfolioService portfolioService;
 
     @PostMapping
     @Override
@@ -43,5 +50,21 @@ public class PortfolioController implements PortfolioApi {
     public ResponseEntity<Long> modifyPortfolio(@AuthUser User user, @PathVariable("id") Long portfolioId,
                                                 @RequestBody @Valid UpdatePortfolioRequestDto requestDto) {
         return ResponseEntity.ok(portfolioFacade.editPortfolio(portfolioId, user, requestDto));
+    }
+
+    @DeleteMapping("/{id}")
+    @Override
+    public ResponseEntity<Void> deletePortfolio(@AuthUser User user, @PathVariable("id") Long portfolioId) {
+        portfolioService.deletePortfolio(portfolioId, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    @Override
+    public ResponseEntity<PaginationPortfolioDto<SimplePortfolioDto>> getMyPortfolios(
+            @RequestParam(value = "size", required = false, defaultValue = "24") @Valid @Min(1) int size,
+            @RequestParam(value = "page", required = false, defaultValue = "1") @Valid @Min(1) int page,
+            @AuthUser User user) {
+        return ResponseEntity.ok().body(portfolioService.getPageMyAllPortfolio(page, size, user));
     }
 }

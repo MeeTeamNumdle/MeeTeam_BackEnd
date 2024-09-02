@@ -23,10 +23,9 @@ import synk.meeteam.domain.auth.dto.response.AuthUserResponseMapper;
 import synk.meeteam.domain.auth.dto.response.ReissueUserResponseDto;
 import synk.meeteam.domain.auth.exception.AuthException;
 import synk.meeteam.domain.auth.exception.AuthExceptionType;
-import synk.meeteam.domain.auth.service.vo.AuthUserVo;
+import synk.meeteam.domain.auth.service.vo.AuthUserVO;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.entity.enums.Authority;
-import synk.meeteam.domain.user.user.entity.enums.PlatformType;
 import synk.meeteam.domain.user.user.repository.UserRepository;
 import synk.meeteam.global.util.Encryption;
 import synk.meeteam.infra.redis.repository.RedisTokenRepository;
@@ -38,13 +37,8 @@ import synk.meeteam.security.jwt.service.vo.TokenVO;
 @Slf4j
 @Transactional(readOnly = true)
 public class JwtService {
-    private static final String AUTH_USER = "memberId";
     private static final String BEARER = "Bearer ";
-    private static final String EMAIL_CLAIM = "email";
-    private static final String PLATFORM_ID_CLAIM = "platformId";
-    private static final String PLATFORM_TYPE_CLAIM = "platformType";
-
-
+    private static final String USER_ID_CLAIM = "userId";
 
     @Value("${jwt.access.expiration}")
     private Long accessTokenExpirationPeriod;
@@ -66,68 +60,68 @@ public class JwtService {
     private final AuthUserResponseMapper authUserResponseMapper;
 
     @Transactional
-    public AuthUserResponseDto.login issueToken(AuthUserVo vo) {
-        String accessToken = jwtTokenProvider.createAccessToken(vo.platformId(), vo.platformType(), accessTokenExpirationPeriod);
-
+    public AuthUserResponseDto.login issueToken(AuthUserVO vo) {
         if (!vo.authority().equals(Authority.USER)) {
             throw new AuthException(AuthExceptionType.UNAUTHORIZED_MEMBER_LOGIN);
         }
 
-        String refreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
-        updateRefreshTokenByPlatformId(vo.platformId(), refreshToken);
+        String accessToken = jwtTokenProvider.createAccessToken(Encryption.encryptLong(vo.userId()),
+                accessTokenExpirationPeriod);
+        String refreshToken = jwtTokenProvider.createRefreshToken(Encryption.encryptLong(vo.userId()),
+                refreshTokenExpirationPeriod);
+        updateRefreshTokenByUserId(Encryption.encryptLong(vo.userId()), refreshToken);
 
         return authUserResponseMapper.ofLogin(vo.authType(), vo.authority(), Encryption.encryptLong(vo.userId()),
-                vo.nickname(), vo.pictureUrl(), accessToken, refreshToken);
+                vo.nickname(), vo.profileImgUrl(), vo.universityName(), accessToken, refreshToken);
     }
 
     @Transactional
     public ReissueUserResponseDto reissueToken(HttpServletRequest request) {
-        String refreshToken = extractRefreshToken(request);
         String accessToken = extractAccessToken(request);
+        String refreshToken = extractRefreshToken(request);
 
         if (!validateToken(refreshToken)) {
             throw new AuthException(INVALID_REFRESH_TOKEN);
         }
 
         Claims tokenClaims = jwtTokenProvider.getTokenClaims(accessToken);
-        TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(
-                String.valueOf(tokenClaims.get(PLATFORM_ID_CLAIM)));
+        String foundRefreshToken = redisTokenRepository
+                .findByIdOrElseThrow((String) tokenClaims.get(USER_ID_CLAIM)).getRefreshToken();
 
-        if (!foundRefreshToken.getRefreshToken().equals(refreshToken)) {
+        if (foundRefreshToken == null || !foundRefreshToken.equals(refreshToken)) {
             throw new AuthException(INVALID_REFRESH_TOKEN);
         }
 
-        String platformId = (String) tokenClaims.get(PLATFORM_ID_CLAIM);
-        PlatformType platformType = (PlatformType) tokenClaims.get(PLATFORM_TYPE_CLAIM);
+        String encryptedUserId = (String) tokenClaims.get(USER_ID_CLAIM);
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(platformId, platformType, accessTokenExpirationPeriod);
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(refreshTokenExpirationPeriod);
+        String newAccessToken = jwtTokenProvider.createAccessToken(encryptedUserId, accessTokenExpirationPeriod);
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(encryptedUserId, refreshTokenExpirationPeriod);
 
-        updateRefreshTokenByPlatformId(platformId, newRefreshToken);
+        updateRefreshTokenByUserId(encryptedUserId, newRefreshToken);
 
-        return ReissueUserResponseDto.of(platformId, newAccessToken, newRefreshToken);
+        return ReissueUserResponseDto.of(encryptedUserId, newAccessToken, newRefreshToken);
     }
 
     @Transactional
-    public void logout(User user){
-        TokenVO foundRefreshToken = redisTokenRepository.findByPlatformIdOrElseThrowException(user.getPlatformId());
+    public void logout(User user) {
+        TokenVO foundRefreshToken = redisTokenRepository.findByIdOrElseThrow(user.getEncryptUserId());
         foundRefreshToken.updateRefreshToken(null);
         redisTokenRepository.save(foundRefreshToken);
     }
 
 
-    public String extractPlatformIdFromAccessToken(final String atk) throws JsonProcessingException {
+    public String extractUserIdFromAccessToken(final String atk) throws JsonProcessingException {
         Claims tokenClaims = jwtTokenProvider.getTokenClaims(atk);
-        return jwtTokenProvider.getPlatformIdFromClaim(tokenClaims, PLATFORM_ID_CLAIM);
+        return jwtTokenProvider.getPlatformIdFromClaim(tokenClaims, USER_ID_CLAIM);
     }
 
-    public Boolean validateToken(final String atk) {
+    public Boolean validateToken(final String accessToken) {
         try {
-            Claims tokenClaims = jwtTokenProvider.getTokenClaims(atk);
+            Claims tokenClaims = jwtTokenProvider.getTokenClaims(accessToken);
             return !tokenClaims.getExpiration().before(new Date());
         } catch (MalformedJwtException e) {
             throw new AuthException(INVALID_ACCESS_TOKEN);
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             throw new AuthException(UNAUTHORIZED_ACCESS_TOKEN);
         }
     }
@@ -146,16 +140,14 @@ public class JwtService {
                 .orElseThrow(() -> new AuthException(INVALID_ACCESS_TOKEN));
     }
 
-
-
-    public void updateRefreshTokenByPlatformId(String platformId, String newRefreshToken) {
-        redisTokenRepository.findByPlatformId(String.valueOf(platformId))
+    public void updateRefreshTokenByUserId(String encryptedUserId, String newRefreshToken) {
+        redisTokenRepository.findById(encryptedUserId)
                 .ifPresent(refreshToken -> {
                     refreshToken.updateBlack(true);
                 });
-        log.info("newRefreshToken = {}", newRefreshToken);
+        log.debug("newRefreshToken = {}", newRefreshToken);
         redisTokenRepository.save(TokenVO.builder()
-                .platformId(platformId)
+                .userId(encryptedUserId)
                 .isBlack(false)
                 .refreshToken(newRefreshToken)
                 .build());

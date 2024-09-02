@@ -25,6 +25,7 @@ import synk.meeteam.domain.recruitment.recruitment_applicant.exception.Recruitme
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.entity.BaseTimeEntity;
+import synk.meeteam.global.entity.DeleteStatus;
 
 @Getter
 @Setter

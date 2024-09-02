@@ -1,11 +1,15 @@
 package synk.meeteam.domain.auth.service;
 
+import static synk.meeteam.domain.auth.exception.AuthExceptionType.ALREADY_REGISTER;
+import static synk.meeteam.domain.auth.exception.AuthExceptionType.INVALID_ACCESS;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.auth.dto.request.AuthUserRequestDto;
 import synk.meeteam.domain.auth.dto.request.VerifyEmailRequestDto;
-import synk.meeteam.domain.auth.service.vo.AuthUserVo;
+import synk.meeteam.domain.auth.exception.AuthException;
+import synk.meeteam.domain.auth.service.vo.AuthUserVO;
 import synk.meeteam.domain.common.department.entity.Department;
 import synk.meeteam.domain.common.department.repository.DepartmentRepository;
 import synk.meeteam.domain.common.university.entity.University;
@@ -26,9 +30,9 @@ public abstract class AuthService {
     private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public abstract AuthUserVo saveUserOrLogin(String platformType, AuthUserRequestDto request);
+    public abstract AuthUserVO saveUserOrLogin(String platformType, AuthUserRequestDto request);
 
-    protected User getUser(PlatformType platformType, String platformId) {
+    protected User getUser(String platformId, PlatformType platformType) {
         return userRepository.findByPlatformIdAndPlatformType(platformId, platformType)
                 .orElse(null);
     }
@@ -45,9 +49,9 @@ public abstract class AuthService {
                 .build();
     }
 
-    protected User saveTempUser(AuthUserRequestDto request, String email, String name, String id,
+    protected User saveTempUser(AuthUserRequestDto request, String email, String name, String platformId,
                                 String phoneNumber, String profileImgFileName) {
-        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), id, phoneNumber,
+        UserVO tempSocialUser = createTempSocialUser(email, name, request.platformType(), platformId, phoneNumber,
                 profileImgFileName);
         redisUserRepository.save(tempSocialUser);
 
@@ -56,7 +60,7 @@ public abstract class AuthService {
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .platformType(request.platformType())
-                .platformId(id)
+                .platformId(platformId)
                 .authority(Authority.GUEST)
                 .profileImgFileName(profileImgFileName)
                 .build();
@@ -64,6 +68,11 @@ public abstract class AuthService {
 
     @Transactional
     public void updateUniversityInfo(VerifyEmailRequestDto requestDTO, String email) {
+        User foundUser = userRepository.findByUniversityEmail(email).orElse(null);
+        if(foundUser != null){
+            throw new AuthException(ALREADY_REGISTER);
+        }
+
         UserVO userVO = redisUserRepository.findByPlatformIdOrElseThrowException(requestDTO.platformId());
         userVO.updateUniversityInfo(requestDTO.universityId(), requestDTO.departmentId(), requestDTO.year(),
                 email);
@@ -72,7 +81,12 @@ public abstract class AuthService {
     }
 
     @Transactional
-    public User createSocialUser(UserVO userVO, String nickName) {
+    public User createSocialUser(UserVO userVO, String nickname) {
+        // 닉네임 검사
+        if(userRepository.findByNickname(nickname).isPresent()){
+            throw new AuthException(INVALID_ACCESS);
+        }
+
         University foundUniversity = universityRepository.findByIdOrElseThrowException(
                 userVO.getUniversityId());
         Department foundDepartment = departmentRepository.findByIdOrElseThrowException(
@@ -81,7 +95,7 @@ public abstract class AuthService {
         User newUser = User.builder()
                 .universityEmail(userVO.getEmail())
                 .name(userVO.getName())
-                .nickname(nickName)
+                .nickname(nickname)
                 .phoneNumber(userVO.getPhoneNumber())
                 .admissionYear(userVO.getAdmissionYear())
                 .university(foundUniversity)

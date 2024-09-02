@@ -9,7 +9,7 @@ public interface AuthUserResponseMapper {
     AuthUserResponseDto.create ofCreate(AuthType authType, Authority authority, String platformId);
 
     AuthUserResponseDto.login ofLogin(AuthType authType, Authority authority, String userId, String nickname,
-                                      String pictureUrl, String accessToken,
+                                      String imageUrl, String universityName, String accessToken,
                                       String refreshToken);
 
 }

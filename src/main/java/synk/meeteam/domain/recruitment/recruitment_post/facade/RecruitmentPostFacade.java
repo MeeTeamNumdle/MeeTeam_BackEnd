@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.course.entity.Course;
 import synk.meeteam.domain.common.course.entity.Professor;
-import synk.meeteam.domain.common.course.service.CourseService;
-import synk.meeteam.domain.common.course.service.ProfessorService;
 import synk.meeteam.domain.recruitment.bookmark.service.BookmarkService;
 import synk.meeteam.domain.recruitment.recruitment_applicant.entity.RecruitmentApplicant;
 import synk.meeteam.domain.recruitment.recruitment_applicant.service.RecruitmentApplicantService;
@@ -20,6 +18,7 @@ import synk.meeteam.domain.recruitment.recruitment_role_skill.service.Recruitmen
 import synk.meeteam.domain.recruitment.recruitment_tag.entity.RecruitmentTag;
 import synk.meeteam.domain.recruitment.recruitment_tag.service.RecruitmentTagService;
 import synk.meeteam.domain.user.user.entity.User;
+import synk.meeteam.infra.mail.MailService;
 
 
 @Service
@@ -29,11 +28,10 @@ public class RecruitmentPostFacade {
     private final RecruitmentRoleService recruitmentRoleService;
     private final RecruitmentRoleSkillService recruitmentRoleSkillService;
     private final RecruitmentTagService recruitmentTagService;
-    private final CourseService courseService;
-    private final ProfessorService professorService;
     private final RecruitmentApplicantService recruitmentApplicantService;
     private final BookmarkService bookmarkService;
 
+    private final MailService mailService;
 
     @Transactional
     public Long createRecruitmentPost(RecruitmentPost recruitmentPost, List<RecruitmentRole> recruitmentRoles,
@@ -43,8 +41,6 @@ public class RecruitmentPostFacade {
         recruitmentRoleService.createRecruitmentRoles(recruitmentRoles);
         recruitmentRoleSkillService.createRecruitmentRoleSkills(recruitmentRoleSkills);
         recruitmentTagService.createRecruitmentTags(recruitmentTags);
-        courseService.createCourse(course);
-        professorService.createProfessor(professor);
 
         return newRecruitmentPost.getId();
     }
@@ -53,9 +49,9 @@ public class RecruitmentPostFacade {
     public void modifyRecruitmentPost(RecruitmentPost dstRecruitmentPost, RecruitmentPost srcRecruitmentPost,
                                       List<RecruitmentRole> recruitmentRoles,
                                       List<RecruitmentRoleSkill> recruitmentRoleSkills,
-                                      List<RecruitmentTag> recruitmentTags) {
+                                      List<RecruitmentTag> recruitmentTags, Long userId) {
 
-        recruitmentPostService.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost);
+        recruitmentPostService.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost, userId);
 
         // cascade 설정을 하여 recruitmentRoleService에서 Role과 Skills를 한 번에 삭제한다.
         recruitmentRoleService.modifyRecruitmentRoleAndSkills(recruitmentRoles, recruitmentRoleSkills,
@@ -65,12 +61,16 @@ public class RecruitmentPostFacade {
     }
 
     @Transactional
-    public void applyRecruitment(RecruitmentRole recruitmentRole, RecruitmentApplicant recruitmentApplicant) {
+    public void applyRecruitment(RecruitmentRole recruitmentRole, RecruitmentApplicant recruitmentApplicant,
+                                 User writer) {
         recruitmentApplicantService.registerRecruitmentApplicant(recruitmentApplicant);
 
         recruitmentPostService.incrementApplicantCount(recruitmentApplicant.getRecruitmentPost());
 
         recruitmentRoleService.incrementApplicantCount(recruitmentRole);
+
+        mailService.sendApplicationNotificationMail(recruitmentApplicant.getRecruitmentPost().getId(),
+                recruitmentApplicant, writer);
     }
 
     @Transactional

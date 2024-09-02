@@ -11,6 +11,7 @@ files:
     destination: /home/ubuntu/app
     # 대상 경로에 이미 파일이 존재하는 경우, 덮어쓰기를 허용할지 여부
     overwrite: yes
+file_exists_behavior: OVERWRITE
 
 # 파일 및 디렉토리 권한에 관련된 설정
 permissions:
@@ -30,6 +31,6 @@ hooks:
     # 실행할 스크립트 또는 명령의 위치
     - location: deploy.sh
       # 스크립트 또는 명령 실행의 제한 시간을 설정
-      timeout: 60
+      timeout: 180
       # CodeDeploy 중 실행되는 스크립트 또는 명령을 실행할 사용자를 지정
       runas: ubuntu

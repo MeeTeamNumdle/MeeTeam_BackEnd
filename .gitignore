@@ -177,8 +177,10 @@ replay_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java
 
-*.yml
+src/**/*.yml
 *.sql
 *.html
 src/main/generated
 .gradle
+
+key

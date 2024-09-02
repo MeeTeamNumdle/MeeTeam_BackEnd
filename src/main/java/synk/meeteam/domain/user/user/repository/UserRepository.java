@@ -31,5 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long>, UserCustomRep
                 () -> new AuthException(NOT_FOUND_USER));
     }
 
+    Optional<User> findByUniversityEmail(String email);
 
 }

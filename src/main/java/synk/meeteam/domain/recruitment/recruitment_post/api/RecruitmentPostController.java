@@ -60,8 +60,8 @@ import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.service.UserService;
 import synk.meeteam.global.entity.Category;
 import synk.meeteam.global.entity.Scope;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 import synk.meeteam.security.AuthUser;
 
 
@@ -87,7 +87,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
     private final CourseService courseService;
     private final ProfessorService professorService;
 
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
 
     private final RecruitmentPostMapper recruitmentPostMapper;
 
@@ -133,7 +133,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         }
 
         User writer = userService.findById(recruitmentPost.getCreatedBy());
-        String writerImgUrl = s3Service.createPreSignedGetUrl(S3FileName.USER, writer.getProfileImgFileName());
+        String writerImgUrl = cloudFrontService.getSignedUrl(S3FilePath.USER, writer.getProfileImgFileName());
 
         List<RecruitmentRole> recruitmentRoles = recruitmentRoleService.findByRecruitmentPostId(postId);
 
@@ -146,7 +146,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
 
         return ResponseEntity.ok()
                 .body(GetRecruitmentPostResponseDto.from(recruitmentPost, isApplied, isBookmarked, recruitmentRoles,
-                        writer,
+                        writer, user,
                         writerImgUrl,
                         recruitmentTags,
                         recruitmentCommentDtos, recruitmentPost.getCourse(), recruitmentPost.getProfessor()));
@@ -160,7 +160,7 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                 postId);
 
         return ResponseEntity.ok()
-                .body(new GetApplyInfoResponseDto(user.getName(), user.getEvaluationScore(),
+                .body(new GetApplyInfoResponseDto(user.getName(), user.getGpa(),
                         user.getUniversity().getName(), user.getDepartment().getName(),
                         user.getAdmissionYear(),
                         user.getUniversityEmail(), availableRecruitmentRoleDtos));
@@ -177,8 +177,9 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         RecruitmentApplicant recruitmentApplicant = recruitmentPostMapper.toRecruitmentApplicantEntity(
                 recruitmentRole.getRecruitmentPost(), recruitmentRole.getRole(), user, requestDto.message(),
                 RecruitStatus.NONE);
-
-        recruitmentPostFacade.applyRecruitment(recruitmentRole, recruitmentApplicant);
+        RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
+        User writer = userService.findById(recruitmentPost.getCreatedBy());
+        recruitmentPostFacade.applyRecruitment(recruitmentRole, recruitmentApplicant, writer);
 
         return ResponseEntity.ok().build();
     }
@@ -226,7 +227,15 @@ public class RecruitmentPostController implements RecruitmentPostApi {
         List<RecruitmentTag> recruitmentTags = getRecruitmentTags(requestDto, dstRecruitmentPost);
 
         recruitmentPostFacade.modifyRecruitmentPost(dstRecruitmentPost, srcRecruitmentPost, recruitmentRoles,
-                recruitmentRoleSkills, recruitmentTags);
+                recruitmentRoleSkills, recruitmentTags, user.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @Override
+    public ResponseEntity<Void> deleteRecruitmentPost(@PathVariable("id") Long postId, @AuthUser User user) {
+        recruitmentPostService.deleteRecruitmentPost(postId, user.getId());
 
         return ResponseEntity.ok().build();
     }
@@ -354,10 +363,10 @@ public class RecruitmentPostController implements RecruitmentPostApi {
                                             Long professorId) {
         Scope scope = null;
         Category category = null;
-        if (scopeOrdinal != null && scopeOrdinal > 1 && scopeOrdinal < Scope.values().length) {
+        if (scopeOrdinal != null && scopeOrdinal >= 1 && scopeOrdinal <= Scope.values().length) {
             scope = Scope.values()[scopeOrdinal - 1];
         }
-        if (categoryOrdinal != null && categoryOrdinal > 1 && categoryOrdinal < Category.values().length) {
+        if (categoryOrdinal != null && categoryOrdinal >= 1 && categoryOrdinal <= Category.values().length) {
             category = Category.values()[categoryOrdinal - 1];
         }
         return new SearchCondition(fieldId, scope, category, skillIds, tagIds, roleIds, courseId, professorId);

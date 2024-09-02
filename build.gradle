@@ -105,6 +105,21 @@ dependencies {
 
     // discord web hook
     implementation('com.github.napstr:logback-discord-appender:1.0.0')
+
+    // aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // ssh 터널링 세팅
+    implementation 'com.github.mwiede:jsch:0.2.17'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    // actuator 설정
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // cloudfront
+    implementation("software.amazon.awssdk:bom:2.21.1")
+    implementation 'software.amazon.awssdk:cloudfront:2.22.3'
+
 }
 
 tasks.named('test') {

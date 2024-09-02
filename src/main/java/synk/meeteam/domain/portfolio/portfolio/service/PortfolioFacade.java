@@ -20,8 +20,9 @@ import synk.meeteam.domain.portfolio.portfolio_link.entity.PortfolioLink;
 import synk.meeteam.domain.portfolio.portfolio_link.service.PortfolioLinkService;
 import synk.meeteam.domain.portfolio.portfolio_skill.service.PortfolioSkillService;
 import synk.meeteam.domain.user.user.entity.User;
-import synk.meeteam.infra.s3.S3FileName;
-import synk.meeteam.infra.s3.service.S3Service;
+import synk.meeteam.domain.user.user.service.UserService;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,8 @@ public class PortfolioFacade {
     private final PortfolioService portfolioService;
     private final PortfolioSkillService portfolioSkillService;
     private final PortfolioLinkService portfolioLinkService;
-    private final S3Service s3Service;
+    private final CloudFrontService cloudFrontService;
+    private final UserService userService;
 
     private final PortfolioCommandMapper commandMapper;
     private final PortfolioMapper portfolioMapper;
@@ -46,13 +48,15 @@ public class PortfolioFacade {
     @Transactional(readOnly = true)
     public GetPortfolioResponseDto getPortfolio(Long portfolioId, User user) {
         Portfolio portfolio = portfolioService.getPortfolio(portfolioId);
-        if (!portfolio.isAllViewAble(user.getId())) {
+        Long userId = user != null ? user.getId() : null;
+        if (!portfolio.isAllViewAble(userId)) {
             throw new PortfolioException(NOT_YOUR_PORTFOLIO);
         }
+        User writer = userService.findById(portfolio.getCreatedBy());
 
         List<Skill> skills = portfolioSkillService.getPortfolioSkill(portfolio);
         List<PortfolioLink> links = portfolioLinkService.getPortfolioLink(portfolio);
-        String zipFileUrl = s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO,
+        String zipFileUrl = cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                 portfolio.getZipFileName());
         List<Portfolio> otherPinPortfolios = getUserPortfolio(portfolio);
         return new GetPortfolioResponseDto(
@@ -70,18 +74,17 @@ public class PortfolioFacade {
                 links.stream().map(link -> new PortfolioLinkDto(link.getUrl(), link.getDescription())).toList(),
                 otherPinPortfolios.stream().map(otherPortfolio ->
                         portfolioMapper.toGetProfilePortfolioDto(otherPortfolio,
-                                s3Service.createPreSignedGetUrl(S3FileName.PORTFOLIO,
+                                cloudFrontService.getSignedUrl(S3FilePath.getPortfolioPath(user.getEncryptUserId()),
                                         otherPortfolio.getMainImageFileName()))).toList(),
-                portfolio.isWriter(user.getId())
+                portfolio.isWriter(userId),
+                writer.getNickname()
         );
     }
 
     @Transactional
     public Long editPortfolio(Long portfolioId, User user, UpdatePortfolioRequestDto requestDto) {
         Portfolio portfolio = portfolioService.getPortfolio(portfolioId);
-        if (!portfolio.isWriter(user.getId())) {
-            throw new PortfolioException(NOT_YOUR_PORTFOLIO);
-        }
+        portfolio.validWriter(user.getId());
         portfolioService.editPortfolio(portfolio, user, commandMapper.toUpdatePortfolioCommand(requestDto));
         portfolioSkillService.editPortfolioSkill(portfolio, requestDto.skills());
         portfolioLinkService.editPortfolioLink(portfolio, requestDto.links());

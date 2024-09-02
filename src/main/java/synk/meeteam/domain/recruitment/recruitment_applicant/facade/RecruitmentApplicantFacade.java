@@ -39,14 +39,16 @@ public class RecruitmentApplicantFacade {
 
         RecruitmentPost recruitmentPost = recruitmentPostService.getRecruitmentPost(postId);
         User user = userService.findById(recruitmentPost.getCreatedBy());
-        mailService.sendApproveMails(postId, applicants, user.getName());
+
+        applicants.stream().forEach(
+                applicant -> mailService.sendApproveMail(postId, applicant, user.getName())
+        );
     }
 
     @Transactional
     public void rejectApplicants(Long postId, Long userId, List<Long> applicantIds) {
 
-        List<RecruitmentApplicant> applicants = recruitmentApplicantService.getAllApplicants(applicantIds);
-        recruitmentApplicantService.rejectApplicants(applicants, applicantIds, userId);
+        recruitmentApplicantService.rejectApplicants(applicantIds, userId);
 
         recruitmentPostService.incrementResponseCount(postId, userId, applicantIds.size());
     }

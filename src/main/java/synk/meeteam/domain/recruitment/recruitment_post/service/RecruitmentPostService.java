@@ -6,23 +6,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.ManageType;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchCondition;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.SearchRecruitmentPostMapper;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.SimpleRecruitmentPostMapper;
 import synk.meeteam.domain.recruitment.recruitment_post.dto.response.PaginationSearchPostResponseDto;
-import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SearchRecruitmentPostDto;
+import synk.meeteam.domain.recruitment.recruitment_post.dto.response.SimpleRecruitmentPostDto;
 import synk.meeteam.domain.recruitment.recruitment_post.entity.RecruitmentPost;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.RecruitmentPostRepository;
 import synk.meeteam.domain.recruitment.recruitment_post.repository.vo.RecruitmentPostVo;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.global.dto.PageInfo;
+import synk.meeteam.global.dto.PaginationDto;
 import synk.meeteam.global.entity.Scope;
+import synk.meeteam.global.util.Encryption;
+import synk.meeteam.infra.aws.S3FilePath;
+import synk.meeteam.infra.aws.service.CloudFrontService;
 
 @Service
 @RequiredArgsConstructor
 public class RecruitmentPostService {
 
     private final RecruitmentPostRepository recruitmentPostRepository;
-    private final SearchRecruitmentPostMapper searchRecruitmentPostMapper;
+    private final SimpleRecruitmentPostMapper simpleRecruitmentPostMapper;
+    private final CloudFrontService cloudFrontService;
 
     @Transactional
     public RecruitmentPost writeRecruitmentPost(RecruitmentPost recruitmentPost) {
@@ -32,6 +38,12 @@ public class RecruitmentPostService {
     @Transactional(readOnly = true)
     public RecruitmentPost getRecruitmentPost(final Long postId) {
         return recruitmentPostRepository.findByIdOrElseThrow(postId);
+    }
+
+    @Transactional
+    public void deleteRecruitmentPost(final Long postId, final Long userId) {
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
+        recruitmentPost.softDelete(userId);
     }
 
     @Transactional
@@ -65,7 +77,7 @@ public class RecruitmentPostService {
 
     @Transactional
     public RecruitmentPost modifyRecruitmentPost(RecruitmentPost dstRecruitmentPost,
-                                                 RecruitmentPost srcRecruitmentPost) {
+                                                 RecruitmentPost srcRecruitmentPost, Long userId) {
 
         dstRecruitmentPost.updateRecruitmentPost(srcRecruitmentPost.getTitle(), srcRecruitmentPost.getContent(),
                 srcRecruitmentPost.getScope(), srcRecruitmentPost.getCategory(), srcRecruitmentPost.getField(),
@@ -73,7 +85,7 @@ public class RecruitmentPostService {
                 srcRecruitmentPost.getProceedingEnd(), srcRecruitmentPost.getDeadline(),
                 srcRecruitmentPost.getBookmarkCount(),
                 srcRecruitmentPost.getKakaoLink(), srcRecruitmentPost.isClosed(), srcRecruitmentPost.getMeeteam(),
-                srcRecruitmentPost.getApplicantCount(), srcRecruitmentPost.getResponseCount());
+                srcRecruitmentPost.getApplicantCount(), srcRecruitmentPost.getResponseCount(), userId);
 
         return recruitmentPostRepository.save(dstRecruitmentPost);
     }
@@ -91,8 +103,12 @@ public class RecruitmentPostService {
         Page<RecruitmentPostVo> postVos = recruitmentPostRepository
                 .findBySearchConditionAndKeyword(PageRequest.of(page - 1, size), condition, keyword, user);
         PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
-        List<SearchRecruitmentPostDto> contents = postVos.stream()
-                .map(searchRecruitmentPostMapper::toSearchRecruitmentPostDto).toList();
+        List<SimpleRecruitmentPostDto> contents = postVos.stream()
+                .map((postVo) -> {
+                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
+                    String imageUrl = cloudFrontService.getSignedUrl(S3FilePath.USER, postVo.getWriterProfileImg());
+                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
+                }).toList();
 
         return new PaginationSearchPostResponseDto(contents, pageInfo);
     }
@@ -111,5 +127,20 @@ public class RecruitmentPostService {
     public void incrementResponseCount(Long postId, Long userId, long responseCount) {
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdOrElseThrow(postId);
         recruitmentPost.incrementResponseCount(userId, responseCount);
+    }
+
+    @Transactional
+    public PaginationDto<SimpleRecruitmentPostDto> getManagementPost(int size, int page, User user, Boolean isClosed,
+                                                                     ManageType manageType) {
+        Page<RecruitmentPostVo> postVos = recruitmentPostRepository.findManagementPost(PageRequest.of(page - 1, size),
+                user, isClosed, manageType);
+        PageInfo pageInfo = new PageInfo(page, size, postVos.getTotalElements(), postVos.getTotalPages());
+        List<SimpleRecruitmentPostDto> contents = postVos.stream()
+                .map((postVo) -> {
+                    String writerEncryptedId = Encryption.encryptLong(postVo.getWriterId());
+                    String imageUrl = cloudFrontService.getSignedUrl(S3FilePath.USER, postVo.getWriterProfileImg());
+                    return simpleRecruitmentPostMapper.toSimpleRecruitmentPostDto(postVo, writerEncryptedId, imageUrl);
+                }).toList();
+        return new PaginationDto<>(contents, pageInfo);
     }
 }

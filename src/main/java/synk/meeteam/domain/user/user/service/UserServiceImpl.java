@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import synk.meeteam.domain.common.role.entity.Role;
 import synk.meeteam.domain.common.role.repository.RoleRepository;
 import synk.meeteam.domain.user.user.dto.command.UpdateInfoCommand;
+import synk.meeteam.domain.user.user.dto.response.ProfileDto;
 import synk.meeteam.domain.user.user.entity.User;
 import synk.meeteam.domain.user.user.exception.UserException;
 import synk.meeteam.domain.user.user.repository.UserRepository;
@@ -73,5 +74,21 @@ public class UserServiceImpl implements UserService {
             throw new UserException(NOT_FOUND_USER);
         }
         return userRepository.findByIdFetchRole(userId);
+    }
+
+    @Override
+    public ProfileDto getOpenProfile(Long userId, User reader) {
+        if (userId == null) {
+            throw new UserException(NOT_FOUND_USER);
+        }
+        User user = userRepository.findByIdFetchRole(userId);
+        boolean isNotWriter = reader == null || !userId.equals(reader.getId());
+        return user.getOpenProfile(isNotWriter);
+    }
+
+    @Transactional
+    public void processFirstAccess(User user) {
+        user.processFirstAccess();
+        userRepository.save(user);
     }
 }

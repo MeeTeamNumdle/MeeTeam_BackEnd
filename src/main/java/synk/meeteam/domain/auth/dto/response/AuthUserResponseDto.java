@@ -30,17 +30,20 @@ public class AuthUserResponseDto {
         private String nickname;
         @Schema(description = "유저 프로필 사진", example = "url 형태")
         private String imageUrl;
+        @Schema(description = "유저 대학교", example = "광운대학교")
+        private String university;
         @Schema(description = "액세스 토큰", example = "eyJhbGciOiJIUzI1N...(액세스 토큰)")
         private String accessToken;
         @Schema(description = "리프레시 토큰", example = "eyJhbGciOiJIUzI1N...(리프레시 토큰)")
         private String refreshToken;
 
         public login(AuthType authType, Authority authority, String userId, String nickname, String imageUrl,
-                     String accessToken, String refreshToken) {
+                     String universityName, String accessToken, String refreshToken) {
             super(authType, authority);
             this.userId = userId;
             this.nickname = nickname;
             this.imageUrl = imageUrl;
+            this.university = universityName;
             this.accessToken = accessToken;
             this.refreshToken = refreshToken;
         }
