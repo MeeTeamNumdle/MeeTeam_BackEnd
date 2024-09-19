@@ -1,5 +1,12 @@
 # MeeTeam_BackEnd
 
+# 아키텍처
+<img width="621" alt="스크린샷 2024-06-30 오전 12 23 12" src="https://github.com/MeeTeamNumdle/MeeTeam_BackEnd/assets/100754581/ca5e06e0-56bc-4fdb-9b05-daa6754a39b5">
+
+# ERD(V1)
+<img width="696" alt="스크린샷 2024-06-30 오전 12 24 30" src="https://github.com/MeeTeamNumdle/MeeTeam_BackEnd/assets/100754581/a6b72f8d-fc1c-4211-b3af-b1ca18aff962">
+
+
 # 🌱 Branch
 
 <aside>
