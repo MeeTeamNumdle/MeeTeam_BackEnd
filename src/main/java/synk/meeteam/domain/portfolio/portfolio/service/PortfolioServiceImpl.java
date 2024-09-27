@@ -60,9 +60,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         oldPinPortfolios.forEach(Portfolio::unpin);
 
         //핀 설정
-        for (int index = 0; index < newPinPortfolios.size(); index++) {
-            newPinPortfolios.get(index).putPin(index + 1);
-        }
+        orderPinPortfolios(newPinPortfolios);
 
         return newPinPortfolios;
     }
@@ -152,18 +150,19 @@ public class PortfolioServiceImpl implements PortfolioService {
         Portfolio portfolio = portfolioRepository.findByIdAndAliveOrElseThrow(portfolioId);
         portfolio.validWriter(user.getId());
         if (portfolio.getIsPin()) {
-            reorderPinPortfolio(user, portfolio);
+            portfolio.unpin();
+            List<Portfolio> pinPortfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(
+                    user.getId());
+            orderPinPortfolios(pinPortfolios);
         }
         portfolio.softDelete();
     }
 
-    private void reorderPinPortfolio(User user, Portfolio portfolio) {
-        List<Portfolio> pinPortfolios = portfolioRepository.findAllByIsPinTrueAndCreatedByOrderByPinOrderAsc(
-                user.getId());
-        for (int index = 0; index < pinPortfolios.size(); index++) {
-            pinPortfolios.get(index).putPin(index + 1);
+    private void orderPinPortfolios(List<Portfolio> portfolios) {
+        int pinOrder = 1;
+        for (Portfolio portfolio : portfolios) {
+            portfolio.putPin(pinOrder++);
         }
-        portfolio.unpin();
     }
 
     @Transactional(readOnly = true)

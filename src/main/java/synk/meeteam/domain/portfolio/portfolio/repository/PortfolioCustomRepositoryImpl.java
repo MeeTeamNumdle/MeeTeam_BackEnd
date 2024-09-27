@@ -4,14 +4,16 @@ import static synk.meeteam.domain.common.field.entity.QField.field;
 import static synk.meeteam.domain.common.role.entity.QRole.role;
 import static synk.meeteam.domain.portfolio.portfolio.entity.QPortfolio.portfolio;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import nonapi.io.github.classgraph.utils.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -42,7 +44,7 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
                         portfolio.createdBy.eq(userId),
                         isAlive()
                 )
-                .orderBy(orderByPin(portfolioIds).asc())
+                .orderBy(orderByPin(portfolioIds))
                 .fetch();
     }
 
@@ -96,13 +98,12 @@ public class PortfolioCustomRepositoryImpl implements PortfolioCustomRepository 
                 .where(portfolio.createdBy.eq(user.getId()), isAlive());
     }
 
-    NumberExpression<Integer> orderByPin(List<Long> ids) {
-        // 포트폴리오 ID의 순서를 기준으로 순서를 정의합니다.
-        CaseBuilder caseBuilder = new CaseBuilder();
+    private OrderSpecifier<?> orderByPin(List<Long> ids) {
+        String template = "FIELD({0}, " + StringUtils.join(", ",
+                ids.stream().map(id -> "{" + (ids.indexOf(id) + 1) + "}").toArray()) + ")";
 
-        return caseBuilder
-                .when(portfolio.id.in(ids)).then(ids.indexOf(portfolio.id))
-                .otherwise(ids.size());
+        return Expressions.stringTemplate(template, Stream.concat(Stream.of(portfolio.id), ids.stream()).toArray())
+                .asc();
     }
 
     BooleanExpression isAlive() {
